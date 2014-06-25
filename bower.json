@@ -29,6 +29,16 @@
   },
   "ignore":
   [
-    "node_modules"
+    ".settings",
+    "app",
+    "config",
+    "node_modules",
+    "spec",
+    ".bowerrc",
+    ".gitignore",
+    "Gruntfile.js",
+    "Jakefile.js",
+    "README.md",
+    "package.json"
   ]
 }

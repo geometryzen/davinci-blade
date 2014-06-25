@@ -42,5 +42,5 @@ task('compile', {async:true}, function(outFile, options) {
 task("default", function() {
    jake.Task['compile'].invoke("dist/davinci-blade.js", ['--target ES5'].concat(compilerSources));
    jake.Task['compile'].invoke("dist/davinci-blade.min.js", ['--target ES5'].concat(compilerSources));
-   jake.Task['compile'].invoke("../bladejs/dist/davinci-blade.d.ts", ['--target ES5 --declaration'].concat(compilerSources));
+   jake.Task['compile'].invoke("dist/davinci-blade.d.ts", ['--target ES5 --declaration'].concat(compilerSources));
 });
