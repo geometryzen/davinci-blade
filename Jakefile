@@ -5,7 +5,11 @@ var path = require("path");
 
 var bladeOptions = [
     "--target ES5",
-    "app/ts/Rational.ts"
+    "app/ts/Rational.ts",
+    "app/ts/Dimensions.ts",
+    "app/ts/bladeASM.ts",
+    "app/ts/bladeSTR.ts",
+    "app/ts/e2gaASM.ts"
 ];
 
 /**
