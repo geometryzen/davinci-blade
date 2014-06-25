@@ -4,26 +4,26 @@ module Blade {
         public x: number;
         public y: number;
         public xy: number;
-        constructor(w, x, y, xy) {
+        constructor(w: number, x: number, y: number, xy: number) {
             this.w = w || 0;
             this.x = x;
             this.y = y;
             this.xy = xy;
         }
 
-        fromCartesian(w, x, y, xy): Euclidean2 {
+        fromCartesian(w: number, x: number, y: number, xy: number): Euclidean2 {
             return new Euclidean2(w, x, y, xy);
         }
 
-        fromPolar(w, r, theta, s) {
+        fromPolar(w: number, r: number, theta: number, s: number): Euclidean2 {
             return new Euclidean2(w, r * Math.cos(theta), r * Math.sin(theta), s);
         }
 
-        coordinates() {
+        coordinates(): number[] {
             return [this.w, this.x, this.y, this.xy];
         }
 
-        coordinate(index) {
+        coordinate(index: number): number {
             switch (index) {
                 case 0:
                     return this.w;
@@ -38,7 +38,7 @@ module Blade {
             }
         }
 
-        static add(a, b) {
+        static add(a: number[], b: number[]): number[] {
             var a00, a01, a10, a11, b00, b01, b10, b11, x00, x01, x10, x11;
 
             a00 = a[0];
@@ -56,14 +56,14 @@ module Blade {
             return [x00, x01, x10, x11];
         }
 
-        add(rhs) {
+        add(rhs:Euclidean2): Euclidean2 {
             var xs;
 
             xs = Euclidean2.add(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         }
 
-        static sub(a, b) {
+        static sub(a: number[], b: number[]): number[] {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -81,14 +81,14 @@ module Blade {
             return [x0, x1, x2, x3];
         }
 
-        sub(rhs) {
+        sub(rhs: Euclidean2): Euclidean2 {
             var xs;
 
             xs = Euclidean2.sub(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         }
 
-        static mul(a, b) {
+        static mul(a: number[], b: number[]): number[] {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -106,7 +106,7 @@ module Blade {
             return [x0, x1, x2, x3];
         }
 
-        mul(rhs) {
+        mul(rhs: any): Euclidean2 {
             var xs;
 
             if (typeof rhs === 'number') {
@@ -117,7 +117,7 @@ module Blade {
             }
         }
 
-        div(rhs) {
+        div(rhs: any): Euclidean2 {
             if (typeof rhs === 'number') {
                 return new Euclidean2(this.w / rhs, this.x / rhs, this.y / rhs, this.xy / rhs);
             } else {
@@ -125,7 +125,7 @@ module Blade {
             }
         }
 
-        static wedge(a, b) {
+        static wedge(a: number[], b: number[]): number[] {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -143,14 +143,14 @@ module Blade {
             return [x0, x1, x2, x3];
         }
 
-        wedge(rhs) {
+        wedge(rhs: Euclidean2): Euclidean2 {
             var xs;
 
             xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         }
 
-        static lshift(a, b) {
+        static lshift(a: number[], b: number[]): number[] {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -168,14 +168,14 @@ module Blade {
             return [x0, x1, x2, x3];
         }
 
-        lshift(rhs) {
+        lshift(rhs: Euclidean2): Euclidean2 {
             var xs;
 
             xs = Euclidean2.lshift(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         }
 
-        static rshift(a, b) {
+        static rshift(a: number[], b: number[]): number[] {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -193,14 +193,14 @@ module Blade {
             return [x0, x1, x2, x3];
         }
 
-        rshift(rhs) {
+        rshift(rhs: Euclidean2): Euclidean2 {
             var xs;
 
             xs = Euclidean2.rshift(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         }
 
-        grade(index) {
+        grade(index: number): Euclidean2 {
             switch (index) {
                 case 0:
                     return new Euclidean2(this.w, 0, 0, 0);
@@ -213,7 +213,7 @@ module Blade {
             }
         }
 
-        quadrance() {
+        quadrance(): number {
             var w, x, xy, y;
 
             w = this.w;
@@ -223,19 +223,19 @@ module Blade {
             return w * w + x * x + y * y + xy * xy;
         }
 
-        isNaN() {
+        isNaN(): boolean {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
         }
 
-        toString() {
+        toString(): string {
             return stringFromCoordinates([this.w, this.x, this.y, this.xy], ["1", "e1", "e2", "e12"]);
         }
 
-        toStringIJK() {
+        toStringIJK(): string {
             return stringFromCoordinates(this.coordinates(), ["1", "i", "j", "I"]);
         }
 
-        toStringLATEX = function() {
+        toStringLATEX(): string {
             return stringFromCoordinates(this.coordinates(), ["1", "e_{1}", "e_{2}", "e_{12}"]);
         }
     }

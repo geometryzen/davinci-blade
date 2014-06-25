@@ -65,30 +65,63 @@ declare module Blade {
         public x: number;
         public y: number;
         public xy: number;
-        constructor(w: any, x: any, y: any, xy: any);
-        public fromCartesian(w: any, x: any, y: any, xy: any): Euclidean2;
-        public fromPolar(w: any, r: any, theta: any, s: any): Euclidean2;
+        constructor(w: number, x: number, y: number, xy: number);
+        public fromCartesian(w: number, x: number, y: number, xy: number): Euclidean2;
+        public fromPolar(w: number, r: number, theta: number, s: number): Euclidean2;
         public coordinates(): number[];
-        public coordinate(index: any): number;
-        static add(a: any, b: any): any[];
-        public add(rhs: any): Euclidean2;
-        static sub(a: any, b: any): any[];
-        public sub(rhs: any): Euclidean2;
-        static mul(a: any, b: any): any[];
+        public coordinate(index: number): number;
+        static add(a: number[], b: number[]): number[];
+        public add(rhs: Euclidean2): Euclidean2;
+        static sub(a: number[], b: number[]): number[];
+        public sub(rhs: Euclidean2): Euclidean2;
+        static mul(a: number[], b: number[]): number[];
         public mul(rhs: any): Euclidean2;
-        public div(rhs: any): any;
-        static wedge(a: any, b: any): any[];
-        public wedge(rhs: any): Euclidean2;
-        static lshift(a: any, b: any): any[];
-        public lshift(rhs: any): Euclidean2;
-        static rshift(a: any, b: any): any[];
-        public rshift(rhs: any): Euclidean2;
-        public grade(index: any): Euclidean2;
+        public div(rhs: any): Euclidean2;
+        static wedge(a: number[], b: number[]): number[];
+        public wedge(rhs: Euclidean2): Euclidean2;
+        static lshift(a: number[], b: number[]): number[];
+        public lshift(rhs: Euclidean2): Euclidean2;
+        static rshift(a: number[], b: number[]): number[];
+        public rshift(rhs: Euclidean2): Euclidean2;
+        public grade(index: number): Euclidean2;
         public quadrance(): number;
         public isNaN(): boolean;
         public toString(): string;
         public toStringIJK(): string;
-        public toStringLATEX: () => string;
+        public toStringLATEX(): string;
+    }
+}
+declare module Blade {
+    class Euclidean3 {
+        public w: number;
+        public x: number;
+        public y: number;
+        public z: number;
+        public xy: number;
+        public yz: number;
+        public zx: number;
+        public xyz: number;
+        constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number);
+        static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number): Euclidean3;
+        public coordinates(): number[];
+        public coordinate(index: number): number;
+        public add(rhs: Euclidean3): Euclidean3;
+        public sub(rhs: Euclidean3): Euclidean3;
+        public mul(rhs: any): Euclidean3;
+        public div(rhs: any): Euclidean3;
+        public wedge(rhs: Euclidean3): Euclidean3;
+        public lshift(rhs: Euclidean3): Euclidean3;
+        public rshift(rhs: Euclidean3): Euclidean3;
+        public grade(index: number): Euclidean3;
+        public dot(vector: Euclidean3): number;
+        public cross(vector: Euclidean3): Euclidean3;
+        public length(): number;
+        public norm(): Euclidean3;
+        public quad(): Euclidean3;
+        public sqrt(): Euclidean3;
+        public toString(): string;
+        public toStringIJK(): string;
+        public toStringLATEX(): string;
     }
 }
 declare module Blade {

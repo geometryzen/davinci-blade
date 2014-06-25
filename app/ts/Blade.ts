@@ -3,6 +3,7 @@
 /// <reference path="Unit.ts"/>
 /// <reference path="Measure.ts"/>
 /// <reference path="Euclidean2.ts"/>
+/// <reference path="Euclidean3.ts"/>
 module Blade {
 
     var UNIT_SYMBOLS: string[] = ["kg", "m", "s", "C", "K", "mol", "cd"];
