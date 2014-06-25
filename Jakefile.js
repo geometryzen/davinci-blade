@@ -5,9 +5,7 @@ var path = require("path");
 
 // We are using the reference feature to create the ordered closure of source files.
 var compilerSources = [
-    "app/ts/Blade.ts",
-    "app/ts/bladeASM.ts",
-    "app/ts/bladeSTR.ts"
+    "app/ts/Blade.ts"
 ];
 
 desc("Builds the full libraries");

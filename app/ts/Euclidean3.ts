@@ -1,5 +1,6 @@
+/// <reference path="GeometricQuantity.ts"/>
 module Blade {
-    export class Euclidean3 {
+    export class Euclidean3 implements GeometricQuantity<Euclidean3> {
         public w: number;
         public x: number;
         public y: number;

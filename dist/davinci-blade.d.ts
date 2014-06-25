@@ -1,5 +1,13 @@
 declare module Blade {
-    class Rational {
+    interface Field<T> {
+        add(rhs: T): T;
+        sub(rhs: T): T;
+        mul(rhs: T): T;
+        div(rhs: T): T;
+    }
+}
+declare module Blade {
+    class Rational implements Field<Rational> {
         private _numer;
         private _denom;
         constructor(n: number, d: number);
@@ -40,7 +48,7 @@ declare module Blade {
     }
 }
 declare module Blade {
-    class Unit {
+    class Unit implements Field<Unit> {
         public scale: number;
         public dimensions: Dimensions;
         public labels: string[];
@@ -56,11 +64,22 @@ declare module Blade {
     }
 }
 declare module Blade {
-    class Measure {
+}
+declare module Blade {
+    interface GeometricQuantity<T> {
+        add(rhs: T): T;
+        sub(rhs: T): T;
+        mul(rhs: T): T;
+        div(rhs: T): T;
+        wedge(rhs: T): T;
+        lshift(rhs: T): T;
+        rshift(rhs: T): T;
+        norm(): T;
+        quad(): T;
     }
 }
 declare module Blade {
-    class Euclidean2 {
+    class Euclidean2 implements GeometricQuantity<Euclidean2> {
         public w: number;
         public x: number;
         public y: number;
@@ -84,7 +103,8 @@ declare module Blade {
         static rshift(a: number[], b: number[]): number[];
         public rshift(rhs: Euclidean2): Euclidean2;
         public grade(index: number): Euclidean2;
-        public quadrance(): number;
+        public norm(): Euclidean2;
+        public quad(): Euclidean2;
         public isNaN(): boolean;
         public toString(): string;
         public toStringIJK(): string;
@@ -92,7 +112,7 @@ declare module Blade {
     }
 }
 declare module Blade {
-    class Euclidean3 {
+    class Euclidean3 implements GeometricQuantity<Euclidean3> {
         public w: number;
         public x: number;
         public y: number;

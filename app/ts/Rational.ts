@@ -1,6 +1,7 @@
+/// <reference path="Field.ts"/>
 module Blade {
 
-    export class Rational {
+    export class Rational implements Field<Rational> {
         private _numer: number;
         private _denom: number;
 

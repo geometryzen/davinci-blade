@@ -1,5 +1,6 @@
+/// <reference path="GeometricQuantity.ts"/>
 module Blade {
-    export class Euclidean2 {
+    export class Euclidean2 implements GeometricQuantity<Euclidean2> {
         public w: number;
         public x: number;
         public y: number;
@@ -213,14 +214,24 @@ module Blade {
             }
         }
 
-        quadrance(): number {
+        norm(): Euclidean2 {
             var w, x, xy, y;
 
             w = this.w;
             x = this.x;
             y = this.y;
             xy = this.xy;
-            return w * w + x * x + y * y + xy * xy;
+            return new Euclidean2(Math.sqrt(w * w + x * x + y * y + xy * xy), 0, 0, 0);
+        }
+
+        quad(): Euclidean2 {
+            var w, x, xy, y;
+
+            w = this.w;
+            x = this.x;
+            y = this.y;
+            xy = this.xy;
+            return new Euclidean2(w * w + x * x + y * y + xy * xy, 0, 0, 0);
         }
 
         isNaN(): boolean {

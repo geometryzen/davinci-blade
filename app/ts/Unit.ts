@@ -1,8 +1,9 @@
 /// <reference path="Dimensions.ts"/>
 /// <reference path="Rational.ts"/>
+/// <reference path="Field.ts"/>
 module Blade {
 
-    export class Unit {
+    export class Unit implements Field<Unit> {
 
         constructor(public scale: number, public dimensions: Dimensions, public labels: string[]) {
             if (labels.length !== 7) {
