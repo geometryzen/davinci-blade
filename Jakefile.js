@@ -7,8 +7,7 @@ var path = require("path");
 var compilerSources = [
     "app/ts/Blade.ts",
     "app/ts/bladeASM.ts",
-    "app/ts/bladeSTR.ts",
-    "app/ts/e2gaASM.ts"
+    "app/ts/bladeSTR.ts"
 ];
 
 desc("Builds the full libraries");

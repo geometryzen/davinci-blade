@@ -56,6 +56,42 @@ declare module Blade {
     }
 }
 declare module Blade {
+    class Measure {
+    }
+}
+declare module Blade {
+    class Euclidean2 {
+        public w: number;
+        public x: number;
+        public y: number;
+        public xy: number;
+        constructor(w: any, x: any, y: any, xy: any);
+        public fromCartesian(w: any, x: any, y: any, xy: any): Euclidean2;
+        public fromPolar(w: any, r: any, theta: any, s: any): Euclidean2;
+        public coordinates(): number[];
+        public coordinate(index: any): number;
+        static add(a: any, b: any): any[];
+        public add(rhs: any): Euclidean2;
+        static sub(a: any, b: any): any[];
+        public sub(rhs: any): Euclidean2;
+        static mul(a: any, b: any): any[];
+        public mul(rhs: any): Euclidean2;
+        public div(rhs: any): any;
+        static wedge(a: any, b: any): any[];
+        public wedge(rhs: any): Euclidean2;
+        static lshift(a: any, b: any): any[];
+        public lshift(rhs: any): Euclidean2;
+        static rshift(a: any, b: any): any[];
+        public rshift(rhs: any): Euclidean2;
+        public grade(index: any): Euclidean2;
+        public quadrance(): number;
+        public isNaN(): boolean;
+        public toString(): string;
+        public toStringIJK(): string;
+        public toStringLATEX: () => string;
+    }
+}
+declare module Blade {
     var UNIT_DIMLESS: Unit;
     var UNIT_KILOGRAM: Unit;
     var UNIT_METER: Unit;
