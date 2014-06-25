@@ -103,6 +103,8 @@ var Blade;
         Rational.prototype.toString = function () {
             return "" + this.numer + "/" + this.denom;
         };
+
+        Rational.ONE = new Rational(1, 1);
         return Rational;
     })();
     Blade.Rational = Rational;
@@ -110,15 +112,13 @@ var Blade;
 var Blade;
 (function (Blade) {
     var Dimensions = (function () {
-        function Dimensions(M, L, T, Q, temperature, amount, intensity) {
-            this.M = M;
+        function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
             this.L = L;
             this.T = T;
             this.Q = Q;
             this.temperature = temperature;
             this.amount = amount;
             this.intensity = intensity;
-            var mass = M;
             var length = L;
             var time = T;
             var charge = Q;
@@ -128,10 +128,10 @@ var Blade;
                     message: "Expecting 7 arguments"
                 };
             }
-            if (typeof mass === 'number') {
-                this.M = new Blade.Rational(mass, 1);
-            } else if (mass instanceof Blade.Rational) {
-                this.M = mass;
+            if (typeof theMass === 'number') {
+                this._mass = new Blade.Rational(theMass, 1);
+            } else if (theMass instanceof Blade.Rational) {
+                this._mass = theMass;
             } else {
                 throw {
                     name: "DimensionError",
@@ -199,8 +199,16 @@ var Blade;
                 };
             }
         }
+        Object.defineProperty(Dimensions.prototype, "M", {
+            get: function () {
+                return this._mass;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         Dimensions.prototype.compatible = function (rhs) {
-            if (this.M.equals(rhs.M) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
+            if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
                 return this;
             } else {
                 throw {
@@ -211,27 +219,27 @@ var Blade;
         };
 
         Dimensions.prototype.mul = function (rhs) {
-            return new Dimensions(this.M.add(rhs.M), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
+            return new Dimensions(this._mass.add(rhs._mass), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
         };
 
         Dimensions.prototype.div = function (rhs) {
-            return new Dimensions(this.M.sub(rhs.M), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
+            return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
         };
 
         Dimensions.prototype.pow = function (exponent) {
-            return new Dimensions(this.M.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+            return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
         };
 
         Dimensions.prototype.dimensionless = function () {
-            return this.M.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         };
 
         Dimensions.prototype.isZero = function () {
-            return this.M.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         };
 
         Dimensions.prototype.negative = function () {
-            return new Dimensions(this.M.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
+            return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
         };
 
         Dimensions.prototype.toString = function () {
@@ -249,13 +257,145 @@ var Blade;
                 return "" + label + " ** " + rational;
             };
 
-            return [stringify(this.M, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function (x) {
+            return [stringify(this._mass, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function (x) {
                 return typeof x === 'string';
             }).join(" * ");
         };
         return Dimensions;
     })();
     Blade.Dimensions = Dimensions;
+})(Blade || (Blade = {}));
+var Blade;
+(function (Blade) {
+    var Unit = (function () {
+        function Unit(scale, dimensions, labels) {
+            this.scale = scale;
+            this.dimensions = dimensions;
+            this.labels = labels;
+            if (labels.length !== 7) {
+                throw new Error("Expecting 7 elements in the labels array.");
+            }
+            this.scale = scale;
+            this.dimensions = dimensions;
+            this.labels = labels;
+        }
+        Unit.prototype.compatible = function (rhs) {
+            var dimensions;
+
+            if (rhs instanceof Unit) {
+                dimensions = this.dimensions.compatible(rhs.dimensions);
+                return this;
+            } else {
+                throw new Error("Illegal Argument for Unit.compatible: " + rhs);
+            }
+        };
+
+        Unit.prototype.add = function (rhs) {
+            if (rhs instanceof Unit) {
+                return new Unit(this.scale + rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for Unit.add: " + rhs);
+            }
+        };
+
+        Unit.prototype.sub = function (rhs) {
+            if (rhs instanceof Unit) {
+                return new Unit(this.scale - rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for Unit.sub: " + rhs);
+            }
+        };
+
+        Unit.prototype.mul = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Unit(this.scale * rhs, this.dimensions, this.labels);
+            } else if (rhs instanceof Unit) {
+                return new Unit(this.scale * rhs.scale, this.dimensions.mul(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for mul: " + rhs);
+            }
+        };
+
+        Unit.prototype.div = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Unit(this.scale / rhs, this.dimensions, this.labels);
+            } else if (rhs instanceof Unit) {
+                return new Unit(this.scale / rhs.scale, this.dimensions.div(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for div: " + rhs);
+            }
+        };
+
+        Unit.prototype.pow = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
+            } else {
+                throw new Error("Illegal Argument for div: " + rhs);
+            }
+        };
+
+        Unit.prototype.inverse = function () {
+            return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
+        };
+
+        Unit.prototype.toString = function () {
+            var operatorStr;
+            var scaleString;
+            var unitsString;
+            var stringify = function (rational, label) {
+                if (rational.numer === 0) {
+                    return null;
+                } else if (rational.denom === 1) {
+                    if (rational.numer === 1) {
+                        return "" + label;
+                    } else {
+                        return "" + label + " ** " + rational.numer;
+                    }
+                } else {
+                }
+                return "" + label + " ** " + rational;
+            };
+
+            operatorStr = this.scale === 1 || this.dimensions.isZero() ? "" : " ";
+            scaleString = this.scale === 1 ? "" : "" + this.scale;
+            unitsString = [stringify(this.dimensions.M, this.labels[0]), stringify(this.dimensions.L, this.labels[1]), stringify(this.dimensions.T, this.labels[2]), stringify(this.dimensions.Q, this.labels[3]), stringify(this.dimensions.temperature, this.labels[4]), stringify(this.dimensions.amount, this.labels[5]), stringify(this.dimensions.intensity, this.labels[6])].filter(function (x) {
+                return typeof x === 'string';
+            }).join(" ");
+            return "" + scaleString + operatorStr + unitsString;
+        };
+        return Unit;
+    })();
+    Blade.Unit = Unit;
+
+    Blade.UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
+
+    Blade.UNIT_DIMLESS = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_KILOGRAM = new Unit(1, new Blade.Dimensions(1, 0, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_METER = new Unit(1, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_SECOND = new Unit(1, new Blade.Dimensions(0, 0, 1, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_AMPERE = new Unit(1, new Blade.Dimensions(0, 0, -1, 1, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_KELVIN = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 1, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_MOLE = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 1, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_CANDELA = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 0, 1), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_COULOMB = new Unit(1, new Blade.Dimensions(0, 0, 0, 1, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_INCH = new Unit(0.0254, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_FOOT = new Unit(0.3048, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_YARD = new Unit(0.9144, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_MILE = new Unit(1609.344, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+
+    Blade.UNIT_POUND = new Unit(0.45359237, new Blade.Dimensions(1, 0, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
 })(Blade || (Blade = {}));
 /*
 * Blade.JS companion JavaScript library to blade.js or blade.min.js

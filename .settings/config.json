@@ -3,11 +3,12 @@
     "main": "./dist/davinci-blade.js",
     "sourcePath": "app/ts",
     "customBuild": {
-        "command": "jake"
+        "command": "jake --jakefile Jakefile.js"
     },
     "builds": [
         {
             "name": "Blade",
+            "main": "",
             "output": "dist/davinci-blade.js"
         }
     ],

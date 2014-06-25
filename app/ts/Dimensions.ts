@@ -1,9 +1,8 @@
 module Blade {
 
     export class Dimensions {
-
-        constructor(public M, public L, public T, public Q, public temperature, public amount, public intensity) {
-            var mass = M;
+        private _mass: Rational;
+        constructor(theMass: any, public L, public T, public Q, public temperature, public amount, public intensity) {
             var length = L;
             var time = T;
             var charge = Q;
@@ -13,10 +12,10 @@ module Blade {
                     message: "Expecting 7 arguments"
                 };
             }
-            if (typeof mass === 'number') {
-                this.M = new Rational(mass, 1);
-            } else if (mass instanceof Rational) {
-                this.M = mass;
+            if (typeof theMass === 'number') {
+                this._mass = new Rational(theMass, 1);
+            } else if (theMass instanceof Rational) {
+                this._mass = theMass;
             } else {
                 throw {
                     name: "DimensionError",
@@ -84,9 +83,13 @@ module Blade {
                 };
             }
         }
+        
+        get M(): Rational {
+            return this._mass;
+        }
 
-        compatible(rhs): Dimensions {
-            if (this.M.equals(rhs.M) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
+        compatible(rhs: Dimensions): Dimensions {
+            if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
                 return this;
             } else {
                 throw {
@@ -97,27 +100,27 @@ module Blade {
         }
 
         mul(rhs: Dimensions): Dimensions {
-            return new Dimensions(this.M.add(rhs.M), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
+            return new Dimensions(this._mass.add(rhs._mass), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
         }
 
         div(rhs: Dimensions): Dimensions {
-            return new Dimensions(this.M.sub(rhs.M), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
+            return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
         }
 
         pow(exponent): Dimensions {
-            return new Dimensions(this.M.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+            return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
         }
 
         dimensionless(): boolean {
-            return this.M.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         }
 
         isZero(): boolean {
-            return this.M.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         }
 
         negative(): Dimensions {
-            return new Dimensions(this.M.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
+            return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
         }
 
         toString(): string {
@@ -137,7 +140,7 @@ module Blade {
                 return "" + label + " ** " + rational;
             };
 
-            return [stringify(this.M, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function(x) {
+            return [stringify(this._mass, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function(x) {
                 return typeof x === 'string';
             }).join(" * ");
         }

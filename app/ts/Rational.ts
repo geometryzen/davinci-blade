@@ -104,5 +104,7 @@ module Blade {
         toString(): string {
             return "" + this.numer + "/" + this.denom;
         }
+
+        static ONE: Rational = new Rational(1, 1);
     }
 }

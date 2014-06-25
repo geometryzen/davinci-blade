@@ -3,18 +3,16 @@
 var fs = require("fs");
 var path = require("path");
 
-var bladeOptions = [
-    "--target ES5",
+var compilerSources = [
     "app/ts/Rational.ts",
     "app/ts/Dimensions.ts",
+    "app/ts/Unit.ts",
     "app/ts/bladeASM.ts",
     "app/ts/bladeSTR.ts",
     "app/ts/e2gaASM.ts"
 ];
 
-/**
- * Compiler task
- */
+desc("Builds the full libraries");
 task('compile', {async:true}, function(outFile, options) {
     var cmd = "tsc --out " + outFile + " " + options.join(" ");
 
@@ -43,6 +41,7 @@ task('compile', {async:true}, function(outFile, options) {
 
 // Set the default task
 task("default", function() {
-   jake.Task['compile'].invoke("dist/davinci-blade.js", bladeOptions);
-   jake.Task['compile'].invoke("dist/davinci-blade.min.js", bladeOptions);
+   jake.Task['compile'].invoke("dist/davinci-blade.js", ['--target ES5'].concat(compilerSources));
+   jake.Task['compile'].invoke("dist/davinci-blade.min.js", ['--target ES5'].concat(compilerSources));
+   jake.Task['compile'].invoke("../bladejs/dist/davinci-blade.d.ts", ['--target ES5 --declaration'].concat(compilerSources));
 });
