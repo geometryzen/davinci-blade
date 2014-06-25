@@ -387,6 +387,92 @@ var Blade;
     Blade.Unit = Unit;
 })(Blade || (Blade = {}));
 /// <reference path="Unit.ts"/>
+var Blade;
+(function (Blade) {
+    var Measure = (function () {
+        function Measure(quantity, uom) {
+            var scale;
+
+            scale = uom.scale;
+            if (scale === 1) {
+                this.quantity = quantity;
+                this.uom = uom;
+            } else {
+                this.quantity = quantity.mul(scale);
+                this.uom = new Blade.Unit(1, uom.dimensions, uom.labels);
+            }
+        }
+        Measure.prototype.add = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
+            } else {
+                throw new Error("Measure.add(rhs): rhs must be a Measure.");
+            }
+        };
+
+        Measure.prototype.sub = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.sub(rhs.quantity), this.uom.compatible(rhs.uom));
+            } else {
+                throw new Error("Measure.sub(rhs): rhs must be a Measure.");
+            }
+        };
+
+        Measure.prototype.mul = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.mul(rhs.quantity), this.uom.mul(rhs.uom));
+            } else if (rhs instanceof Blade.Unit) {
+                return new Measure(this.quantity, this.uom.mul(rhs));
+            } else if (typeof rhs === 'number') {
+                return new Measure(this.quantity.mul(rhs), this.uom);
+            } else {
+                throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
+            }
+        };
+
+        Measure.prototype.div = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.div(rhs.quantity), this.uom.div(rhs.uom));
+            } else if (rhs instanceof Blade.Unit) {
+                return new Measure(this.quantity, this.uom.div(rhs));
+            } else if (typeof rhs === 'number') {
+                return new Measure(this.quantity.div(rhs), this.uom);
+            } else {
+                throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number]");
+            }
+        };
+
+        Measure.prototype.wedge = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.wedge(rhs): rhs must be a Measure");
+            }
+        };
+
+        Measure.prototype.lshift = function (rhs) {
+            return null;
+        };
+
+        Measure.prototype.rshift = function (rhs) {
+            return null;
+        };
+
+        Measure.prototype.norm = function () {
+            return null;
+        };
+
+        Measure.prototype.quad = function () {
+            return null;
+        };
+
+        Measure.prototype.toString = function () {
+            return "" + this.quantity + " " + this.uom;
+        };
+        return Measure;
+    })();
+    Blade.Measure = Measure;
+})(Blade || (Blade = {}));
 /// <reference path="GeometricQuantity.ts"/>
 var Blade;
 (function (Blade) {
