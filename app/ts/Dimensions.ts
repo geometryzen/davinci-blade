@@ -1,3 +1,4 @@
+/// <reference path="Rational.ts"/>
 module Blade {
 
     export class Dimensions {

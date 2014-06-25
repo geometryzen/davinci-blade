@@ -1,3 +1,5 @@
+/// <reference path="Dimensions.ts"/>
+/// <reference path="Rational.ts"/>
 module Blade {
 
     export class Unit {
@@ -97,35 +99,4 @@ module Blade {
             return "" + scaleString + operatorStr + unitsString;
         }
     }
-
-    export var UNIT_SYMBOLS: string[] = ["kg", "m", "s", "C", "K", "mol", "cd"];
-
-    export var UNIT_DIMLESS = new Unit(1, new Dimensions(0, 0, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_KILOGRAM = new Unit(1, new Dimensions(1, 0, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_METER = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_SECOND = new Unit(1, new Dimensions(0, 0, 1, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_AMPERE = new Unit(1, new Dimensions(0, 0, -1, 1, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_KELVIN = new Unit(1, new Dimensions(0, 0, 0, 0, 1, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_MOLE = new Unit(1, new Dimensions(0, 0, 0, 0, 0, 1, 0), UNIT_SYMBOLS);
-
-    export var UNIT_CANDELA = new Unit(1, new Dimensions(0, 0, 0, 0, 0, 0, 1), UNIT_SYMBOLS);
-
-    export var UNIT_COULOMB = new Unit(1, new Dimensions(0, 0, 0, 1, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_INCH = new Unit(0.0254, new Dimensions(0, 1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_FOOT = new Unit(0.3048, new Dimensions(0, 1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_YARD = new Unit(0.9144, new Dimensions(0, 1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_MILE = new Unit(1609.344, new Dimensions(0, 1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
-    export var UNIT_POUND = new Unit(0.45359237, new Dimensions(1, 0, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-
 }

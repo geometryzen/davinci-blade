@@ -1,12 +1,8 @@
 var Blade;
 (function (Blade) {
     var Rational = (function () {
-        function Rational(numer, denom) {
-            this.numer = numer;
-            this.denom = denom;
+        function Rational(n, d) {
             var g;
-            var n = numer;
-            var d = denom;
 
             var gcd = function (a, b) {
                 var temp;
@@ -46,69 +42,88 @@ var Blade;
                 n = -n;
                 d = -d;
             }
-            this.numer = n / g;
-            this.denom = d / g;
+            this._numer = n / g;
+            this._denom = d / g;
         }
+        Object.defineProperty(Rational.prototype, "numer", {
+            get: function () {
+                return this._numer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Rational.prototype, "denom", {
+            get: function () {
+                return this._denom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         Rational.prototype.add = function (rhs) {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer + this.denom * rhs, this.denom);
+                return new Rational(this._numer + this._denom * rhs, this._denom);
             } else {
-                return new Rational(this.numer * rhs.denom + this.denom * rhs.numer, this.denom * rhs.denom);
+                return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
             }
         };
 
         Rational.prototype.sub = function (rhs) {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer - this.denom * rhs, this.denom);
+                return new Rational(this._numer - this._denom * rhs, this._denom);
             } else {
-                return new Rational(this.numer * rhs.denom - this.denom * rhs.numer, this.denom * rhs.denom);
+                return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
             }
         };
 
         Rational.prototype.mul = function (rhs) {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer * rhs, this.denom);
+                return new Rational(this._numer * rhs, this._denom);
             } else {
-                return new Rational(this.numer * rhs.numer, this.denom * rhs.denom);
+                return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
             }
         };
 
         // TODO: div testing
         Rational.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer, this.denom * rhs);
+                return new Rational(this._numer, this._denom * rhs);
             } else {
-                return new Rational(this.numer * rhs.denom, this.denom * rhs.numer);
+                return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
             }
         };
 
         // TODO: isZero testing
         Rational.prototype.isZero = function () {
-            return this.numer === 0;
+            return this._numer === 0;
         };
 
         Rational.prototype.negative = function () {
-            return new Rational(-this.numer, this.denom);
+            return new Rational(-this._numer, this._denom);
         };
 
         // TODO: equals testing
         Rational.prototype.equals = function (other) {
             if (other instanceof Rational) {
-                return this.numer * other.denom === this.denom * other.numer;
+                return this._numer * other._denom === this._denom * other._numer;
             } else {
                 return false;
             }
         };
 
         Rational.prototype.toString = function () {
-            return "" + this.numer + "/" + this.denom;
+            return "" + this._numer + "/" + this._denom;
         };
 
         Rational.ONE = new Rational(1, 1);
+        Rational.MINUS_ONE = new Rational(-1, 1);
+        Rational.ZERO = new Rational(0, 1);
         return Rational;
     })();
     Blade.Rational = Rational;
 })(Blade || (Blade = {}));
+/// <reference path="Rational.ts"/>
 var Blade;
 (function (Blade) {
     var Dimensions = (function () {
@@ -265,6 +280,8 @@ var Blade;
     })();
     Blade.Dimensions = Dimensions;
 })(Blade || (Blade = {}));
+/// <reference path="Dimensions.ts"/>
+/// <reference path="Rational.ts"/>
 var Blade;
 (function (Blade) {
     var Unit = (function () {
@@ -366,36 +383,45 @@ var Blade;
         return Unit;
     })();
     Blade.Unit = Unit;
+})(Blade || (Blade = {}));
+/// <reference path="Rational.ts"/>
+/// <reference path="Dimensions.ts"/>
+/// <reference path="Unit.ts"/>
+var Blade;
+(function (Blade) {
+    var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
 
-    Blade.UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
+    var R0 = Blade.Rational.ZERO;
+    var R1 = Blade.Rational.ONE;
+    var MINUS_ONE = Blade.Rational.MINUS_ONE;
 
-    Blade.UNIT_DIMLESS = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_DIMLESS = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_KILOGRAM = new Unit(1, new Blade.Dimensions(1, 0, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_KILOGRAM = new Blade.Unit(1, new Blade.Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_METER = new Unit(1, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_METER = new Blade.Unit(1, new Blade.Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_SECOND = new Unit(1, new Blade.Dimensions(0, 0, 1, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_SECOND = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R1, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_AMPERE = new Unit(1, new Blade.Dimensions(0, 0, -1, 1, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_AMPERE = new Blade.Unit(1, new Blade.Dimensions(R0, R0, MINUS_ONE, R1, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_KELVIN = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 1, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_KELVIN = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R0, R0, R1, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_MOLE = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 1, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_MOLE = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R0, R0, R0, R1, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_CANDELA = new Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 0, 1), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_CANDELA = new Blade.Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 0, R1), UNIT_SYMBOLS);
 
-    Blade.UNIT_COULOMB = new Unit(1, new Blade.Dimensions(0, 0, 0, 1, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_COULOMB = new Blade.Unit(1, new Blade.Dimensions(0, 0, 0, R1, 0, 0, 0), UNIT_SYMBOLS);
 
-    Blade.UNIT_INCH = new Unit(0.0254, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_INCH = new Blade.Unit(0.0254, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
 
-    Blade.UNIT_FOOT = new Unit(0.3048, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_FOOT = new Blade.Unit(0.3048, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
 
-    Blade.UNIT_YARD = new Unit(0.9144, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_YARD = new Blade.Unit(0.9144, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
 
-    Blade.UNIT_MILE = new Unit(1609.344, new Blade.Dimensions(0, 1, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_MILE = new Blade.Unit(1609.344, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
 
-    Blade.UNIT_POUND = new Unit(0.45359237, new Blade.Dimensions(1, 0, 0, 0, 0, 0, 0), Blade.UNIT_SYMBOLS);
+    Blade.UNIT_POUND = new Blade.Unit(0.45359237, new Blade.Dimensions(R1, 0, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
 })(Blade || (Blade = {}));
 /*
 * Blade.JS companion JavaScript library to blade.js or blade.min.js

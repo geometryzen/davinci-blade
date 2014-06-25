@@ -1,11 +1,11 @@
 module Blade {
 
     export class Rational {
+        private _numer: number;
+        private _denom: number;
 
-        constructor(public numer: number, public denom: number) {
+        constructor(n: number, d: number) {
             var g;
-            var n = numer;
-            var d = denom;
 
             var gcd = function(a: number, b: number) {
                 var temp;
@@ -46,65 +46,77 @@ module Blade {
                 n = -n;
                 d = -d;
             }
-            this.numer = n / g;
-            this.denom = d / g;
+            this._numer = n / g;
+            this._denom = d / g;
+        }
+
+        get numer(): number {
+            return this._numer;
+        }
+
+        get denom(): number {
+            return this._denom;
         }
 
         add(rhs): Rational {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer + this.denom * rhs, this.denom);
+                return new Rational(this._numer + this._denom * rhs, this._denom);
             } else {
-                return new Rational(this.numer * rhs.denom + this.denom * rhs.numer, this.denom * rhs.denom);
+                return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
             }
         }
 
         sub(rhs): Rational {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer - this.denom * rhs, this.denom);
+                return new Rational(this._numer - this._denom * rhs, this._denom);
             } else {
-                return new Rational(this.numer * rhs.denom - this.denom * rhs.numer, this.denom * rhs.denom);
+                return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
             }
         }
 
         mul(rhs): Rational {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer * rhs, this.denom);
+                return new Rational(this._numer * rhs, this._denom);
             } else {
-                return new Rational(this.numer * rhs.numer, this.denom * rhs.denom);
+                return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
             }
         }
 
         // TODO: div testing
         div(rhs): Rational {
             if (typeof rhs === 'number') {
-                return new Rational(this.numer, this.denom * rhs);
+                return new Rational(this._numer, this._denom * rhs);
             } else {
-                return new Rational(this.numer * rhs.denom, this.denom * rhs.numer);
+                return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
             }
         }
 
         // TODO: isZero testing
         isZero(): boolean {
-            return this.numer === 0;
+            return this._numer === 0;
         }
 
         negative(): Rational {
-            return new Rational(-this.numer, this.denom);
+            return new Rational(-this._numer, this._denom);
         }
 
         // TODO: equals testing
         equals(other): boolean {
             if (other instanceof Rational) {
-                return this.numer * other.denom === this.denom * other.numer;
+                return this._numer * other._denom === this._denom * other._numer;
             } else {
                 return false;
             }
         }
 
         toString(): string {
-            return "" + this.numer + "/" + this.denom;
+            return "" + this._numer + "/" + this._denom;
         }
 
+        // TODO: Implement some sort of interning to reduce object creation.
+        // Make sure that Rational is immutable!
         static ONE: Rational = new Rational(1, 1);
+        static MINUS_ONE: Rational = new Rational(-1, 1);
+        static ZERO: Rational = new Rational(0, 1);
     }
 }
