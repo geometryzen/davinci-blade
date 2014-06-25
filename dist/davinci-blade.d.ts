@@ -64,6 +64,15 @@ declare module Blade {
     }
 }
 declare module Blade {
+    interface GeometricQuantity<T> extends Field<T> {
+        wedge(rhs: T): T;
+        lshift(rhs: T): T;
+        rshift(rhs: T): T;
+        norm(): T;
+        quad(): T;
+    }
+}
+declare module Blade {
     class Measure<T> implements GeometricQuantity<Measure<T>> {
         public quantity: any;
         public uom: Unit;
@@ -78,15 +87,6 @@ declare module Blade {
         public norm(): Measure<T>;
         public quad(): Measure<T>;
         public toString(): string;
-    }
-}
-declare module Blade {
-    interface GeometricQuantity<T> extends Field<T> {
-        wedge(rhs: T): T;
-        lshift(rhs: T): T;
-        rshift(rhs: T): T;
-        norm(): T;
-        quad(): T;
     }
 }
 declare module Blade {

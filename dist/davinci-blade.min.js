@@ -386,19 +386,18 @@ var Blade;
     })();
     Blade.Unit = Unit;
 })(Blade || (Blade = {}));
+/// <reference path="Field.ts"/>
+/// <reference path="GeometricQuantity.ts"/>
 /// <reference path="Unit.ts"/>
 var Blade;
 (function (Blade) {
     var Measure = (function () {
         function Measure(quantity, uom) {
-            var scale;
-
-            scale = uom.scale;
-            if (scale === 1) {
+            if (uom.scale === 1) {
                 this.quantity = quantity;
                 this.uom = uom;
             } else {
-                this.quantity = quantity.mul(scale);
+                this.quantity = quantity.mul(uom.scale);
                 this.uom = new Blade.Unit(1, uom.dimensions, uom.labels);
             }
         }
@@ -451,11 +450,19 @@ var Blade;
         };
 
         Measure.prototype.lshift = function (rhs) {
-            return null;
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.lshift(rhs): rhs must be a Measure");
+            }
         };
 
         Measure.prototype.rshift = function (rhs) {
-            return null;
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.rshift(rhs): rhs must be a Measure");
+            }
         };
 
         Measure.prototype.norm = function () {

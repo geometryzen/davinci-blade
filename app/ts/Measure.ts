@@ -1,17 +1,18 @@
+/// <reference path="GeometricQuantity.ts"/>
 /// <reference path="Unit.ts"/>
 module Blade {
     export class Measure<T> implements GeometricQuantity<Measure<T>> {
+
         public quantity: any;
         public uom: Unit;
-        constructor(quantity: any, uom: Unit) {
-            var scale;
 
-            scale = uom.scale;
-            if (scale === 1) {
+        constructor(quantity: any, uom: Unit) {
+
+            if (uom.scale === 1) {
                 this.quantity = quantity;
                 this.uom = uom;
             } else {
-                this.quantity = quantity.mul(scale);
+                this.quantity = quantity.mul(uom.scale);
                 this.uom = new Unit(1, uom.dimensions, uom.labels);
             }
         }
@@ -65,11 +66,19 @@ module Blade {
         }
 
         lshift(rhs: Measure<T>): Measure<T> {
-            return null;
+            if (rhs instanceof Measure) {
+                return new Measure<T>(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.lshift(rhs): rhs must be a Measure");
+            }
         }
 
         rshift(rhs: Measure<T>): Measure<T> {
-            return null;
+            if (rhs instanceof Measure) {
+                return new Measure<T>(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.rshift(rhs): rhs must be a Measure");
+            }
         }
 
         norm(): Measure<T> {
