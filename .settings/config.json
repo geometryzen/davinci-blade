@@ -1,0 +1,26 @@
+{
+    "version": "0.0.1",
+    "main": "./dist/davinci-blade.js",
+    "sourcePath": "app/ts",
+    "customBuild": {
+        "command": "jake"
+    },
+    "builds": [
+        {
+            "name": "Blade",
+            "output": "dist/davinci-blade.js"
+        }
+    ],
+    "compiler": {
+        "useDefaultLib": true,
+        "emitComments": false,
+        "outputOption": "/home/david/dev/geometryzen/davinci-blade/home/david/dev/geometryzen/davinci-blade/tmp",
+        "generateDeclarationFiles": false,
+        "mapSourceFiles": false,
+        "codeGenTarget": 1,
+        "moduleGenTarget": 0
+    },
+    "completionMode": "loose",
+    "minify": false,
+    "rememberOpenFiles": true
+}
