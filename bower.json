@@ -36,18 +36,21 @@
   "ignore":
   [
     ".settings",
-    "app",
-    "config",
-    "dist/js",
     "node_modules",
-    "spec",
-    "tasks",
+    "src",
+    "test",
+    "typings",
+    "vendor",
     ".bowerrc",
     ".gitignore",
-    "Gruntfile.js",
+    ".npmignore",
+    ".travis.yml",
     "Jakefile.js",
     "README.md",
     "bower.json",
-    "package.json"
+    "build.js",
+    "grunt.js",
+    "package.json",
+    "tsd.json"
   ]
 }
