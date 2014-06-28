@@ -426,7 +426,7 @@ define("../vendor/almond/almond", function(){});
 
 define('blade/core',["require", "exports"], function(require, exports) {
     var blade = {
-        VERSION: '0.0.1'
+        VERSION: '0.9.0'
     };
 
     

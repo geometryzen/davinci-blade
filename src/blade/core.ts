@@ -1,5 +1,6 @@
 var blade = {
-    VERSION: '0.0.1'
+    // TODO: Automatically synchronize with bower.json
+    VERSION: '0.9.0'
 };
 
 export = blade;
