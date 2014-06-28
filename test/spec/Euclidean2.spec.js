@@ -6,7 +6,7 @@ describe("Euclidean2", function() {
     var x2 = Math.random();
     var x3 = Math.random();
 
-    var a = new Blade.Euclidean2(x0, x1, x2, x3);
+    var a = new blade.Euclidean2(x0, x1, x2, x3);
 
     expect(a.coordinate(0)).toBe(x0);
     expect(a.coordinate(1)).toBe(x1);
@@ -20,13 +20,13 @@ describe("Euclidean2", function() {
   });
 
   it('Should implement toString()', function() {
-    var a = new Blade.Euclidean2(1, 2, 3, 4);
+    var a = new blade.Euclidean2(1, 2, 3, 4);
     expect(a.toStringIJK()).toBe("1+2*i+3*j+4*I");
   });
 
   it('Should implement add function', function() {
-    var a = new Blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
-    var b = new Blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+    var a = new blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+    var b = new blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
     
     var c = a.add(b);
 
@@ -37,8 +37,8 @@ describe("Euclidean2", function() {
   });
 
   it('Should implement sub function', function() {
-    var a = new Blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
-    var b = new Blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+    var a = new blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+    var b = new blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
     
     var c = a.sub(b);
 
@@ -49,10 +49,10 @@ describe("Euclidean2", function() {
   });
 
   it('Should implement mul function', function() {
-    var u = new Blade.Euclidean2(1, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 1, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 1, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 1)
+    var u = new blade.Euclidean2(1, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 1, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 1, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 1)
 
     expect(u.mul(u).coordinate(0)).toBe(1);
     expect(u.mul(u).coordinate(1)).toBe(0);
@@ -136,10 +136,10 @@ describe("Euclidean2", function() {
   });
 
   it('div Euclidean2', function() {
-    var u = new Blade.Euclidean2(1, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 1, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 1, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 1)
+    var u = new blade.Euclidean2(1, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 1, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 1, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 1)
 
     expect(u.div(u).coordinate(0)).toBe(1);
     expect(u.div(u).coordinate(1)).toBe(0);
@@ -223,10 +223,10 @@ describe("Euclidean2", function() {
   });
 
   it('div number', function() {
-    var u = new Blade.Euclidean2(2, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 2, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 2, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 2)
+    var u = new blade.Euclidean2(2, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 2, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 2, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 2)
 
     expect(u.div(2).coordinate(0)).toBe(1);
     expect(u.div(2).coordinate(1)).toBe(0);
@@ -250,10 +250,10 @@ describe("Euclidean2", function() {
   });
 
   it('div 0', function() {
-    var u = new Blade.Euclidean2(2, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 2, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 2, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 2)
+    var u = new blade.Euclidean2(2, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 2, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 2, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 2)
 
     expect(u.div(0).coordinate(0)).toBe(Infinity);
     expect(u.div(0).coordinate(1)).toBeNaN();
@@ -277,10 +277,10 @@ describe("Euclidean2", function() {
   });
 
   it('Should implement wedge function', function() {
-    var u = new Blade.Euclidean2(1, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 1, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 1, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 1)
+    var u = new blade.Euclidean2(1, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 1, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 1, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 1)
 
     expect(u.wedge(u).coordinate(0)).toBe(1);
     expect(u.wedge(u).coordinate(1)).toBe(0);
@@ -364,10 +364,10 @@ describe("Euclidean2", function() {
   });
 
   it('Should implement lshift function', function() {
-    var u = new Blade.Euclidean2(1, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 1, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 1, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 1)
+    var u = new blade.Euclidean2(1, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 1, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 1, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 1)
 
     expect(u.lshift(u).coordinate(0)).toBe(1);
     expect(u.lshift(u).coordinate(1)).toBe(0);
@@ -451,10 +451,10 @@ describe("Euclidean2", function() {
   });
 
   it('Should implement rshift function', function() {
-    var u = new Blade.Euclidean2(1, 0, 0, 0)
-    var i = new Blade.Euclidean2(0, 1, 0, 0)
-    var j = new Blade.Euclidean2(0, 0, 1, 0)
-    var I = new Blade.Euclidean2(0, 0, 0, 1)
+    var u = new blade.Euclidean2(1, 0, 0, 0)
+    var i = new blade.Euclidean2(0, 1, 0, 0)
+    var j = new blade.Euclidean2(0, 0, 1, 0)
+    var I = new blade.Euclidean2(0, 0, 0, 1)
 
     expect(u.rshift(u).coordinate(0)).toBe(1);
     expect(u.rshift(u).coordinate(1)).toBe(0);
@@ -538,7 +538,7 @@ describe("Euclidean2", function() {
   });
 
   it('grade(index) function', function() {
-    var m = new Blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+    var m = new blade.Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
 
     var w = m.grade(0);
 

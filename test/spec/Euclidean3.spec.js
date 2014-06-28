@@ -5,42 +5,36 @@ describe("Euclidean3", function() {
     var x = Math.random();
     var y = Math.random();
     var z = Math.random();
-    return new Blade.Euclidean3(w, x, y, z, Math.random(), Math.random(), Math.random(), Math.random());
+    return new blade.Euclidean3(w, x, y, z, Math.random(), Math.random(), Math.random(), Math.random());
   }
 
-  var zero = new Blade.Euclidean3(0, 0, 0, 0, 0, 0, 0, 0);
-  var one  = new Blade.Euclidean3(1, 0, 0, 0, 0, 0, 0, 0);
-  var i    = new Blade.Euclidean3(0, 1, 0, 0, 0, 0, 0, 0);
-  var j    = new Blade.Euclidean3(0, 0, 1, 0, 0, 0, 0, 0);
-  var k    = new Blade.Euclidean3(0, 0, 0, 1, 0, 0, 0, 0);
-  var ij   = new Blade.Euclidean3(0, 0, 0, 0, 1, 0, 0, 0);
-  var jk   = new Blade.Euclidean3(0, 0, 0, 0, 0, 1, 0, 0);
-  var ki   = new Blade.Euclidean3(0, 0, 0, 0, 0, 0, 1, 0);
-  var I    = new Blade.Euclidean3(0, 0, 0, 0, 0, 0, 0, 1);
+  var zero = new blade.Euclidean3(0, 0, 0, 0, 0, 0, 0, 0);
+  var one  = new blade.Euclidean3(1, 0, 0, 0, 0, 0, 0, 0);
+  var i    = new blade.Euclidean3(0, 1, 0, 0, 0, 0, 0, 0);
+  var j    = new blade.Euclidean3(0, 0, 1, 0, 0, 0, 0, 0);
+  var k    = new blade.Euclidean3(0, 0, 0, 1, 0, 0, 0, 0);
+  var ij   = new blade.Euclidean3(0, 0, 0, 0, 1, 0, 0, 0);
+  var jk   = new blade.Euclidean3(0, 0, 0, 0, 0, 1, 0, 0);
+  var ki   = new blade.Euclidean3(0, 0, 0, 0, 0, 0, 1, 0);
+  var I    = new blade.Euclidean3(0, 0, 0, 0, 0, 0, 0, 1);
 
   beforeEach(function() {
-    this.addMatchers({
-      toBeNearZero: function() {
-        var tolerance = (Math.pow(10, -2) / 2);
-        return (Math.abs(this.actual.coordinate(0)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(1)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(2)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(3)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(4)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(5)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(6)) < tolerance) &&
-            (Math.abs(this.actual.coordinate(7)) < tolerance);
-      },
+    jasmine.addMatchers({
       toBeNear: function(m) {
-        var tolerance = (Math.pow(10, -2) / 2);
-        return (Math.abs(this.actual.coordinate(0) - m.coordinate(0)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(1) - m.coordinate(1)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(2) - m.coordinate(2)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(3) - m.coordinate(3)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(4) - m.coordinate(4)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(5) - m.coordinate(5)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(6) - m.coordinate(6)) < tolerance) &&
-               (Math.abs(this.actual.coordinate(7) - m.coordinate(7)) < tolerance);
+        return {
+          compare: function (actual, expected) {
+            var tolerance = (Math.pow(10, -2) / 2);
+            var pass = (Math.abs(actual.coordinate(0) - expected.coordinate(0)) < tolerance) &&
+                       (Math.abs(actual.coordinate(1) - expected.coordinate(1)) < tolerance) &&
+                       (Math.abs(actual.coordinate(2) - expected.coordinate(2)) < tolerance) &&
+                       (Math.abs(actual.coordinate(3) - expected.coordinate(3)) < tolerance) &&
+                       (Math.abs(actual.coordinate(4) - expected.coordinate(4)) < tolerance) &&
+                       (Math.abs(actual.coordinate(5) - expected.coordinate(5)) < tolerance) &&
+                       (Math.abs(actual.coordinate(6) - expected.coordinate(6)) < tolerance) &&
+                       (Math.abs(actual.coordinate(7) - expected.coordinate(7)) < tolerance);
+            return {'pass': pass};
+          }
+        };
       }
     });
   });
@@ -55,7 +49,7 @@ describe("Euclidean3", function() {
     var zx = Math.random();
     var xyz = Math.random();
 
-    var a = new Blade.Euclidean3(w, x, y, z, xy, yz, zx, xyz);
+    var a = new blade.Euclidean3(w, x, y, z, xy, yz, zx, xyz);
 
     expect(a.coordinate(0)).toBe(w);
     expect(a.coordinate(1)).toBe(x);
@@ -77,13 +71,13 @@ describe("Euclidean3", function() {
   });
 
   it('Should implement toString()', function() {
-    var a = new Blade.Euclidean3(1, 2, 3, 4, 5, 6, 7, 8);
+    var a = new blade.Euclidean3(1, 2, 3, 4, 5, 6, 7, 8);
     expect(a.toStringIJK()).toBe("1+2*i+3*j+4*k+5*ij+6*jk+7*ki+8*I");
   });
 
   it('Should implement add function', function() {
-    var a = new Blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
-    var b = new Blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+    var a = new blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+    var b = new blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
     
     var c = a.add(b);
 
@@ -98,8 +92,8 @@ describe("Euclidean3", function() {
   });
 
   it('Should implement sub function', function() {
-    var a = new Blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
-    var b = new Blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+    var a = new blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+    var b = new blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
     
     var c = a.sub(b);
 
@@ -114,14 +108,14 @@ describe("Euclidean3", function() {
   });
 
   it('div Euclidean3', function() {
-    var u  = new Blade.Euclidean3(1, 0, 0, 0, 0, 0, 0, 0)
-    var i  = new Blade.Euclidean3(0, 1, 0, 0, 0, 0, 0, 0)
-    var j  = new Blade.Euclidean3(0, 0, 1, 0, 0, 0, 0, 0)
-    var k  = new Blade.Euclidean3(0, 0, 0, 1, 0, 0, 0, 0)
-    var ij = new Blade.Euclidean3(0, 0, 0, 0, 1, 0, 0, 0)
-    var jk = new Blade.Euclidean3(0, 0, 0, 0, 0, 1, 0, 0)
-    var ki = new Blade.Euclidean3(0, 0, 0, 0, 0, 0, 1, 0)
-    var I  = new Blade.Euclidean3(0, 0, 0, 0, 0, 0, 0, 1)
+    var u  = new blade.Euclidean3(1, 0, 0, 0, 0, 0, 0, 0)
+    var i  = new blade.Euclidean3(0, 1, 0, 0, 0, 0, 0, 0)
+    var j  = new blade.Euclidean3(0, 0, 1, 0, 0, 0, 0, 0)
+    var k  = new blade.Euclidean3(0, 0, 0, 1, 0, 0, 0, 0)
+    var ij = new blade.Euclidean3(0, 0, 0, 0, 1, 0, 0, 0)
+    var jk = new blade.Euclidean3(0, 0, 0, 0, 0, 1, 0, 0)
+    var ki = new blade.Euclidean3(0, 0, 0, 0, 0, 0, 1, 0)
+    var I  = new blade.Euclidean3(0, 0, 0, 0, 0, 0, 0, 1)
 
     expect(u.div(u).w).toBe(1);
     expect(u.div(u).x).toBe(0);
@@ -143,7 +137,7 @@ describe("Euclidean3", function() {
   });
 
   it('grade(index) function', function() {
-    var m = new Blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+    var m = new blade.Euclidean3(Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
 
     var w = m.grade(0);
 
