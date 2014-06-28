@@ -1,30 +1,24 @@
-/// <reference path="GeometricQuantity.ts"/>
-module Blade {
-    export class Euclidean2 implements GeometricQuantity<Euclidean2> {
-        public w: number;
-        public x: number;
-        public y: number;
-        public xy: number;
-        constructor(w: number, x: number, y: number, xy: number) {
+define(["require", "exports"], function(require, exports) {
+    var Euclidean2 = (function () {
+        function Euclidean2(w, x, y, xy) {
             this.w = w || 0;
             this.x = x;
             this.y = y;
             this.xy = xy;
         }
-
-        fromCartesian(w: number, x: number, y: number, xy: number): Euclidean2 {
+        Euclidean2.prototype.fromCartesian = function (w, x, y, xy) {
             return new Euclidean2(w, x, y, xy);
-        }
+        };
 
-        fromPolar(w: number, r: number, theta: number, s: number): Euclidean2 {
+        Euclidean2.prototype.fromPolar = function (w, r, theta, s) {
             return new Euclidean2(w, r * Math.cos(theta), r * Math.sin(theta), s);
-        }
+        };
 
-        coordinates(): number[] {
+        Euclidean2.prototype.coordinates = function () {
             return [this.w, this.x, this.y, this.xy];
-        }
+        };
 
-        coordinate(index: number): number {
+        Euclidean2.prototype.coordinate = function (index) {
             switch (index) {
                 case 0:
                     return this.w;
@@ -37,9 +31,9 @@ module Blade {
                 default:
                     throw new Error("index must be in the range [0..3]");
             }
-        }
+        };
 
-        static add(a: number[], b: number[]): number[] {
+        Euclidean2.add = function (a, b) {
             var a00, a01, a10, a11, b00, b01, b10, b11, x00, x01, x10, x11;
 
             a00 = a[0];
@@ -55,16 +49,16 @@ module Blade {
             x10 = add10(a00, a01, a10, a11, b00, b01, b10, b11);
             x11 = add11(a00, a01, a10, a11, b00, b01, b10, b11);
             return [x00, x01, x10, x11];
-        }
+        };
 
-        add(rhs:Euclidean2): Euclidean2 {
+        Euclidean2.prototype.add = function (rhs) {
             var xs;
 
             xs = Euclidean2.add(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
-        }
+        };
 
-        static sub(a: number[], b: number[]): number[] {
+        Euclidean2.sub = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -80,16 +74,16 @@ module Blade {
             x2 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
             x3 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
-        }
+        };
 
-        sub(rhs: Euclidean2): Euclidean2 {
+        Euclidean2.prototype.sub = function (rhs) {
             var xs;
 
             xs = Euclidean2.sub(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
-        }
+        };
 
-        static mul(a: number[], b: number[]): number[] {
+        Euclidean2.mul = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -105,9 +99,9 @@ module Blade {
             x2 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
             x3 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
-        }
+        };
 
-        mul(rhs: any): Euclidean2 {
+        Euclidean2.prototype.mul = function (rhs) {
             var xs;
 
             if (typeof rhs === 'number') {
@@ -116,17 +110,17 @@ module Blade {
                 xs = Euclidean2.mul(this.coordinates(), rhs.coordinates());
                 return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
             }
-        }
+        };
 
-        div(rhs: any): Euclidean2 {
+        Euclidean2.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Euclidean2(this.w / rhs, this.x / rhs, this.y / rhs, this.xy / rhs);
             } else {
                 return divide(this.w, this.x, this.y, this.xy, rhs.w, rhs.x, rhs.y, rhs.xy, void 0);
             }
-        }
+        };
 
-        static wedge(a: number[], b: number[]): number[] {
+        Euclidean2.wedge = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -142,16 +136,16 @@ module Blade {
             x2 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
             x3 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
-        }
+        };
 
-        wedge(rhs: Euclidean2): Euclidean2 {
+        Euclidean2.prototype.wedge = function (rhs) {
             var xs;
 
             xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
-        }
+        };
 
-        static lshift(a: number[], b: number[]): number[] {
+        Euclidean2.lshift = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -167,16 +161,16 @@ module Blade {
             x2 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
             x3 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
-        }
+        };
 
-        lshift(rhs: Euclidean2): Euclidean2 {
+        Euclidean2.prototype.lshift = function (rhs) {
             var xs;
 
             xs = Euclidean2.lshift(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
-        }
+        };
 
-        static rshift(a: number[], b: number[]): number[] {
+        Euclidean2.rshift = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
             a0 = a[0];
@@ -192,16 +186,16 @@ module Blade {
             x2 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
             x3 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
-        }
+        };
 
-        rshift(rhs: Euclidean2): Euclidean2 {
+        Euclidean2.prototype.rshift = function (rhs) {
             var xs;
 
             xs = Euclidean2.rshift(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
-        }
+        };
 
-        grade(index: number): Euclidean2 {
+        Euclidean2.prototype.grade = function (index) {
             switch (index) {
                 case 0:
                     return new Euclidean2(this.w, 0, 0, 0);
@@ -212,9 +206,9 @@ module Blade {
                 default:
                     return new Euclidean2(0, 0, 0, 0);
             }
-        }
+        };
 
-        norm(): Euclidean2 {
+        Euclidean2.prototype.norm = function () {
             var w, x, xy, y;
 
             w = this.w;
@@ -222,9 +216,9 @@ module Blade {
             y = this.y;
             xy = this.xy;
             return new Euclidean2(Math.sqrt(w * w + x * x + y * y + xy * xy), 0, 0, 0);
-        }
+        };
 
-        quad(): Euclidean2 {
+        Euclidean2.prototype.quad = function () {
             var w, x, xy, y;
 
             w = this.w;
@@ -232,25 +226,26 @@ module Blade {
             y = this.y;
             xy = this.xy;
             return new Euclidean2(w * w + x * x + y * y + xy * xy, 0, 0, 0);
-        }
+        };
 
-        isNaN(): boolean {
+        Euclidean2.prototype.isNaN = function () {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
-        }
+        };
 
-        toString(): string {
+        Euclidean2.prototype.toString = function () {
             return stringFromCoordinates([this.w, this.x, this.y, this.xy], ["1", "e1", "e2", "e12"]);
-        }
+        };
 
-        toStringIJK(): string {
+        Euclidean2.prototype.toStringIJK = function () {
             return stringFromCoordinates(this.coordinates(), ["1", "i", "j", "I"]);
-        }
+        };
 
-        toStringLATEX(): string {
+        Euclidean2.prototype.toStringLATEX = function () {
             return stringFromCoordinates(this.coordinates(), ["1", "e_{1}", "e_{2}", "e_{12}"]);
-        }
-    }
-    function add00(a00: number, a01: number, a10: number, a11: number, b00: number, b01: number, b10: number, b11: number): number {
+        };
+        return Euclidean2;
+    })();
+    function add00(a00, a01, a10, a11, b00, b01, b10, b11) {
         a00 = +a00;
         a01 = +a01;
         a10 = +a10;
@@ -261,7 +256,7 @@ module Blade {
         b11 = +b11;
         return +(a00 + b00);
     }
-    function add01(a00: number, a01: number, a10: number, a11: number, b00: number, b01: number, b10: number, b11: number): number {
+    function add01(a00, a01, a10, a11, b00, b01, b10, b11) {
         a00 = +a00;
         a01 = +a01;
         a10 = +a10;
@@ -272,7 +267,7 @@ module Blade {
         b11 = +b11;
         return +(a01 + b01);
     }
-    function add10(a00: number, a01: number, a10: number, a11: number, b00: number, b01: number, b10: number, b11: number): number {
+    function add10(a00, a01, a10, a11, b00, b01, b10, b11) {
         a00 = +a00;
         a01 = +a01;
         a10 = +a10;
@@ -283,7 +278,7 @@ module Blade {
         b11 = +b11;
         return +(a10 + b10);
     }
-    function add11(a00: number, a01: number, a10: number, a11: number, b00: number, b01: number, b10: number, b11: number): number {
+    function add11(a00, a01, a10, a11, b00, b01, b10, b11) {
         a00 = +a00;
         a01 = +a01;
         a10 = +a10;
@@ -294,7 +289,7 @@ module Blade {
         b11 = +b11;
         return +(a11 + b11);
     }
-    function addE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: number, b2: number, b3: number, index: number): number {
+    function addE2(a0, a1, a2, a3, b0, b1, b2, b3, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -306,28 +301,32 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 + b0);
-            }
+            case 0:
+                 {
+                    x = +(a0 + b0);
+                }
                 break;
-            case 1: {
-                x = +(a1 + b1);
-            }
+            case 1:
+                 {
+                    x = +(a1 + b1);
+                }
                 break;
-            case 2: {
-                x = +(a2 + b2);
-            }
+            case 2:
+                 {
+                    x = +(a2 + b2);
+                }
                 break;
-            case 3: {
-                x = +(a3 + b3);
-            }
+            case 3:
+                 {
+                    x = +(a3 + b3);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function subE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: number, b2: number, b3: number, index: number): number {
+    function subE2(a0, a1, a2, a3, b0, b1, b2, b3, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -339,28 +338,32 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 - b0);
-            }
+            case 0:
+                 {
+                    x = +(a0 - b0);
+                }
                 break;
-            case 1: {
-                x = +(a1 - b1);
-            }
+            case 1:
+                 {
+                    x = +(a1 - b1);
+                }
                 break;
-            case 2: {
-                x = +(a2 - b2);
-            }
+            case 2:
+                 {
+                    x = +(a2 - b2);
+                }
                 break;
-            case 3: {
-                x = +(a3 - b3);
-            }
+            case 3:
+                 {
+                    x = +(a3 - b3);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function mulE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: number, b2: number, b3: number, index: number): number {
+    function mulE2(a0, a1, a2, a3, b0, b1, b2, b3, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -372,28 +375,32 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3);
+                }
                 break;
-            case 1: {
-                x = +(a0 * b1 + a1 * b0 - a2 * b3 + a3 * b2);
-            }
+            case 1:
+                 {
+                    x = +(a0 * b1 + a1 * b0 - a2 * b3 + a3 * b2);
+                }
                 break;
-            case 2: {
-                x = +(a0 * b2 + a1 * b3 + a2 * b0 - a3 * b1);
-            }
+            case 2:
+                 {
+                    x = +(a0 * b2 + a1 * b3 + a2 * b0 - a3 * b1);
+                }
                 break;
-            case 3: {
-                x = +(a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0);
-            }
+            case 3:
+                 {
+                    x = +(a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function extE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: number, b2: number, b3: number, index: number): number {
+    function extE2(a0, a1, a2, a3, b0, b1, b2, b3, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -405,28 +412,32 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0);
+                }
                 break;
-            case 1: {
-                x = +(a0 * b1 + a1 * b0);
-            }
+            case 1:
+                 {
+                    x = +(a0 * b1 + a1 * b0);
+                }
                 break;
-            case 2: {
-                x = +(a0 * b2 + a2 * b0);
-            }
+            case 2:
+                 {
+                    x = +(a0 * b2 + a2 * b0);
+                }
                 break;
-            case 3: {
-                x = +(a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0);
-            }
+            case 3:
+                 {
+                    x = +(a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function lcoE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: number, b2: number, b3: number, index: number): number {
+    function lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -438,28 +449,32 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3);
+                }
                 break;
-            case 1: {
-                x = +(a0 * b1 - a2 * b3);
-            }
+            case 1:
+                 {
+                    x = +(a0 * b1 - a2 * b3);
+                }
                 break;
-            case 2: {
-                x = +(a0 * b2 + a1 * b3);
-            }
+            case 2:
+                 {
+                    x = +(a0 * b2 + a1 * b3);
+                }
                 break;
-            case 3: {
-                x = +(a0 * b3);
-            }
+            case 3:
+                 {
+                    x = +(a0 * b3);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function rcoE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: number, b2: number, b3: number, index: number): number {
+    function rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -471,32 +486,36 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3);
+                }
                 break;
-            case 1: {
-                x = +(- a1 * b0 - a3 * b2);
-            }
+            case 1:
+                 {
+                    x = +(-a1 * b0 - a3 * b2);
+                }
                 break;
-            case 2: {
-                x = +(- a2 * b0 + a3 * b1);
-            }
+            case 2:
+                 {
+                    x = +(-a2 * b0 + a3 * b1);
+                }
                 break;
-            case 3: {
-                x = +(a3 * b0);
-            }
+            case 3:
+                 {
+                    x = +(a3 * b0);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function stringFromCoordinates(coordinates: number[], labels: string[]): string {
-        var i: number, _i: number, _ref: number;
-        var str: string;
-        var sb: string[] = [];
-        var append = function(coord: number, label: string): void {
+    function stringFromCoordinates(coordinates, labels) {
+        var i, _i, _ref;
+        var str;
+        var sb = [];
+        var append = function (coord, label) {
             var n;
             if (coord !== 0) {
                 if (coord >= 0) {
@@ -528,7 +547,7 @@ module Blade {
         }
         return str;
     }
-    var divide = function(a00, a01, a10, a11, b00, b01, b10, b11, m) {
+    var divide = function (a00, a01, a10, a11, b00, b01, b10, b11, m) {
         var c00, c01, c10, c11, i00, i01, i10, i11, k00, m00, m01, m10, m11, r00, r01, r10, r11, s00, s01, s10, s11, x00, x01, x10, x11;
 
         r00 = +b00;
@@ -565,4 +584,6 @@ module Blade {
             return new Euclidean2(x00, x01, x10, x11);
         }
     };
-}
+    
+    return Euclidean2;
+});

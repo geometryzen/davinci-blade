@@ -1,13 +1,6 @@
-/// <reference path="GeometricQuantity.ts"/>
-/// <reference path="Unit.ts"/>
-module Blade {
-    export class Measure<T> implements GeometricQuantity<Measure<T>> {
-
-        public quantity: any;
-        public uom: Unit;
-
-        constructor(quantity: any, uom: Unit) {
-
+define(["require", "exports", 'blade/Unit'], function(require, exports, Unit) {
+    var Measure = (function () {
+        function Measure(quantity, uom) {
             if (uom.scale === 1) {
                 this.quantity = quantity;
                 this.uom = uom;
@@ -16,24 +9,23 @@ module Blade {
                 this.uom = new Unit(1, uom.dimensions, uom.labels);
             }
         }
-
-        add(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.add = function (rhs) {
             if (rhs instanceof Measure) {
                 return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
             } else {
                 throw new Error("Measure.add(rhs): rhs must be a Measure.");
             }
-        }
+        };
 
-        sub(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.sub = function (rhs) {
             if (rhs instanceof Measure) {
                 return new Measure(this.quantity.sub(rhs.quantity), this.uom.compatible(rhs.uom));
             } else {
                 throw new Error("Measure.sub(rhs): rhs must be a Measure.");
             }
-        }
+        };
 
-        mul(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.mul = function (rhs) {
             if (rhs instanceof Measure) {
                 return new Measure(this.quantity.mul(rhs.quantity), this.uom.mul(rhs.uom));
             } else if (rhs instanceof Unit) {
@@ -43,9 +35,9 @@ module Blade {
             } else {
                 throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
             }
-        }
+        };
 
-        div(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.div = function (rhs) {
             if (rhs instanceof Measure) {
                 return new Measure(this.quantity.div(rhs.quantity), this.uom.div(rhs.uom));
             } else if (rhs instanceof Unit) {
@@ -55,42 +47,45 @@ module Blade {
             } else {
                 throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number]");
             }
-        }
+        };
 
-        wedge(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.wedge = function (rhs) {
             if (rhs instanceof Measure) {
-                return new Measure<T>(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
+                return new Measure(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
             } else {
                 throw new Error("Measure.wedge(rhs): rhs must be a Measure");
             }
-        }
+        };
 
-        lshift(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.lshift = function (rhs) {
             if (rhs instanceof Measure) {
-                return new Measure<T>(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
+                return new Measure(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
             } else {
                 throw new Error("Measure.lshift(rhs): rhs must be a Measure");
             }
-        }
+        };
 
-        rshift(rhs: Measure<T>): Measure<T> {
+        Measure.prototype.rshift = function (rhs) {
             if (rhs instanceof Measure) {
-                return new Measure<T>(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
+                return new Measure(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
             } else {
                 throw new Error("Measure.rshift(rhs): rhs must be a Measure");
             }
-        }
+        };
 
-        norm(): Measure<T> {
+        Measure.prototype.norm = function () {
             return null;
-        }
+        };
 
-        quad(): Measure<T> {
+        Measure.prototype.quad = function () {
             return null;
-        }
+        };
 
-        toString(): string {
+        Measure.prototype.toString = function () {
             return "" + this.quantity + " " + this.uom;
-        }
-    }
-}
+        };
+        return Measure;
+    })();
+    
+    return Measure;
+});

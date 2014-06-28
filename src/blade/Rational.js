@@ -1,14 +1,9 @@
-/// <reference path="Field.ts"/>
-module Blade {
-
-    export class Rational implements Field<Rational> {
-        private _numer: number;
-        private _denom: number;
-
-        constructor(n: number, d: number) {
+define(["require", "exports"], function(require, exports) {
+    var Rational = (function () {
+        function Rational(n, d) {
             var g;
 
-            var gcd = function(a: number, b: number) {
+            var gcd = function (a, b) {
                 var temp;
 
                 if (a < 0) {
@@ -39,8 +34,7 @@ module Blade {
             }
             if (n === 0) {
                 g = 1;
-            }
-            else {
+            } else {
                 g = gcd(Math.abs(n), Math.abs(d));
             }
             if (d < 0) {
@@ -50,74 +44,79 @@ module Blade {
             this._numer = n / g;
             this._denom = d / g;
         }
+        Object.defineProperty(Rational.prototype, "numer", {
+            get: function () {
+                return this._numer;
+            },
+            enumerable: true,
+            configurable: true
+        });
 
-        get numer(): number {
-            return this._numer;
-        }
+        Object.defineProperty(Rational.prototype, "denom", {
+            get: function () {
+                return this._denom;
+            },
+            enumerable: true,
+            configurable: true
+        });
 
-        get denom(): number {
-            return this._denom;
-        }
-
-        add(rhs): Rational {
+        Rational.prototype.add = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer + this._denom * rhs, this._denom);
             } else {
                 return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
             }
-        }
+        };
 
-        sub(rhs): Rational {
+        Rational.prototype.sub = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer - this._denom * rhs, this._denom);
             } else {
                 return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
             }
-        }
+        };
 
-        mul(rhs): Rational {
+        Rational.prototype.mul = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer * rhs, this._denom);
             } else {
                 return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
             }
-        }
+        };
 
-        // TODO: div testing
-        div(rhs): Rational {
+        Rational.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer, this._denom * rhs);
             } else {
                 return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
             }
-        }
+        };
 
-        // TODO: isZero testing
-        isZero(): boolean {
+        Rational.prototype.isZero = function () {
             return this._numer === 0;
-        }
+        };
 
-        negative(): Rational {
+        Rational.prototype.negative = function () {
             return new Rational(-this._numer, this._denom);
-        }
+        };
 
-        // TODO: equals testing
-        equals(other): boolean {
+        Rational.prototype.equals = function (other) {
             if (other instanceof Rational) {
                 return this._numer * other._denom === this._denom * other._numer;
             } else {
                 return false;
             }
-        }
+        };
 
-        toString(): string {
+        Rational.prototype.toString = function () {
             return "" + this._numer + "/" + this._denom;
-        }
+        };
 
-        // TODO: Implement some sort of interning to reduce object creation.
-        // Make sure that Rational is immutable!
-        static ONE: Rational = new Rational(1, 1);
-        static MINUS_ONE: Rational = new Rational(-1, 1);
-        static ZERO: Rational = new Rational(0, 1);
-    }
-}
+        Rational.ONE = new Rational(1, 1);
+        Rational.MINUS_ONE = new Rational(-1, 1);
+        Rational.ZERO = new Rational(0, 1);
+        return Rational;
+    })();
+    
+    return Rational;
+});

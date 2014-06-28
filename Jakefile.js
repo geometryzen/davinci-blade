@@ -1,16 +1,30 @@
-// This file contains the build logic for davinc-blade.
-
 var fs = require("fs");
 var path = require("path");
 
-// We are using the reference feature to create the ordered closure of source files.
 var compilerSources = [
-    "app/ts/Blade.ts"
+    "src/blade.ts"
 ];
 
+function ES5(xs) {
+    return ['--target ES5'].concat(xs);
+}
+
+function AMD(xs) {
+    return ['--module amd'].concat(xs);
+}
+
+function removeComments(xs) {
+    return ['--removeComments'].concat(xs);
+}
+
+var args = removeComments(AMD(ES5(compilerSources)));
+
+// The --out option does not apply when doing external module code generation.
+// If we want concatenation then we must use something like almond.
+// The outFile parameter below is not currently used.
 desc("Builds the full libraries");
-task('compile', {async:true}, function(outFile, options) {
-    var cmd = "tsc --out " + outFile + " " + options.join(" ");
+task('compile', {async:true}, function(target, outFile, options) {
+    var cmd = "tsc " + options.join(" ");
 
     // console.log(cmd + "\n");
     var ex = jake.createExec([cmd]);
@@ -25,19 +39,18 @@ task('compile', {async:true}, function(outFile, options) {
     ex.addListener("cmdEnd", function() {
         var time = new Date();
         var stamp = time.toLocaleTimeString();
-        console.log(stamp + " done creating file " + outFile);
+        console.log(stamp + " done creating " + target);
         complete();
     });
     ex.addListener("error", function() {
         fs.unlinkSync(outFile);
-        console.log("Compilation of " + outFile + " unsuccessful");
+        console.log("Compilation of " + target + " unsuccessful");
     });
     ex.run();
 });
 
 // Set the default task
 task("default", function() {
-   jake.Task['compile'].invoke("dist/davinci-blade.js", ['--target ES5'].concat(compilerSources));
-   jake.Task['compile'].invoke("dist/davinci-blade.min.js", ['--target ES5'].concat(compilerSources));
-   jake.Task['compile'].invoke("dist/davinci-blade.d.ts", ['--target ES5 --declaration'].concat(compilerSources));
+   jake.Task['compile'].invoke("JavaScript", "dist/davinci-blade.js", args);
+   jake.Task['compile'].invoke("d.ts files", "dist/davinci-blade.d.ts", ['--declaration'].concat(args));
 });

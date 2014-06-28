@@ -7,7 +7,7 @@
     },
     "builds": [
         {
-            "name": "Blade",
+            "name": "blade",
             "main": "",
             "output": "dist/davinci-blade.js"
         }
@@ -15,7 +15,7 @@
     "compiler": {
         "useDefaultLib": true,
         "emitComments": false,
-        "outputOption": "/home/david/dev/geometryzen/davinci-blade/home/david/dev/geometryzen/davinci-blade/tmp",
+        "outputOption": "/home/david/dev/geometryzen/davinci-blade/tmp",
         "generateDeclarationFiles": false,
         "mapSourceFiles": false,
         "codeGenTarget": 1,

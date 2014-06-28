@@ -1,0 +1,33 @@
+import GeometricQuantity = require('blade/GeometricQuantity');
+declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
+    public w: number;
+    public x: number;
+    public y: number;
+    public xy: number;
+    constructor(w: number, x: number, y: number, xy: number);
+    public fromCartesian(w: number, x: number, y: number, xy: number): Euclidean2;
+    public fromPolar(w: number, r: number, theta: number, s: number): Euclidean2;
+    public coordinates(): number[];
+    public coordinate(index: number): number;
+    static add(a: number[], b: number[]): number[];
+    public add(rhs: Euclidean2): Euclidean2;
+    static sub(a: number[], b: number[]): number[];
+    public sub(rhs: Euclidean2): Euclidean2;
+    static mul(a: number[], b: number[]): number[];
+    public mul(rhs: any): Euclidean2;
+    public div(rhs: any): Euclidean2;
+    static wedge(a: number[], b: number[]): number[];
+    public wedge(rhs: Euclidean2): Euclidean2;
+    static lshift(a: number[], b: number[]): number[];
+    public lshift(rhs: Euclidean2): Euclidean2;
+    static rshift(a: number[], b: number[]): number[];
+    public rshift(rhs: Euclidean2): Euclidean2;
+    public grade(index: number): Euclidean2;
+    public norm(): Euclidean2;
+    public quad(): Euclidean2;
+    public isNaN(): boolean;
+    public toString(): string;
+    public toStringIJK(): string;
+    public toStringLATEX(): string;
+}
+export = Euclidean2;

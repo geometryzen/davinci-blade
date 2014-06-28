@@ -1,488 +1,439 @@
-/// <reference path="Field.ts"/>
-var Blade;
-(function (Blade) {
-    var Rational = (function () {
-        function Rational(n, d) {
-            var g;
+(function(global, define) {
+  var globalDefine = global.define;
+/**
+ * @license almond 0.2.9 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/almond for details
+ */
+//Going sloppy to avoid 'use strict' string cost, but strict practices should
+//be followed.
+/*jslint sloppy: true */
+/*global setTimeout: false */
 
-            var gcd = function (a, b) {
-                var temp;
+var requirejs, require, define;
+(function (undef) {
+    var main, req, makeMap, handlers,
+        defined = {},
+        waiting = {},
+        config = {},
+        defining = {},
+        hasOwn = Object.prototype.hasOwnProperty,
+        aps = [].slice,
+        jsSuffixRegExp = /\.js$/;
 
-                if (a < 0) {
-                    a = -a;
+    function hasProp(obj, prop) {
+        return hasOwn.call(obj, prop);
+    }
+
+    /**
+     * Given a relative module name, like ./something, normalize it to
+     * a real name that can be mapped to a path.
+     * @param {String} name the relative name
+     * @param {String} baseName a real name that the name arg is relative
+     * to.
+     * @returns {String} normalized name
+     */
+    function normalize(name, baseName) {
+        var nameParts, nameSegment, mapValue, foundMap, lastIndex,
+            foundI, foundStarMap, starI, i, j, part,
+            baseParts = baseName && baseName.split("/"),
+            map = config.map,
+            starMap = (map && map['*']) || {};
+
+        //Adjust any relative paths.
+        if (name && name.charAt(0) === ".") {
+            //If have a base name, try to normalize against it,
+            //otherwise, assume it is a top-level require that will
+            //be relative to baseUrl in the end.
+            if (baseName) {
+                //Convert baseName to array, and lop off the last part,
+                //so that . matches that "directory" and not name of the baseName's
+                //module. For instance, baseName of "one/two/three", maps to
+                //"one/two/three.js", but we want the directory, "one/two" for
+                //this normalization.
+                baseParts = baseParts.slice(0, baseParts.length - 1);
+                name = name.split('/');
+                lastIndex = name.length - 1;
+
+                // Node .js allowance:
+                if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
+                    name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
                 }
-                if (b < 0) {
-                    b = -b;
-                }
-                if (b > a) {
-                    temp = a;
-                    a = b;
-                    b = temp;
-                }
-                while (true) {
-                    a %= b;
-                    if (a === 0) {
-                        return b;
+
+                name = baseParts.concat(name);
+
+                //start trimDots
+                for (i = 0; i < name.length; i += 1) {
+                    part = name[i];
+                    if (part === ".") {
+                        name.splice(i, 1);
+                        i -= 1;
+                    } else if (part === "..") {
+                        if (i === 1 && (name[2] === '..' || name[0] === '..')) {
+                            //End of the line. Keep at least one non-dot
+                            //path segment at the front so it can be mapped
+                            //correctly to disk. Otherwise, there is likely
+                            //no path mapping for a path starting with '..'.
+                            //This can still fail, but catches the most reasonable
+                            //uses of ..
+                            break;
+                        } else if (i > 0) {
+                            name.splice(i - 1, 2);
+                            i -= 2;
+                        }
                     }
-                    b %= a;
-                    if (b === 0) {
-                        return a;
+                }
+                //end trimDots
+
+                name = name.join("/");
+            } else if (name.indexOf('./') === 0) {
+                // No baseName, so this is ID is resolved relative
+                // to baseUrl, pull off the leading dot.
+                name = name.substring(2);
+            }
+        }
+
+        //Apply map config if available.
+        if ((baseParts || starMap) && map) {
+            nameParts = name.split('/');
+
+            for (i = nameParts.length; i > 0; i -= 1) {
+                nameSegment = nameParts.slice(0, i).join("/");
+
+                if (baseParts) {
+                    //Find the longest baseName segment match in the config.
+                    //So, do joins on the biggest to smallest lengths of baseParts.
+                    for (j = baseParts.length; j > 0; j -= 1) {
+                        mapValue = map[baseParts.slice(0, j).join('/')];
+
+                        //baseName segment has  config, find if it has one for
+                        //this name.
+                        if (mapValue) {
+                            mapValue = mapValue[nameSegment];
+                            if (mapValue) {
+                                //Match, update name to the new value.
+                                foundMap = mapValue;
+                                foundI = i;
+                                break;
+                            }
+                        }
                     }
                 }
+
+                if (foundMap) {
+                    break;
+                }
+
+                //Check for a star map match, but just hold on to it,
+                //if there is a shorter segment match later in a matching
+                //config, then favor over this star map.
+                if (!foundStarMap && starMap && starMap[nameSegment]) {
+                    foundStarMap = starMap[nameSegment];
+                    starI = i;
+                }
+            }
+
+            if (!foundMap && foundStarMap) {
+                foundMap = foundStarMap;
+                foundI = starI;
+            }
+
+            if (foundMap) {
+                nameParts.splice(0, foundI, foundMap);
+                name = nameParts.join('/');
+            }
+        }
+
+        return name;
+    }
+
+    function makeRequire(relName, forceSync) {
+        return function () {
+            //A version of a require function that passes a moduleName
+            //value for items that may need to
+            //look up paths relative to the moduleName
+            return req.apply(undef, aps.call(arguments, 0).concat([relName, forceSync]));
+        };
+    }
+
+    function makeNormalize(relName) {
+        return function (name) {
+            return normalize(name, relName);
+        };
+    }
+
+    function makeLoad(depName) {
+        return function (value) {
+            defined[depName] = value;
+        };
+    }
+
+    function callDep(name) {
+        if (hasProp(waiting, name)) {
+            var args = waiting[name];
+            delete waiting[name];
+            defining[name] = true;
+            main.apply(undef, args);
+        }
+
+        if (!hasProp(defined, name) && !hasProp(defining, name)) {
+            throw new Error('No ' + name);
+        }
+        return defined[name];
+    }
+
+    //Turns a plugin!resource to [plugin, resource]
+    //with the plugin being undefined if the name
+    //did not have a plugin prefix.
+    function splitPrefix(name) {
+        var prefix,
+            index = name ? name.indexOf('!') : -1;
+        if (index > -1) {
+            prefix = name.substring(0, index);
+            name = name.substring(index + 1, name.length);
+        }
+        return [prefix, name];
+    }
+
+    /**
+     * Makes a name map, normalizing the name, and using a plugin
+     * for normalization if necessary. Grabs a ref to plugin
+     * too, as an optimization.
+     */
+    makeMap = function (name, relName) {
+        var plugin,
+            parts = splitPrefix(name),
+            prefix = parts[0];
+
+        name = parts[1];
+
+        if (prefix) {
+            prefix = normalize(prefix, relName);
+            plugin = callDep(prefix);
+        }
+
+        //Normalize according
+        if (prefix) {
+            if (plugin && plugin.normalize) {
+                name = plugin.normalize(name, makeNormalize(relName));
+            } else {
+                name = normalize(name, relName);
+            }
+        } else {
+            name = normalize(name, relName);
+            parts = splitPrefix(name);
+            prefix = parts[0];
+            name = parts[1];
+            if (prefix) {
+                plugin = callDep(prefix);
+            }
+        }
+
+        //Using ridiculous property names for space reasons
+        return {
+            f: prefix ? prefix + '!' + name : name, //fullName
+            n: name,
+            pr: prefix,
+            p: plugin
+        };
+    };
+
+    function makeConfig(name) {
+        return function () {
+            return (config && config.config && config.config[name]) || {};
+        };
+    }
+
+    handlers = {
+        require: function (name) {
+            return makeRequire(name);
+        },
+        exports: function (name) {
+            var e = defined[name];
+            if (typeof e !== 'undefined') {
+                return e;
+            } else {
+                return (defined[name] = {});
+            }
+        },
+        module: function (name) {
+            return {
+                id: name,
+                uri: '',
+                exports: defined[name],
+                config: makeConfig(name)
             };
-
-            if (d === 0) {
-                throw new Error("denominator must not be zero");
-            }
-            if (n === 0) {
-                g = 1;
-            } else {
-                g = gcd(Math.abs(n), Math.abs(d));
-            }
-            if (d < 0) {
-                n = -n;
-                d = -d;
-            }
-            this._numer = n / g;
-            this._denom = d / g;
         }
-        Object.defineProperty(Rational.prototype, "numer", {
-            get: function () {
-                return this._numer;
-            },
-            enumerable: true,
-            configurable: true
-        });
+    };
 
-        Object.defineProperty(Rational.prototype, "denom", {
-            get: function () {
-                return this._denom;
-            },
-            enumerable: true,
-            configurable: true
-        });
+    main = function (name, deps, callback, relName) {
+        var cjsModule, depName, ret, map, i,
+            args = [],
+            callbackType = typeof callback,
+            usingExports;
 
-        Rational.prototype.add = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer + this._denom * rhs, this._denom);
-            } else {
-                return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
-            }
-        };
+        //Use name if no relName
+        relName = relName || name;
 
-        Rational.prototype.sub = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer - this._denom * rhs, this._denom);
-            } else {
-                return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
-            }
-        };
+        //Call the callback to define the module, if necessary.
+        if (callbackType === 'undefined' || callbackType === 'function') {
+            //Pull out the defined dependencies and pass the ordered
+            //values to the callback.
+            //Default to [require, exports, module] if no deps
+            deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
+            for (i = 0; i < deps.length; i += 1) {
+                map = makeMap(deps[i], relName);
+                depName = map.f;
 
-        Rational.prototype.mul = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer * rhs, this._denom);
-            } else {
-                return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
-            }
-        };
-
-        // TODO: div testing
-        Rational.prototype.div = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer, this._denom * rhs);
-            } else {
-                return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
-            }
-        };
-
-        // TODO: isZero testing
-        Rational.prototype.isZero = function () {
-            return this._numer === 0;
-        };
-
-        Rational.prototype.negative = function () {
-            return new Rational(-this._numer, this._denom);
-        };
-
-        // TODO: equals testing
-        Rational.prototype.equals = function (other) {
-            if (other instanceof Rational) {
-                return this._numer * other._denom === this._denom * other._numer;
-            } else {
-                return false;
-            }
-        };
-
-        Rational.prototype.toString = function () {
-            return "" + this._numer + "/" + this._denom;
-        };
-
-        Rational.ONE = new Rational(1, 1);
-        Rational.MINUS_ONE = new Rational(-1, 1);
-        Rational.ZERO = new Rational(0, 1);
-        return Rational;
-    })();
-    Blade.Rational = Rational;
-})(Blade || (Blade = {}));
-/// <reference path="Rational.ts"/>
-var Blade;
-(function (Blade) {
-    var Dimensions = (function () {
-        function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
-            this.L = L;
-            this.T = T;
-            this.Q = Q;
-            this.temperature = temperature;
-            this.amount = amount;
-            this.intensity = intensity;
-            var length = L;
-            var time = T;
-            var charge = Q;
-            if (arguments.length !== 7) {
-                throw {
-                    name: "DimensionError",
-                    message: "Expecting 7 arguments"
-                };
-            }
-            if (typeof theMass === 'number') {
-                this._mass = new Blade.Rational(theMass, 1);
-            } else if (theMass instanceof Blade.Rational) {
-                this._mass = theMass;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "mass must be a Rational or number"
-                };
-            }
-            if (typeof length === 'number') {
-                this.L = new Blade.Rational(length, 1);
-            } else if (length instanceof Blade.Rational) {
-                this.L = length;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "length must be a Rational or number"
-                };
-            }
-            if (typeof time === 'number') {
-                this.T = new Blade.Rational(time, 1);
-            } else if (time instanceof Blade.Rational) {
-                this.T = time;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "time must be a Rational or number"
-                };
-            }
-            if (typeof charge === 'number') {
-                this.Q = new Blade.Rational(charge, 1);
-            } else if (charge instanceof Blade.Rational) {
-                this.Q = charge;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "charge must be a Rational or number"
-                };
-            }
-            if (typeof temperature === 'number') {
-                this.temperature = new Blade.Rational(temperature, 1);
-            } else if (temperature instanceof Blade.Rational) {
-                this.temperature = temperature;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "(thermodynamic) temperature must be a Rational or number"
-                };
-            }
-            if (typeof amount === 'number') {
-                this.amount = new Blade.Rational(amount, 1);
-            } else if (amount instanceof Blade.Rational) {
-                this.amount = amount;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "amount (of substance) must be a Rational or number"
-                };
-            }
-            if (typeof intensity === 'number') {
-                this.intensity = new Blade.Rational(intensity, 1);
-            } else if (intensity instanceof Blade.Rational) {
-                this.intensity = intensity;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "(luminous) intensity must be a Rational or number"
-                };
-            }
-        }
-        Object.defineProperty(Dimensions.prototype, "M", {
-            get: function () {
-                return this._mass;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Dimensions.prototype.compatible = function (rhs) {
-            if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
-                return this;
-            } else {
-                throw {
-                    name: "DimensionError",
-                    message: "Dimensions must be equal (" + this + ", " + rhs + ")"
-                };
-            }
-        };
-
-        Dimensions.prototype.mul = function (rhs) {
-            return new Dimensions(this._mass.add(rhs._mass), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
-        };
-
-        Dimensions.prototype.div = function (rhs) {
-            return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
-        };
-
-        Dimensions.prototype.pow = function (exponent) {
-            return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
-        };
-
-        Dimensions.prototype.dimensionless = function () {
-            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
-        };
-
-        Dimensions.prototype.isZero = function () {
-            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
-        };
-
-        Dimensions.prototype.negative = function () {
-            return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
-        };
-
-        Dimensions.prototype.toString = function () {
-            var stringify = function (rational, label) {
-                if (rational.numer === 0) {
-                    return null;
-                } else if (rational.denom === 1) {
-                    if (rational.numer === 1) {
-                        return "" + label;
-                    } else {
-                        return "" + label + " ** " + rational.numer;
-                    }
+                //Fast path CommonJS standard dependencies.
+                if (depName === "require") {
+                    args[i] = handlers.require(name);
+                } else if (depName === "exports") {
+                    //CommonJS module spec 1.1
+                    args[i] = handlers.exports(name);
+                    usingExports = true;
+                } else if (depName === "module") {
+                    //CommonJS module spec 1.1
+                    cjsModule = args[i] = handlers.module(name);
+                } else if (hasProp(defined, depName) ||
+                           hasProp(waiting, depName) ||
+                           hasProp(defining, depName)) {
+                    args[i] = callDep(depName);
+                } else if (map.p) {
+                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
+                    args[i] = defined[depName];
                 } else {
+                    throw new Error(name + ' missing ' + depName);
                 }
-                return "" + label + " ** " + rational;
-            };
-
-            return [stringify(this._mass, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function (x) {
-                return typeof x === 'string';
-            }).join(" * ");
-        };
-        return Dimensions;
-    })();
-    Blade.Dimensions = Dimensions;
-})(Blade || (Blade = {}));
-/// <reference path="Dimensions.ts"/>
-/// <reference path="Rational.ts"/>
-/// <reference path="Field.ts"/>
-var Blade;
-(function (Blade) {
-    var Unit = (function () {
-        function Unit(scale, dimensions, labels) {
-            this.scale = scale;
-            this.dimensions = dimensions;
-            this.labels = labels;
-            if (labels.length !== 7) {
-                throw new Error("Expecting 7 elements in the labels array.");
             }
-            this.scale = scale;
-            this.dimensions = dimensions;
-            this.labels = labels;
+
+            ret = callback ? callback.apply(defined[name], args) : undefined;
+
+            if (name) {
+                //If setting exports via "module" is in play,
+                //favor that over return value and exports. After that,
+                //favor a non-undefined return value over exports use.
+                if (cjsModule && cjsModule.exports !== undef &&
+                        cjsModule.exports !== defined[name]) {
+                    defined[name] = cjsModule.exports;
+                } else if (ret !== undef || !usingExports) {
+                    //Use the return value from the function.
+                    defined[name] = ret;
+                }
+            }
+        } else if (name) {
+            //May just be an object definition for the module. Only
+            //worry about defining if have a module name.
+            defined[name] = callback;
         }
-        Unit.prototype.compatible = function (rhs) {
-            var dimensions;
+    };
 
-            if (rhs instanceof Unit) {
-                dimensions = this.dimensions.compatible(rhs.dimensions);
-                return this;
-            } else {
-                throw new Error("Illegal Argument for Unit.compatible: " + rhs);
+    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
+        if (typeof deps === "string") {
+            if (handlers[deps]) {
+                //callback in this case is really relName
+                return handlers[deps](callback);
             }
-        };
-
-        Unit.prototype.add = function (rhs) {
-            if (rhs instanceof Unit) {
-                return new Unit(this.scale + rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
-            } else {
-                throw new Error("Illegal Argument for Unit.add: " + rhs);
+            //Just return the module wanted. In this scenario, the
+            //deps arg is the module name, and second arg (if passed)
+            //is just the relName.
+            //Normalize module name, if it contains . or ..
+            return callDep(makeMap(deps, callback).f);
+        } else if (!deps.splice) {
+            //deps is a config object, not an array.
+            config = deps;
+            if (config.deps) {
+                req(config.deps, config.callback);
             }
-        };
-
-        Unit.prototype.sub = function (rhs) {
-            if (rhs instanceof Unit) {
-                return new Unit(this.scale - rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
-            } else {
-                throw new Error("Illegal Argument for Unit.sub: " + rhs);
+            if (!callback) {
+                return;
             }
-        };
 
-        Unit.prototype.mul = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Unit(this.scale * rhs, this.dimensions, this.labels);
-            } else if (rhs instanceof Unit) {
-                return new Unit(this.scale * rhs.scale, this.dimensions.mul(rhs.dimensions), this.labels);
+            if (callback.splice) {
+                //callback is an array, which means it is a dependency list.
+                //Adjust args if there are dependencies
+                deps = callback;
+                callback = relName;
+                relName = null;
             } else {
-                throw new Error("Illegal Argument for mul: " + rhs);
-            }
-        };
-
-        Unit.prototype.div = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Unit(this.scale / rhs, this.dimensions, this.labels);
-            } else if (rhs instanceof Unit) {
-                return new Unit(this.scale / rhs.scale, this.dimensions.div(rhs.dimensions), this.labels);
-            } else {
-                throw new Error("Illegal Argument for div: " + rhs);
-            }
-        };
-
-        Unit.prototype.pow = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
-            } else {
-                throw new Error("Illegal Argument for div: " + rhs);
-            }
-        };
-
-        Unit.prototype.inverse = function () {
-            return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
-        };
-
-        Unit.prototype.toString = function () {
-            var operatorStr;
-            var scaleString;
-            var unitsString;
-            var stringify = function (rational, label) {
-                if (rational.numer === 0) {
-                    return null;
-                } else if (rational.denom === 1) {
-                    if (rational.numer === 1) {
-                        return "" + label;
-                    } else {
-                        return "" + label + " ** " + rational.numer;
-                    }
-                } else {
-                }
-                return "" + label + " ** " + rational;
-            };
-
-            operatorStr = this.scale === 1 || this.dimensions.isZero() ? "" : " ";
-            scaleString = this.scale === 1 ? "" : "" + this.scale;
-            unitsString = [stringify(this.dimensions.M, this.labels[0]), stringify(this.dimensions.L, this.labels[1]), stringify(this.dimensions.T, this.labels[2]), stringify(this.dimensions.Q, this.labels[3]), stringify(this.dimensions.temperature, this.labels[4]), stringify(this.dimensions.amount, this.labels[5]), stringify(this.dimensions.intensity, this.labels[6])].filter(function (x) {
-                return typeof x === 'string';
-            }).join(" ");
-            return "" + scaleString + operatorStr + unitsString;
-        };
-        return Unit;
-    })();
-    Blade.Unit = Unit;
-})(Blade || (Blade = {}));
-/// <reference path="Field.ts"/>
-/// <reference path="GeometricQuantity.ts"/>
-/// <reference path="Unit.ts"/>
-var Blade;
-(function (Blade) {
-    var Measure = (function () {
-        function Measure(quantity, uom) {
-            if (uom.scale === 1) {
-                this.quantity = quantity;
-                this.uom = uom;
-            } else {
-                this.quantity = quantity.mul(uom.scale);
-                this.uom = new Blade.Unit(1, uom.dimensions, uom.labels);
+                deps = undef;
             }
         }
-        Measure.prototype.add = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
-            } else {
-                throw new Error("Measure.add(rhs): rhs must be a Measure.");
-            }
-        };
 
-        Measure.prototype.sub = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.sub(rhs.quantity), this.uom.compatible(rhs.uom));
-            } else {
-                throw new Error("Measure.sub(rhs): rhs must be a Measure.");
-            }
-        };
+        //Support require(['a'])
+        callback = callback || function () {};
 
-        Measure.prototype.mul = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.mul(rhs.quantity), this.uom.mul(rhs.uom));
-            } else if (rhs instanceof Blade.Unit) {
-                return new Measure(this.quantity, this.uom.mul(rhs));
-            } else if (typeof rhs === 'number') {
-                return new Measure(this.quantity.mul(rhs), this.uom);
-            } else {
-                throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
-            }
-        };
+        //If relName is a function, it is an errback handler,
+        //so remove it.
+        if (typeof relName === 'function') {
+            relName = forceSync;
+            forceSync = alt;
+        }
 
-        Measure.prototype.div = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.div(rhs.quantity), this.uom.div(rhs.uom));
-            } else if (rhs instanceof Blade.Unit) {
-                return new Measure(this.quantity, this.uom.div(rhs));
-            } else if (typeof rhs === 'number') {
-                return new Measure(this.quantity.div(rhs), this.uom);
-            } else {
-                throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number]");
-            }
-        };
+        //Simulate async callback;
+        if (forceSync) {
+            main(undef, deps, callback, relName);
+        } else {
+            //Using a non-zero value because of concern for what old browsers
+            //do, and latest browsers "upgrade" to 4 if lower value is used:
+            //http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout:
+            //If want a value immediately, use require('id') instead -- something
+            //that works in almond on the global level, but not guaranteed and
+            //unlikely to work in other AMD implementations.
+            setTimeout(function () {
+                main(undef, deps, callback, relName);
+            }, 4);
+        }
 
-        Measure.prototype.wedge = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
-            } else {
-                throw new Error("Measure.wedge(rhs): rhs must be a Measure");
-            }
-        };
+        return req;
+    };
 
-        Measure.prototype.lshift = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
-            } else {
-                throw new Error("Measure.lshift(rhs): rhs must be a Measure");
-            }
-        };
+    /**
+     * Just drops the config on the floor, but returns req in case
+     * the config return value is used.
+     */
+    req.config = function (cfg) {
+        return req(cfg);
+    };
 
-        Measure.prototype.rshift = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
-            } else {
-                throw new Error("Measure.rshift(rhs): rhs must be a Measure");
-            }
-        };
+    /**
+     * Expose module registry for debugging and tooling
+     */
+    requirejs._defined = defined;
 
-        Measure.prototype.norm = function () {
-            return null;
-        };
+    define = function (name, deps, callback) {
 
-        Measure.prototype.quad = function () {
-            return null;
-        };
+        //This module may not have dependencies
+        if (!deps.splice) {
+            //deps is not an array, so probably means
+            //an object literal or factory function for
+            //the value. Adjust args.
+            callback = deps;
+            deps = [];
+        }
 
-        Measure.prototype.toString = function () {
-            return "" + this.quantity + " " + this.uom;
-        };
-        return Measure;
-    })();
-    Blade.Measure = Measure;
-})(Blade || (Blade = {}));
-/// <reference path="GeometricQuantity.ts"/>
-var Blade;
-(function (Blade) {
+        if (!hasProp(defined, name) && !hasProp(waiting, name)) {
+            waiting[name] = [name, deps, callback];
+        }
+    };
+
+    define.amd = {
+        jQuery: true
+    };
+}());
+
+define("../vendor/almond/almond", function(){});
+
+define('blade/core',["require", "exports"], function(require, exports) {
+    var blade = {
+        VERSION: '0.0.1'
+    };
+
+    
+    return blade;
+});
+
+define('blade/Euclidean2',["require", "exports"], function(require, exports) {
     var Euclidean2 = (function () {
         function Euclidean2(w, x, y, xy) {
             this.w = w || 0;
@@ -729,7 +680,6 @@ var Blade;
         };
         return Euclidean2;
     })();
-    Blade.Euclidean2 = Euclidean2;
     function add00(a00, a01, a10, a11, b00, b01, b10, b11) {
         a00 = +a00;
         a01 = +a01;
@@ -1069,10 +1019,11 @@ var Blade;
             return new Euclidean2(x00, x01, x10, x11);
         }
     };
-})(Blade || (Blade = {}));
-/// <reference path="GeometricQuantity.ts"/>
-var Blade;
-(function (Blade) {
+    
+    return Euclidean2;
+});
+
+define('blade/Euclidean3',["require", "exports"], function(require, exports) {
     var Euclidean3 = (function () {
         function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
             this.w = w || 0;
@@ -1262,7 +1213,6 @@ var Blade;
         };
         return Euclidean3;
     })();
-    Blade.Euclidean3 = Euclidean3;
     var compute = function (f, a, b, coord, pack) {
         var a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, x0, x1, x2, x3, x4, x5, x6, x7;
 
@@ -1422,6 +1372,7 @@ var Blade;
         }
         return +x;
     }
+
     function mulE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
@@ -1487,6 +1438,7 @@ var Blade;
         }
         return +x;
     }
+
     function extE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
@@ -1552,6 +1504,7 @@ var Blade;
         }
         return +x;
     }
+
     function lcoE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
@@ -1617,6 +1570,7 @@ var Blade;
         }
         return +x;
     }
+
     function rcoE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
@@ -1682,6 +1636,7 @@ var Blade;
         }
         return +x;
     }
+
     var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, dst) {
         var c000, c001, c010, c011, c100, c101, c110, c111, i000, i001, i010, i011, i100, i101, i110, i111, k000, m000, m001, m010, m011, m100, m101, m110, m111, r000, r001, r010, r011, r100, r101, r110, r111, s000, s001, s010, s011, s100, s101, s110, s111, w, x, x000, x001, x010, x011, x100, x101, x110, x111, xy, xyz, y, yz, z, zx;
 
@@ -1755,6 +1710,7 @@ var Blade;
             return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
         }
     };
+
     function stringFromCoordinates(coordinates, labels) {
         var i, _i, _ref;
         var str;
@@ -1791,48 +1747,555 @@ var Blade;
         }
         return str;
     }
-})(Blade || (Blade = {}));
-/// <reference path="Rational.ts"/>
-/// <reference path="Dimensions.ts"/>
-/// <reference path="Unit.ts"/>
-/// <reference path="Measure.ts"/>
-/// <reference path="Euclidean2.ts"/>
-/// <reference path="Euclidean3.ts"/>
-/// <reference path="Field.ts"/>
-/// <reference path="GeometricQuantity.ts"/>
-var Blade;
-(function (Blade) {
+    
+    return Euclidean3;
+});
+
+define('blade/Rational',["require", "exports"], function(require, exports) {
+    var Rational = (function () {
+        function Rational(n, d) {
+            var g;
+
+            var gcd = function (a, b) {
+                var temp;
+
+                if (a < 0) {
+                    a = -a;
+                }
+                if (b < 0) {
+                    b = -b;
+                }
+                if (b > a) {
+                    temp = a;
+                    a = b;
+                    b = temp;
+                }
+                while (true) {
+                    a %= b;
+                    if (a === 0) {
+                        return b;
+                    }
+                    b %= a;
+                    if (b === 0) {
+                        return a;
+                    }
+                }
+            };
+
+            if (d === 0) {
+                throw new Error("denominator must not be zero");
+            }
+            if (n === 0) {
+                g = 1;
+            } else {
+                g = gcd(Math.abs(n), Math.abs(d));
+            }
+            if (d < 0) {
+                n = -n;
+                d = -d;
+            }
+            this._numer = n / g;
+            this._denom = d / g;
+        }
+        Object.defineProperty(Rational.prototype, "numer", {
+            get: function () {
+                return this._numer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Rational.prototype, "denom", {
+            get: function () {
+                return this._denom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Rational.prototype.add = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Rational(this._numer + this._denom * rhs, this._denom);
+            } else {
+                return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
+            }
+        };
+
+        Rational.prototype.sub = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Rational(this._numer - this._denom * rhs, this._denom);
+            } else {
+                return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
+            }
+        };
+
+        Rational.prototype.mul = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Rational(this._numer * rhs, this._denom);
+            } else {
+                return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
+            }
+        };
+
+        Rational.prototype.div = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Rational(this._numer, this._denom * rhs);
+            } else {
+                return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
+            }
+        };
+
+        Rational.prototype.isZero = function () {
+            return this._numer === 0;
+        };
+
+        Rational.prototype.negative = function () {
+            return new Rational(-this._numer, this._denom);
+        };
+
+        Rational.prototype.equals = function (other) {
+            if (other instanceof Rational) {
+                return this._numer * other._denom === this._denom * other._numer;
+            } else {
+                return false;
+            }
+        };
+
+        Rational.prototype.toString = function () {
+            return "" + this._numer + "/" + this._denom;
+        };
+
+        Rational.ONE = new Rational(1, 1);
+        Rational.MINUS_ONE = new Rational(-1, 1);
+        Rational.ZERO = new Rational(0, 1);
+        return Rational;
+    })();
+    
+    return Rational;
+});
+
+define('blade/Dimensions',["require", "exports", 'blade/Rational'], function(require, exports, Rational) {
+    var Dimensions = (function () {
+        function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
+            this.L = L;
+            this.T = T;
+            this.Q = Q;
+            this.temperature = temperature;
+            this.amount = amount;
+            this.intensity = intensity;
+            var length = L;
+            var time = T;
+            var charge = Q;
+            if (arguments.length !== 7) {
+                throw {
+                    name: "DimensionError",
+                    message: "Expecting 7 arguments"
+                };
+            }
+            if (typeof theMass === 'number') {
+                this._mass = new Rational(theMass, 1);
+            } else if (theMass instanceof Rational) {
+                this._mass = theMass;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "mass must be a Rational or number"
+                };
+            }
+            if (typeof length === 'number') {
+                this.L = new Rational(length, 1);
+            } else if (length instanceof Rational) {
+                this.L = length;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "length must be a Rational or number"
+                };
+            }
+            if (typeof time === 'number') {
+                this.T = new Rational(time, 1);
+            } else if (time instanceof Rational) {
+                this.T = time;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "time must be a Rational or number"
+                };
+            }
+            if (typeof charge === 'number') {
+                this.Q = new Rational(charge, 1);
+            } else if (charge instanceof Rational) {
+                this.Q = charge;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "charge must be a Rational or number"
+                };
+            }
+            if (typeof temperature === 'number') {
+                this.temperature = new Rational(temperature, 1);
+            } else if (temperature instanceof Rational) {
+                this.temperature = temperature;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "(thermodynamic) temperature must be a Rational or number"
+                };
+            }
+            if (typeof amount === 'number') {
+                this.amount = new Rational(amount, 1);
+            } else if (amount instanceof Rational) {
+                this.amount = amount;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "amount (of substance) must be a Rational or number"
+                };
+            }
+            if (typeof intensity === 'number') {
+                this.intensity = new Rational(intensity, 1);
+            } else if (intensity instanceof Rational) {
+                this.intensity = intensity;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "(luminous) intensity must be a Rational or number"
+                };
+            }
+        }
+        Object.defineProperty(Dimensions.prototype, "M", {
+            get: function () {
+                return this._mass;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Dimensions.prototype.compatible = function (rhs) {
+            if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
+                return this;
+            } else {
+                throw {
+                    name: "DimensionError",
+                    message: "Dimensions must be equal (" + this + ", " + rhs + ")"
+                };
+            }
+        };
+
+        Dimensions.prototype.mul = function (rhs) {
+            return new Dimensions(this._mass.add(rhs._mass), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
+        };
+
+        Dimensions.prototype.div = function (rhs) {
+            return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
+        };
+
+        Dimensions.prototype.pow = function (exponent) {
+            return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+        };
+
+        Dimensions.prototype.dimensionless = function () {
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+        };
+
+        Dimensions.prototype.isZero = function () {
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+        };
+
+        Dimensions.prototype.negative = function () {
+            return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
+        };
+
+        Dimensions.prototype.toString = function () {
+            var stringify = function (rational, label) {
+                if (rational.numer === 0) {
+                    return null;
+                } else if (rational.denom === 1) {
+                    if (rational.numer === 1) {
+                        return "" + label;
+                    } else {
+                        return "" + label + " ** " + rational.numer;
+                    }
+                } else {
+                }
+                return "" + label + " ** " + rational;
+            };
+
+            return [stringify(this._mass, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function (x) {
+                return typeof x === 'string';
+            }).join(" * ");
+        };
+        return Dimensions;
+    })();
+    
+    return Dimensions;
+});
+
+define('blade/Unit',["require", "exports"], function(require, exports) {
+    var Unit = (function () {
+        function Unit(scale, dimensions, labels) {
+            this.scale = scale;
+            this.dimensions = dimensions;
+            this.labels = labels;
+            if (labels.length !== 7) {
+                throw new Error("Expecting 7 elements in the labels array.");
+            }
+            this.scale = scale;
+            this.dimensions = dimensions;
+            this.labels = labels;
+        }
+        Unit.prototype.compatible = function (rhs) {
+            var dimensions;
+
+            if (rhs instanceof Unit) {
+                dimensions = this.dimensions.compatible(rhs.dimensions);
+                return this;
+            } else {
+                throw new Error("Illegal Argument for Unit.compatible: " + rhs);
+            }
+        };
+
+        Unit.prototype.add = function (rhs) {
+            if (rhs instanceof Unit) {
+                return new Unit(this.scale + rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for Unit.add: " + rhs);
+            }
+        };
+
+        Unit.prototype.sub = function (rhs) {
+            if (rhs instanceof Unit) {
+                return new Unit(this.scale - rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for Unit.sub: " + rhs);
+            }
+        };
+
+        Unit.prototype.mul = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Unit(this.scale * rhs, this.dimensions, this.labels);
+            } else if (rhs instanceof Unit) {
+                return new Unit(this.scale * rhs.scale, this.dimensions.mul(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for mul: " + rhs);
+            }
+        };
+
+        Unit.prototype.div = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Unit(this.scale / rhs, this.dimensions, this.labels);
+            } else if (rhs instanceof Unit) {
+                return new Unit(this.scale / rhs.scale, this.dimensions.div(rhs.dimensions), this.labels);
+            } else {
+                throw new Error("Illegal Argument for div: " + rhs);
+            }
+        };
+
+        Unit.prototype.pow = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
+            } else {
+                throw new Error("Illegal Argument for div: " + rhs);
+            }
+        };
+
+        Unit.prototype.inverse = function () {
+            return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
+        };
+
+        Unit.prototype.toString = function () {
+            var operatorStr;
+            var scaleString;
+            var unitsString;
+            var stringify = function (rational, label) {
+                if (rational.numer === 0) {
+                    return null;
+                } else if (rational.denom === 1) {
+                    if (rational.numer === 1) {
+                        return "" + label;
+                    } else {
+                        return "" + label + " ** " + rational.numer;
+                    }
+                } else {
+                }
+                return "" + label + " ** " + rational;
+            };
+
+            operatorStr = this.scale === 1 || this.dimensions.isZero() ? "" : " ";
+            scaleString = this.scale === 1 ? "" : "" + this.scale;
+            unitsString = [stringify(this.dimensions.M, this.labels[0]), stringify(this.dimensions.L, this.labels[1]), stringify(this.dimensions.T, this.labels[2]), stringify(this.dimensions.Q, this.labels[3]), stringify(this.dimensions.temperature, this.labels[4]), stringify(this.dimensions.amount, this.labels[5]), stringify(this.dimensions.intensity, this.labels[6])].filter(function (x) {
+                return typeof x === 'string';
+            }).join(" ");
+            return "" + scaleString + operatorStr + unitsString;
+        };
+        return Unit;
+    })();
+    
+    return Unit;
+});
+
+define('blade/Measure',["require", "exports", 'blade/Unit'], function(require, exports, Unit) {
+    var Measure = (function () {
+        function Measure(quantity, uom) {
+            if (uom.scale === 1) {
+                this.quantity = quantity;
+                this.uom = uom;
+            } else {
+                this.quantity = quantity.mul(uom.scale);
+                this.uom = new Unit(1, uom.dimensions, uom.labels);
+            }
+        }
+        Measure.prototype.add = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
+            } else {
+                throw new Error("Measure.add(rhs): rhs must be a Measure.");
+            }
+        };
+
+        Measure.prototype.sub = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.sub(rhs.quantity), this.uom.compatible(rhs.uom));
+            } else {
+                throw new Error("Measure.sub(rhs): rhs must be a Measure.");
+            }
+        };
+
+        Measure.prototype.mul = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.mul(rhs.quantity), this.uom.mul(rhs.uom));
+            } else if (rhs instanceof Unit) {
+                return new Measure(this.quantity, this.uom.mul(rhs));
+            } else if (typeof rhs === 'number') {
+                return new Measure(this.quantity.mul(rhs), this.uom);
+            } else {
+                throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
+            }
+        };
+
+        Measure.prototype.div = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.div(rhs.quantity), this.uom.div(rhs.uom));
+            } else if (rhs instanceof Unit) {
+                return new Measure(this.quantity, this.uom.div(rhs));
+            } else if (typeof rhs === 'number') {
+                return new Measure(this.quantity.div(rhs), this.uom);
+            } else {
+                throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number]");
+            }
+        };
+
+        Measure.prototype.wedge = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.wedge(rhs): rhs must be a Measure");
+            }
+        };
+
+        Measure.prototype.lshift = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.lshift(rhs): rhs must be a Measure");
+            }
+        };
+
+        Measure.prototype.rshift = function (rhs) {
+            if (rhs instanceof Measure) {
+                return new Measure(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
+            } else {
+                throw new Error("Measure.rshift(rhs): rhs must be a Measure");
+            }
+        };
+
+        Measure.prototype.norm = function () {
+            return null;
+        };
+
+        Measure.prototype.quad = function () {
+            return null;
+        };
+
+        Measure.prototype.toString = function () {
+            return "" + this.quantity + " " + this.uom;
+        };
+        return Measure;
+    })();
+    
+    return Measure;
+});
+
+define('blade',["require", "exports", 'blade/core', 'blade/Euclidean2', 'blade/Euclidean3', 'blade/Rational', 'blade/Dimensions', 'blade/Unit', 'blade/Measure'], function(require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
 
-    var R0 = Blade.Rational.ZERO;
-    var R1 = Blade.Rational.ONE;
-    var MINUS_ONE = Blade.Rational.MINUS_ONE;
+    var R0 = Rational.ZERO;
+    var R1 = Rational.ONE;
+    var N1 = Rational.MINUS_ONE;
 
-    Blade.UNIT_DIMLESS = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+    var UNIT_DIMLESS = new Unit(1, new Dimensions(R0, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_KILOGRAM = new Blade.Unit(1, new Blade.Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+    var UNIT_KILOGRAM = new Unit(1, new Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_METER = new Blade.Unit(1, new Blade.Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+    var UNIT_METER = new Unit(1, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_SECOND = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R1, R0, R0, R0, R0), UNIT_SYMBOLS);
+    var UNIT_SECOND = new Unit(1, new Dimensions(R0, R0, R1, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_AMPERE = new Blade.Unit(1, new Blade.Dimensions(R0, R0, MINUS_ONE, R1, R0, R0, R0), UNIT_SYMBOLS);
+    var UNIT_AMPERE = new Unit(1, new Dimensions(R0, R0, N1, R1, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_KELVIN = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R0, R0, R1, R0, R0), UNIT_SYMBOLS);
+    var UNIT_KELVIN = new Unit(1, new Dimensions(R0, R0, R0, R0, R1, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_MOLE = new Blade.Unit(1, new Blade.Dimensions(R0, R0, R0, R0, R0, R1, R0), UNIT_SYMBOLS);
+    var UNIT_MOLE = new Unit(1, new Dimensions(R0, R0, R0, R0, R0, R1, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_CANDELA = new Blade.Unit(1, new Blade.Dimensions(0, 0, 0, 0, 0, 0, R1), UNIT_SYMBOLS);
+    var UNIT_CANDELA = new Unit(1, new Dimensions(R0, R0, R0, R0, R0, R0, R1), UNIT_SYMBOLS);
 
-    Blade.UNIT_COULOMB = new Blade.Unit(1, new Blade.Dimensions(0, 0, 0, R1, 0, 0, 0), UNIT_SYMBOLS);
+    var UNIT_COULOMB = new Unit(1, new Dimensions(R0, R0, R0, R1, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_INCH = new Blade.Unit(0.0254, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
+    var UNIT_INCH = new Unit(0.0254, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_FOOT = new Blade.Unit(0.3048, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
+    var UNIT_FOOT = new Unit(0.3048, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_YARD = new Blade.Unit(0.9144, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
+    var UNIT_YARD = new Unit(0.9144, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_MILE = new Blade.Unit(1609.344, new Blade.Dimensions(0, R1, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
+    var UNIT_MILE = new Unit(1609.344, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 
-    Blade.UNIT_POUND = new Blade.Unit(0.45359237, new Blade.Dimensions(R1, 0, 0, 0, 0, 0, 0), UNIT_SYMBOLS);
-})(Blade || (Blade = {}));
+    var UNIT_POUND = new Unit(0.45359237, new Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+
+    var blade = {
+        'VERSION': core.VERSION,
+        Euclidean2: Euclidean2,
+        Euclidean3: Euclidean3,
+        Rational: Rational,
+        Dimensions: Dimensions,
+        Unit: Unit,
+        Measure: Measure,
+        UNIT_DIMLESS: UNIT_DIMLESS,
+        UNIT_KILOGRAM: UNIT_KILOGRAM,
+        UNIT_METER: UNIT_METER,
+        UNIT_SECOND: UNIT_SECOND,
+        UNIT_AMPERE: UNIT_AMPERE,
+        UNIT_KELVIN: UNIT_KELVIN,
+        UNIT_MOLE: UNIT_MOLE,
+        UNIT_CANDELA: UNIT_CANDELA,
+        UNIT_COULOMB: UNIT_COULOMB,
+        UNIT_INCH: UNIT_INCH,
+        UNIT_FOOT: UNIT_FOOT,
+        UNIT_YARD: UNIT_YARD,
+        UNIT_MILE: UNIT_MILE,
+        UNIT_POUND: UNIT_POUND
+    };
+    
+    return blade;
+});
+
+  var library = require('blade');
+  if(typeof module !== 'undefined' && module.exports) {
+    module.exports = library;
+  } else if(globalDefine) {
+    (function (define) {
+      define(function () { return library; });
+    }(globalDefine));
+  } else {
+    global['blade'] = library;
+  }
+}(this));

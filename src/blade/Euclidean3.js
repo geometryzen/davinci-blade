@@ -1,15 +1,6 @@
-/// <reference path="GeometricQuantity.ts"/>
-module Blade {
-    export class Euclidean3 implements GeometricQuantity<Euclidean3> {
-        public w: number;
-        public x: number;
-        public y: number;
-        public z: number;
-        public xy: number;
-        public yz: number;
-        public zx: number;
-        public xyz: number;
-        constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number) {
+define(["require", "exports"], function(require, exports) {
+    var Euclidean3 = (function () {
+        function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
             this.w = w || 0;
             this.x = x || 0;
             this.y = y || 0;
@@ -19,16 +10,15 @@ module Blade {
             this.zx = zx || 0;
             this.xyz = xyz || 0;
         }
-
-        static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number): Euclidean3 {
+        Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz) {
             return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
-        }
+        };
 
-        coordinates(): number[] {
+        Euclidean3.prototype.coordinates = function () {
             return [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz];
-        }
+        };
 
-        coordinate(index: number): number {
+        Euclidean3.prototype.coordinate = function (index) {
             switch (index) {
                 case 0:
                     return this.w;
@@ -49,93 +39,93 @@ module Blade {
                 default:
                     throw new Error("index must be in the range [0..7]");
             }
-        }
+        };
 
-        add(rhs: Euclidean3): Euclidean3 {
+        Euclidean3.prototype.add = function (rhs) {
             var coord, pack;
 
-            coord = function(x: number[], n: number): number {
+            coord = function (x, n) {
                 return x[n];
             };
-            pack = function(w, x, y, z, xy, yz, zx, xyz) {
+            pack = function (w, x, y, z, xy, yz, zx, xyz) {
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(addE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
-        }
+        };
 
-        sub(rhs: Euclidean3): Euclidean3 {
+        Euclidean3.prototype.sub = function (rhs) {
             var coord, pack;
 
-            coord = function(x, n) {
+            coord = function (x, n) {
                 return x[n];
             };
-            pack = function(w, x, y, z, xy, yz, zx, xyz) {
+            pack = function (w, x, y, z, xy, yz, zx, xyz) {
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(subE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
-        }
+        };
 
-        mul(rhs: any): Euclidean3 {
+        Euclidean3.prototype.mul = function (rhs) {
             var coord, pack;
 
             if (typeof rhs === 'number') {
                 return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
             } else {
-                coord = function(x, n) {
+                coord = function (x, n) {
                     return x[n];
                 };
-                pack = function(w, x, y, z, xy, yz, zx, xyz) {
+                pack = function (w, x, y, z, xy, yz, zx, xyz) {
                     return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
                 };
                 return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
             }
-        }
+        };
 
-        div(rhs: any): Euclidean3 {
+        Euclidean3.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs);
             } else {
                 return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, void 0);
             }
-        }
+        };
 
-        wedge(rhs: Euclidean3): Euclidean3 {
+        Euclidean3.prototype.wedge = function (rhs) {
             var coord, pack;
 
-            coord = function(x, n) {
+            coord = function (x, n) {
                 return x[n];
             };
-            pack = function(w, x, y, z, xy, yz, zx, xyz) {
+            pack = function (w, x, y, z, xy, yz, zx, xyz) {
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(extE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
-        }
+        };
 
-        lshift(rhs: Euclidean3): Euclidean3 {
+        Euclidean3.prototype.lshift = function (rhs) {
             var coord, pack;
 
-            coord = function(x, n) {
+            coord = function (x, n) {
                 return x[n];
             };
-            pack = function(w, x, y, z, xy, yz, zx, xyz) {
+            pack = function (w, x, y, z, xy, yz, zx, xyz) {
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(lcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
-        }
+        };
 
-        rshift(rhs: Euclidean3): Euclidean3 {
+        Euclidean3.prototype.rshift = function (rhs) {
             var coord, pack;
 
-            coord = function(x, n) {
+            coord = function (x, n) {
                 return x[n];
             };
-            pack = function(w, x, y, z, xy, yz, zx, xyz) {
+            pack = function (w, x, y, z, xy, yz, zx, xyz) {
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(rcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
-        }
+        };
 
-        grade(index: number): Euclidean3 {
+        Euclidean3.prototype.grade = function (index) {
             switch (index) {
                 case 0:
                     return Euclidean3.fromCartesian(this.w, 0, 0, 0, 0, 0, 0, 0);
@@ -148,13 +138,13 @@ module Blade {
                 default:
                     return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, 0);
             }
-        }
+        };
 
-        dot(vector: Euclidean3): number {
+        Euclidean3.prototype.dot = function (vector) {
             return this.x * vector.x + this.y * vector.y + this.z * vector.z;
-        }
+        };
 
-        cross(vector: Euclidean3): Euclidean3 {
+        Euclidean3.prototype.cross = function (vector) {
             var x, x1, x2, y, y1, y2, z, z1, z2;
 
             x1 = this.x;
@@ -167,37 +157,38 @@ module Blade {
             y = z1 * x2 - x1 * z2;
             z = x1 * y2 - y1 * x2;
             return new Euclidean3(0, x, y, z, 0, 0, 0, 0);
-        }
+        };
 
-        length() {
+        Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
-        }
+        };
 
-        norm() {
+        Euclidean3.prototype.norm = function () {
             return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
-        }
+        };
 
-        quad() {
+        Euclidean3.prototype.quad = function () {
             return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
-        }
+        };
 
-        sqrt() {
+        Euclidean3.prototype.sqrt = function () {
             return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);
-        }
+        };
 
-        toString() {
+        Euclidean3.prototype.toString = function () {
             return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
-        }
+        };
 
-        toStringIJK() {
+        Euclidean3.prototype.toStringIJK = function () {
             return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "i", "j", "k", "ij", "jk", "ki", "I"]);
-        }
+        };
 
-        toStringLATEX() {
+        Euclidean3.prototype.toStringLATEX = function () {
             return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e_{1}", "e_{2}", "e_{3}", "e_{12}", "e_{23}", "e_{31}", "e_{123}"]);
-        }
-    }
-    var compute = function(f, a: number[], b: number[], coord, pack): Euclidean3 {
+        };
+        return Euclidean3;
+    })();
+    var compute = function (f, a, b, coord, pack) {
         var a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, x0, x1, x2, x3, x4, x5, x6, x7;
 
         a0 = coord(a, 0);
@@ -225,8 +216,8 @@ module Blade {
         x6 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 6);
         x7 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 7);
         return pack(x0, x1, x2, x3, x4, x5, x6, x7);
-    }
-  function addE3(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number, b0: number, b1: number, b2: number, b3: number, b4: number, b5: number, b6: number, b7: number, index: number): number {
+    };
+    function addE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -246,44 +237,52 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 + b0);
-            }
+            case 0:
+                 {
+                    x = +(a0 + b0);
+                }
                 break;
-            case 1: {
-                x = +(a1 + b1);
-            }
+            case 1:
+                 {
+                    x = +(a1 + b1);
+                }
                 break;
-            case 2: {
-                x = +(a2 + b2);
-            }
+            case 2:
+                 {
+                    x = +(a2 + b2);
+                }
                 break;
-            case 3: {
-                x = +(a3 + b3);
-            }
+            case 3:
+                 {
+                    x = +(a3 + b3);
+                }
                 break;
-            case 4: {
-                x = +(a4 + b4);
-            }
+            case 4:
+                 {
+                    x = +(a4 + b4);
+                }
                 break;
-            case 5: {
-                x = +(a5 + b5);
-            }
+            case 5:
+                 {
+                    x = +(a5 + b5);
+                }
                 break;
-            case 6: {
-                x = +(a6 + b6);
-            }
+            case 6:
+                 {
+                    x = +(a6 + b6);
+                }
                 break;
-            case 7: {
-                x = +(a7 + b7);
-            }
+            case 7:
+                 {
+                    x = +(a7 + b7);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function subE3(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number, b0: number, b1: number, b2: number, b3: number, b4: number, b5: number, b6: number, b7: number, index: number): number {
+    function subE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -303,44 +302,53 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 - b0);
-            }
+            case 0:
+                 {
+                    x = +(a0 - b0);
+                }
                 break;
-            case 1: {
-                x = +(a1 - b1);
-            }
+            case 1:
+                 {
+                    x = +(a1 - b1);
+                }
                 break;
-            case 2: {
-                x = +(a2 - b2);
-            }
+            case 2:
+                 {
+                    x = +(a2 - b2);
+                }
                 break;
-            case 3: {
-                x = +(a3 - b3);
-            }
+            case 3:
+                 {
+                    x = +(a3 - b3);
+                }
                 break;
-            case 4: {
-                x = +(a4 - b4);
-            }
+            case 4:
+                 {
+                    x = +(a4 - b4);
+                }
                 break;
-            case 5: {
-                x = +(a5 - b5);
-            }
+            case 5:
+                 {
+                    x = +(a5 - b5);
+                }
                 break;
-            case 6: {
-                x = +(a6 - b6);
-            }
+            case 6:
+                 {
+                    x = +(a6 - b6);
+                }
                 break;
-            case 7: {
-                x = +(a7 - b7);
-            }
+            case 7:
+                 {
+                    x = +(a7 - b7);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function mulE3(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number, b0: number, b1: number, b2: number, b3: number, b4: number, b5: number, b6: number, b7: number, index: number): number {
+
+    function mulE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -360,44 +368,53 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
+                }
                 break;
-            case 1: {
-                x = +(a0 * b1 + a1 * b0 - a2 * b4 + a3 * b6 + a4 * b2 - a5 * b7 - a6 * b3 - a7 * b5);
-            }
+            case 1:
+                 {
+                    x = +(a0 * b1 + a1 * b0 - a2 * b4 + a3 * b6 + a4 * b2 - a5 * b7 - a6 * b3 - a7 * b5);
+                }
                 break;
-            case 2: {
-                x = +(a0 * b2 + a1 * b4 + a2 * b0 - a3 * b5 - a4 * b1 + a5 * b3 - a6 * b7 - a7 * b6);
-            }
+            case 2:
+                 {
+                    x = +(a0 * b2 + a1 * b4 + a2 * b0 - a3 * b5 - a4 * b1 + a5 * b3 - a6 * b7 - a7 * b6);
+                }
                 break;
-            case 3: {
-                x = +(a0 * b3 - a1 * b6 + a2 * b5 + a3 * b0 - a4 * b7 - a5 * b2 + a6 * b1 - a7 * b4);
-            }
+            case 3:
+                 {
+                    x = +(a0 * b3 - a1 * b6 + a2 * b5 + a3 * b0 - a4 * b7 - a5 * b2 + a6 * b1 - a7 * b4);
+                }
                 break;
-            case 4: {
-                x = +(a0 * b4 + a1 * b2 - a2 * b1 + a3 * b7 + a4 * b0 - a5 * b6 + a6 * b5 + a7 * b3);
-            }
+            case 4:
+                 {
+                    x = +(a0 * b4 + a1 * b2 - a2 * b1 + a3 * b7 + a4 * b0 - a5 * b6 + a6 * b5 + a7 * b3);
+                }
                 break;
-            case 5: {
-                x = +(a0 * b5 + a1 * b7 + a2 * b3 - a3 * b2 + a4 * b6 + a5 * b0 - a6 * b4 + a7 * b1);
-            }
+            case 5:
+                 {
+                    x = +(a0 * b5 + a1 * b7 + a2 * b3 - a3 * b2 + a4 * b6 + a5 * b0 - a6 * b4 + a7 * b1);
+                }
                 break;
-            case 6: {
-                x = +(a0 * b6 - a1 * b3 + a2 * b7 + a3 * b1 - a4 * b5 + a5 * b4 + a6 * b0 + a7 * b2);
-            }
+            case 6:
+                 {
+                    x = +(a0 * b6 - a1 * b3 + a2 * b7 + a3 * b1 - a4 * b5 + a5 * b4 + a6 * b0 + a7 * b2);
+                }
                 break;
-            case 7: {
-                x = +(a0 * b7 + a1 * b5 + a2 * b6 + a3 * b4 + a4 * b3 + a5 * b1 + a6 * b2 + a7 * b0);
-            }
+            case 7:
+                 {
+                    x = +(a0 * b7 + a1 * b5 + a2 * b6 + a3 * b4 + a4 * b3 + a5 * b1 + a6 * b2 + a7 * b0);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function extE3(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number, b0: number, b1: number, b2: number, b3: number, b4: number, b5: number, b6: number, b7: number, index: number): number {
+
+    function extE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -417,44 +434,53 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0);
+                }
                 break;
-            case 1: {
-                x = +(a0 * b1 + a1 * b0);
-            }
+            case 1:
+                 {
+                    x = +(a0 * b1 + a1 * b0);
+                }
                 break;
-            case 2: {
-                x = +(a0 * b2 + a2 * b0);
-            }
+            case 2:
+                 {
+                    x = +(a0 * b2 + a2 * b0);
+                }
                 break;
-            case 3: {
-                x = +(a0 * b3 + a3 * b0);
-            }
+            case 3:
+                 {
+                    x = +(a0 * b3 + a3 * b0);
+                }
                 break;
-            case 4: {
-                x = +(a0 * b4 + a1 * b2 - a2 * b1 + a4 * b0);
-            }
+            case 4:
+                 {
+                    x = +(a0 * b4 + a1 * b2 - a2 * b1 + a4 * b0);
+                }
                 break;
-            case 5: {
-                x = +(a0 * b5 + a2 * b3 - a3 * b2 + a5 * b0);
-            }
+            case 5:
+                 {
+                    x = +(a0 * b5 + a2 * b3 - a3 * b2 + a5 * b0);
+                }
                 break;
-            case 6: {
-                x = +(a0 * b6 - a1 * b3 + a3 * b1 + a6 * b0);
-            }
+            case 6:
+                 {
+                    x = +(a0 * b6 - a1 * b3 + a3 * b1 + a6 * b0);
+                }
                 break;
-            case 7: {
-                x = +(a0 * b7 + a1 * b5 + a2 * b6 + a3 * b4 + a4 * b3 + a5 * b1 + a6 * b2 + a7 * b0);
-            }
+            case 7:
+                 {
+                    x = +(a0 * b7 + a1 * b5 + a2 * b6 + a3 * b4 + a4 * b3 + a5 * b1 + a6 * b2 + a7 * b0);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function lcoE3(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number, b0: number, b1: number, b2: number, b3: number, b4: number, b5: number, b6: number, b7: number, index: number): number {
+
+    function lcoE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -474,44 +500,53 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
+                }
                 break;
-            case 1: {
-                x = +(a0 * b1 - a2 * b4 + a3 * b6 - a5 * b7);
-            }
+            case 1:
+                 {
+                    x = +(a0 * b1 - a2 * b4 + a3 * b6 - a5 * b7);
+                }
                 break;
-            case 2: {
-                x = +(a0 * b2 + a1 * b4 - a3 * b5 - a6 * b7);
-            }
+            case 2:
+                 {
+                    x = +(a0 * b2 + a1 * b4 - a3 * b5 - a6 * b7);
+                }
                 break;
-            case 3: {
-                x = +(a0 * b3 - a1 * b6 + a2 * b5 - a4 * b7);
-            }
+            case 3:
+                 {
+                    x = +(a0 * b3 - a1 * b6 + a2 * b5 - a4 * b7);
+                }
                 break;
-            case 4: {
-                x = +(a0 * b4 + a3 * b7);
-            }
+            case 4:
+                 {
+                    x = +(a0 * b4 + a3 * b7);
+                }
                 break;
-            case 5: {
-                x = +(a0 * b5 + a1 * b7);
-            }
+            case 5:
+                 {
+                    x = +(a0 * b5 + a1 * b7);
+                }
                 break;
-            case 6: {
-                x = +(a0 * b6 + a2 * b7);
-            }
+            case 6:
+                 {
+                    x = +(a0 * b6 + a2 * b7);
+                }
                 break;
-            case 7: {
-                x = +(a0 * b7);
-            }
+            case 7:
+                 {
+                    x = +(a0 * b7);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    function rcoE3(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number, b0: number, b1: number, b2: number, b3: number, b4: number, b5: number, b6: number, b7: number, index: number): number {
+
+    function rcoE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
         a2 = +a2;
@@ -531,44 +566,53 @@ module Blade {
         index = index | 0;
         var x = 0.0;
         switch (~(~index)) {
-            case 0: {
-                x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
-            }
+            case 0:
+                 {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
+                }
                 break;
-            case 1: {
-                x = +(+ a1 * b0 + a4 * b2 - a6 * b3 - a7 * b5);
-            }
+            case 1:
+                 {
+                    x = +(+a1 * b0 + a4 * b2 - a6 * b3 - a7 * b5);
+                }
                 break;
-            case 2: {
-                x = +(+ a2 * b0 - a4 * b1 + a5 * b3 - a7 * b6);
-            }
+            case 2:
+                 {
+                    x = +(+a2 * b0 - a4 * b1 + a5 * b3 - a7 * b6);
+                }
                 break;
-            case 3: {
-                x = +(+ a3 * b0 - a5 * b2 + a6 * b1 - a7 * b4);
-            }
+            case 3:
+                 {
+                    x = +(+a3 * b0 - a5 * b2 + a6 * b1 - a7 * b4);
+                }
                 break;
-            case 4: {
-                x = +(+ a4 * b0 + a7 * b3);
-            }
+            case 4:
+                 {
+                    x = +(+a4 * b0 + a7 * b3);
+                }
                 break;
-            case 5: {
-                x = +(+ a5 * b0 + a7 * b1);
-            }
+            case 5:
+                 {
+                    x = +(+a5 * b0 + a7 * b1);
+                }
                 break;
-            case 6: {
-                x = +(+ a6 * b0 + a7 * b2);
-            }
+            case 6:
+                 {
+                    x = +(+a6 * b0 + a7 * b2);
+                }
                 break;
-            case 7: {
-                x = +(+ a7 * b0);
-            }
+            case 7:
+                 {
+                    x = +(+a7 * b0);
+                }
                 break;
             default: {
             }
         }
         return +x;
     }
-    var divide = function(a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, dst) {
+
+    var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, dst) {
         var c000, c001, c010, c011, c100, c101, c110, c111, i000, i001, i010, i011, i100, i101, i110, i111, k000, m000, m001, m010, m011, m100, m101, m110, m111, r000, r001, r010, r011, r100, r101, r110, r111, s000, s001, s010, s011, s100, s101, s110, s111, w, x, x000, x001, x010, x011, x100, x101, x110, x111, xy, xyz, y, yz, z, zx;
 
         r000 = +b000;
@@ -641,11 +685,12 @@ module Blade {
             return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
         }
     };
-    function stringFromCoordinates(coordinates: number[], labels: string[]): string {
-        var i: number, _i: number, _ref: number;
-        var str: string;
-        var sb: string[] = [];
-        var append = function(coord: number, label: string): void {
+
+    function stringFromCoordinates(coordinates, labels) {
+        var i, _i, _ref;
+        var str;
+        var sb = [];
+        var append = function (coord, label) {
             var n;
             if (coord !== 0) {
                 if (coord >= 0) {
@@ -677,4 +722,6 @@ module Blade {
         }
         return str;
     }
-}
+    
+    return Euclidean3;
+});

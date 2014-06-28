@@ -27,6 +27,12 @@
   "dependencies":
   {
   },
+  "devDependencies":
+  {
+    "r.js": "~2.1.14",
+    "requirejs": "~2.1.14",
+    "almond": "~0.2.9"
+  },
   "ignore":
   [
     ".settings",
