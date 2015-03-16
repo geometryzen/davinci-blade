@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jslint>
+<file name="amd/blade.js">
+  
+  <issue
+    line="1"
+    char="&lt;anonymous&gt;"
+    evidence="&lt;anonymous&gt; is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 20.511
+    | Effort: 39724
+    | Volume: 1936.8
+    | Vocabulary: 55" />
+  
+</file>
+<file name="amd/blade/Euclidean3.js">
+  
+  <issue
+    line="2"
+    char="compute"
+    evidence="compute is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.730
+    | Effort: 22435
+    | Volume: 1634.1
+    | Vocabulary: 41" />
+  
+  <issue
+    line="30"
+    char="addE3"
+    evidence="addE3 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 20.893
+    | Effort: 19477
+    | Volume: 932.21
+    | Vocabulary: 41" />
+  
+  <issue
+    line="96"
+    char="subE3"
+    evidence="subE3 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 20.893
+    | Effort: 19477
+    | Volume: 932.21
+    | Vocabulary: 41" />
+  
+  <issue
+    line="165"
+    char="mulE3"
+    evidence="mulE3 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 54.107
+    | Effort: 1.1685e+5
+    | Volume: 2159.7
+    | Vocabulary: 43" />
+  
+  <issue
+    line="231"
+    char="extE3"
+    evidence="extE3 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 34.286
+    | Effort: 46511
+    | Volume: 1356.6
+    | Vocabulary: 43" />
+  
+  <issue
+    line="297"
+    char="lcoE3"
+    evidence="lcoE3 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 34.286
+    | Effort: 46511
+    | Volume: 1356.6
+    | Vocabulary: 43" />
+  
+  <issue
+    line="363"
+    char="rcoE3"
+    evidence="rcoE3 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 34.286
+    | Effort: 47813
+    | Volume: 1394.6
+    | Vocabulary: 43" />
+  
+  <issue
+    line="429"
+    char="divide"
+    evidence="divide is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 44.965
+    | Effort: 2.2575e+5
+    | Volume: 5020.6
+    | Vocabulary: 98" />
+  
+  <issue
+    line="502"
+    char="stringFromCoordinates"
+    evidence="stringFromCoordinates is too complicated"
+    reason="Cyclomatic: 5,
+    Halstead: 24.367
+    | Effort: 9503.0
+    | Volume: 390.00
+    | Vocabulary: 32" />
+  
+  <issue
+    line="506"
+    char="append"
+    evidence="append is too complicated"
+    reason="Cyclomatic: 6,
+    Halstead: 12.333
+    | Effort: 3894.6
+    | Volume: 315.78
+    | Vocabulary: 25" />
+  
+  <issue
+    line="580"
+    char="&lt;anonymous&gt;.add"
+    evidence="&lt;anonymous&gt;.add is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22" />
+  
+  <issue
+    line="590"
+    char="&lt;anonymous&gt;.sub"
+    evidence="&lt;anonymous&gt;.sub is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22" />
+  
+  <issue
+    line="600"
+    char="&lt;anonymous&gt;.mul"
+    evidence="&lt;anonymous&gt;.mul is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 27.529
+    | Effort: 16075
+    | Volume: 583.92
+    | Vocabulary: 30" />
+  
+  <issue
+    line="615"
+    char="&lt;anonymous&gt;.div"
+    evidence="&lt;anonymous&gt;.div is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 24.357
+    | Effort: 11877
+    | Volume: 487.60
+    | Vocabulary: 25" />
+  
+  <issue
+    line="623"
+    char="&lt;anonymous&gt;.wedge"
+    evidence="&lt;anonymous&gt;.wedge is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22" />
+  
+  <issue
+    line="633"
+    char="&lt;anonymous&gt;.lshift"
+    evidence="&lt;anonymous&gt;.lshift is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22" />
+  
+  <issue
+    line="643"
+    char="&lt;anonymous&gt;.rshift"
+    evidence="&lt;anonymous&gt;.rshift is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22" />
+  
+  <issue
+    line="653"
+    char="&lt;anonymous&gt;.grade"
+    evidence="&lt;anonymous&gt;.grade is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 12.000
+    | Effort: 4976.7
+    | Volume: 414.73
+    | Vocabulary: 22" />
+  
+  <issue
+    line="670"
+    char="&lt;anonymous&gt;.cross"
+    evidence="&lt;anonymous&gt;.cross is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 14.000
+    | Effort: 4780.1
+    | Volume: 341.43
+    | Vocabulary: 20" />
+  
+  <issue
+    line="686"
+    char="&lt;anonymous&gt;.norm"
+    evidence="&lt;anonymous&gt;.norm is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 9.6923
+    | Effort: 3170.3
+    | Volume: 327.09
+    | Vocabulary: 19" />
+  
+  <issue
+    line="689"
+    char="&lt;anonymous&gt;.quad"
+    evidence="&lt;anonymous&gt;.quad is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 9.0909
+    | Effort: 2654.5
+    | Volume: 292.00
+    | Vocabulary: 16" />
+  
+</file>
+<file name="amd/blade/Euclidean2.js">
+  
+  <issue
+    line="46"
+    char="addE2"
+    evidence="addE2 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 20.313
+    | Effort: 9670.4
+    | Volume: 476.08
+    | Vocabulary: 29" />
+  
+  <issue
+    line="84"
+    char="subE2"
+    evidence="subE2 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 20.313
+    | Effort: 9670.4
+    | Volume: 476.08
+    | Vocabulary: 29" />
+  
+  <issue
+    line="122"
+    char="mulE2"
+    evidence="mulE2 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 34.688
+    | Effort: 25090
+    | Volume: 723.31
+    | Vocabulary: 31" />
+  
+  <issue
+    line="160"
+    char="extE2"
+    evidence="extE2 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 28.125
+    | Effort: 16442
+    | Volume: 584.60
+    | Vocabulary: 31" />
+  
+  <issue
+    line="198"
+    char="lcoE2"
+    evidence="lcoE2 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 28.125
+    | Effort: 16442
+    | Volume: 584.60
+    | Vocabulary: 31" />
+  
+  <issue
+    line="236"
+    char="rcoE2"
+    evidence="rcoE2 is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 30.000
+    | Effort: 18000
+    | Volume: 600.00
+    | Vocabulary: 32" />
+  
+  <issue
+    line="274"
+    char="stringFromCoordinates"
+    evidence="stringFromCoordinates is too complicated"
+    reason="Cyclomatic: 5,
+    Halstead: 24.367
+    | Effort: 9503.0
+    | Volume: 390.00
+    | Vocabulary: 32" />
+  
+  <issue
+    line="278"
+    char="append"
+    evidence="append is too complicated"
+    reason="Cyclomatic: 6,
+    Halstead: 12.333
+    | Effort: 3894.6
+    | Volume: 315.78
+    | Vocabulary: 25" />
+  
+  <issue
+    line="313"
+    char="divide"
+    evidence="divide is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 32.378
+    | Effort: 56409
+    | Volume: 1742.2
+    | Vocabulary: 56" />
+  
+  <issue
+    line="350"
+    char="&lt;anonymous&gt;"
+    evidence="&lt;anonymous&gt; is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 8.7619
+    | Effort: 7486.8
+    | Volume: 854.47
+    | Vocabulary: 25" />
+  
+  <issue
+    line="380"
+    char="Euclidean2.add"
+    evidence="Euclidean2.add is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 10.826
+    | Effort: 5785.2
+    | Volume: 534.38
+    | Vocabulary: 29" />
+  
+  <issue
+    line="401"
+    char="Euclidean2.sub"
+    evidence="Euclidean2.sub is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26" />
+  
+  <issue
+    line="422"
+    char="Euclidean2.mul"
+    evidence="Euclidean2.mul is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26" />
+  
+  <issue
+    line="438"
+    char="&lt;anonymous&gt;.mul"
+    evidence="&lt;anonymous&gt;.mul is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 12.100
+    | Effort: 3469.4
+    | Volume: 286.73
+    | Vocabulary: 26" />
+  
+  <issue
+    line="448"
+    char="&lt;anonymous&gt;.div"
+    evidence="&lt;anonymous&gt;.div is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 17.000
+    | Effort: 4334.9
+    | Volume: 254.99
+    | Vocabulary: 20" />
+  
+  <issue
+    line="456"
+    char="Euclidean2.wedge"
+    evidence="Euclidean2.wedge is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26" />
+  
+  <issue
+    line="477"
+    char="Euclidean2.lshift"
+    evidence="Euclidean2.lshift is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26" />
+  
+  <issue
+    line="498"
+    char="Euclidean2.rshift"
+    evidence="Euclidean2.rshift is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26" />
+  
+  <issue
+    line="519"
+    char="&lt;anonymous&gt;.grade"
+    evidence="&lt;anonymous&gt;.grade is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 8.7000
+    | Effort: 1600.8
+    | Volume: 184.00
+    | Vocabulary: 16" />
+  
+  <issue
+    line="531"
+    char="&lt;anonymous&gt;.norm"
+    evidence="&lt;anonymous&gt;.norm is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.333
+    | Effort: 2725.0
+    | Volume: 204.37
+    | Vocabulary: 17" />
+  
+  <issue
+    line="539"
+    char="&lt;anonymous&gt;.quad"
+    evidence="&lt;anonymous&gt;.quad is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 14.000
+    | Effort: 2451.9
+    | Volume: 175.14
+    | Vocabulary: 14" />
+  
+</file>
+<file name="amd/blade/Dimensions.js">
+  
+  <issue
+    line="2"
+    char="&lt;anonymous&gt;"
+    evidence="&lt;anonymous&gt; is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 8.9444
+    | Effort: 3655.2
+    | Volume: 408.66
+    | Vocabulary: 25" />
+  
+  <issue
+    line="3"
+    char="Dimensions"
+    evidence="Dimensions is too complicated"
+    reason="Cyclomatic: 16,
+    Halstead: 35.414
+    | Effort: 56334
+    | Volume: 1590.7
+    | Vocabulary: 42" />
+  
+  <issue
+    line="111"
+    char="&lt;anonymous&gt;.compatible"
+    evidence="&lt;anonymous&gt;.compatible is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 13.529
+    | Effort: 5854.1
+    | Volume: 432.69
+    | Vocabulary: 27" />
+  
+  <issue
+    line="141"
+    char="stringify"
+    evidence="stringify is too complicated"
+    reason="Cyclomatic: 4,
+    Halstead: 7.6667
+    | Effort: 1377.8
+    | Volume: 179.72
+    | Vocabulary: 15" />
+  
+</file>
+<file name="amd/blade/Unit.js">
+  
+  <issue
+    line="3"
+    char="Unit"
+    evidence="Unit is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 9.7500
+    | Effort: 1596.2
+    | Volume: 163.72
+    | Vocabulary: 14" />
+  
+  <issue
+    line="14"
+    char="&lt;anonymous&gt;.compatible"
+    evidence="&lt;anonymous&gt;.compatible is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 11.000
+    | Effort: 1238.5
+    | Volume: 112.59
+    | Vocabulary: 18" />
+  
+  <issue
+    line="24"
+    char="&lt;anonymous&gt;.add"
+    evidence="&lt;anonymous&gt;.add is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 9.0000
+    | Effort: 1276.0
+    | Volume: 141.78
+    | Vocabulary: 18" />
+  
+  <issue
+    line="32"
+    char="&lt;anonymous&gt;.sub"
+    evidence="&lt;anonymous&gt;.sub is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 10.000
+    | Effort: 1444.3
+    | Volume: 144.43
+    | Vocabulary: 19" />
+  
+  <issue
+    line="40"
+    char="&lt;anonymous&gt;.mul"
+    evidence="&lt;anonymous&gt;.mul is too complicated"
+    reason="Cyclomatic: 3,
+    Halstead: 16.800
+    | Effort: 4045.6
+    | Volume: 240.81
+    | Vocabulary: 22" />
+  
+  <issue
+    line="51"
+    char="&lt;anonymous&gt;.div"
+    evidence="&lt;anonymous&gt;.div is too complicated"
+    reason="Cyclomatic: 3,
+    Halstead: 16.800
+    | Effort: 4045.6
+    | Volume: 240.81
+    | Vocabulary: 22" />
+  
+  <issue
+    line="62"
+    char="&lt;anonymous&gt;.pow"
+    evidence="&lt;anonymous&gt;.pow is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 8.1818
+    | Effort: 1221.9
+    | Volume: 149.34
+    | Vocabulary: 21" />
+  
+  <issue
+    line="73"
+    char="&lt;anonymous&gt;.toString"
+    evidence="&lt;anonymous&gt;.toString is too complicated"
+    reason="Cyclomatic: 3,
+    Halstead: 15.911
+    | Effort: 12362
+    | Volume: 776.95
+    | Vocabulary: 39" />
+  
+  <issue
+    line="77"
+    char="stringify"
+    evidence="stringify is too complicated"
+    reason="Cyclomatic: 4,
+    Halstead: 7.6667
+    | Effort: 1377.8
+    | Volume: 179.72
+    | Vocabulary: 15" />
+  
+</file>
+<file name="amd/blade/Rational.js">
+  
+  <issue
+    line="2"
+    char="&lt;anonymous&gt;"
+    evidence="&lt;anonymous&gt; is too complicated"
+    reason="Cyclomatic: 1,
+    Halstead: 13.688
+    | Effort: 9183.0
+    | Volume: 670.90
+    | Vocabulary: 33" />
+  
+  <issue
+    line="3"
+    char="Rational"
+    evidence="Rational is too complicated"
+    reason="Cyclomatic: 4,
+    Halstead: 16.250
+    | Effort: 5022.3
+    | Volume: 309.07
+    | Vocabulary: 27" />
+  
+  <issue
+    line="5"
+    char="gcd"
+    evidence="gcd is too complicated"
+    reason="Cyclomatic: 7,
+    Halstead: 30.000
+    | Effort: 6212.0
+    | Volume: 207.07
+    | Vocabulary: 15" />
+  
+  <issue
+    line="59"
+    char="&lt;anonymous&gt;.add"
+    evidence="&lt;anonymous&gt;.add is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 18.000
+    | Effort: 3305.2
+    | Volume: 183.62
+    | Vocabulary: 15" />
+  
+  <issue
+    line="67"
+    char="&lt;anonymous&gt;.sub"
+    evidence="&lt;anonymous&gt;.sub is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 18.000
+    | Effort: 3305.2
+    | Volume: 183.62
+    | Vocabulary: 15" />
+  
+  <issue
+    line="75"
+    char="&lt;anonymous&gt;.mul"
+    evidence="&lt;anonymous&gt;.mul is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 12.000
+    | Effort: 1599.1
+    | Volume: 133.26
+    | Vocabulary: 14" />
+  
+  <issue
+    line="84"
+    char="&lt;anonymous&gt;.div"
+    evidence="&lt;anonymous&gt;.div is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 12.000
+    | Effort: 1599.1
+    | Volume: 133.26
+    | Vocabulary: 14" />
+  
+</file>
+<file name="amd/blade/Measure.js">
+  
+  <issue
+    line="3"
+    char="Measure"
+    evidence="Measure is too complicated"
+    reason="Cyclomatic: 2,
+    Halstead: 9.7222
+    | Effort: 1672.2
+    | Volume: 172.00
+    | Vocabulary: 16" />
+  
+  <issue
+    line="29"
+    char="&lt;anonymous&gt;.mul"
+    evidence="&lt;anonymous&gt;.mul is too complicated"
+    reason="Cyclomatic: 4,
+    Halstead: 17.000
+    | Effort: 4996.1
+    | Volume: 293.89
+    | Vocabulary: 20" />
+  
+  <issue
+    line="43"
+    char="&lt;anonymous&gt;.div"
+    evidence="&lt;anonymous&gt;.div is too complicated"
+    reason="Cyclomatic: 4,
+    Halstead: 17.000
+    | Effort: 4996.1
+    | Volume: 293.89
+    | Vocabulary: 20" />
+  
+</file>
+<file name="amd/blade/core.js">
+  
+</file>
+<file name="amd/blade/Field.js">
+  
+</file>
+<file name="amd/blade/GeometricQuantity.js">
+  
+</file>
+</jslint>

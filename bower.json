@@ -29,9 +29,11 @@
   },
   "devDependencies":
   {
-    "r.js": "~2.1.14",
-    "requirejs": "~2.1.14",
-    "almond": "~0.2.9"
+    "jasmine": "2.2.1",
+    "almond": "0.3.1",
+    "r.js": "2.1.16",
+    "requirejs": "2.1.16",
+    "jscover": "http://github.com/tntim96/JSCover.git"
   },
   "ignore":
   [

@@ -1,0 +1,33 @@
+{
+    "project": {
+        "name": "davinci-blade",
+        "description": "TypeScript Geometric Physics library.",
+        "version": "0.9.0",
+        "url": "",
+        "logo": "../assets/logo.png"
+    },
+    "files": {
+        "amd/davinci-blade/Euclidean3.js": {
+            "name": "amd/davinci-blade/Euclidean3.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {},
+    "classitems": [
+        {
+            "file": "amd/davinci-blade/Euclidean3.js",
+            "line": 162,
+            "class": ""
+        }
+    ],
+    "warnings": [
+        {
+            "message": "Missing item type",
+            "line": " amd/davinci-blade/Euclidean3.js:162"
+        }
+    ]
+}

@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<checkstyle>
+
+<file name="amd/blade.js">
+  
+  <error
+    line="1"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 20.511
+    | Effort: 39724
+    | Volume: 1936.8
+    | Vocabulary: 55"
+    source="&lt;anonymous&gt;"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/Euclidean3.js">
+  
+  <error
+    line="2"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.730
+    | Effort: 22435
+    | Volume: 1634.1
+    | Vocabulary: 41"
+    source="compute"
+    />
+  
+  <error
+    line="30"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 20.893
+    | Effort: 19477
+    | Volume: 932.21
+    | Vocabulary: 41"
+    source="addE3"
+    />
+  
+  <error
+    line="96"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 20.893
+    | Effort: 19477
+    | Volume: 932.21
+    | Vocabulary: 41"
+    source="subE3"
+    />
+  
+  <error
+    line="165"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 54.107
+    | Effort: 1.1685e+5
+    | Volume: 2159.7
+    | Vocabulary: 43"
+    source="mulE3"
+    />
+  
+  <error
+    line="231"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 34.286
+    | Effort: 46511
+    | Volume: 1356.6
+    | Vocabulary: 43"
+    source="extE3"
+    />
+  
+  <error
+    line="297"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 34.286
+    | Effort: 46511
+    | Volume: 1356.6
+    | Vocabulary: 43"
+    source="lcoE3"
+    />
+  
+  <error
+    line="363"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 34.286
+    | Effort: 47813
+    | Volume: 1394.6
+    | Vocabulary: 43"
+    source="rcoE3"
+    />
+  
+  <error
+    line="429"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 44.965
+    | Effort: 2.2575e+5
+    | Volume: 5020.6
+    | Vocabulary: 98"
+    source="divide"
+    />
+  
+  <error
+    line="502"
+    severity="warning"
+    message="Cyclomatic: 5,
+    Halstead: 24.367
+    | Effort: 9503.0
+    | Volume: 390.00
+    | Vocabulary: 32"
+    source="stringFromCoordinates"
+    />
+  
+  <error
+    line="506"
+    severity="warning"
+    message="Cyclomatic: 6,
+    Halstead: 12.333
+    | Effort: 3894.6
+    | Volume: 315.78
+    | Vocabulary: 25"
+    source="append"
+    />
+  
+  <error
+    line="580"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.add"
+    />
+  
+  <error
+    line="590"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.sub"
+    />
+  
+  <error
+    line="600"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 27.529
+    | Effort: 16075
+    | Volume: 583.92
+    | Vocabulary: 30"
+    source="&lt;anonymous&gt;.mul"
+    />
+  
+  <error
+    line="615"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 24.357
+    | Effort: 11877
+    | Volume: 487.60
+    | Vocabulary: 25"
+    source="&lt;anonymous&gt;.div"
+    />
+  
+  <error
+    line="623"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.wedge"
+    />
+  
+  <error
+    line="633"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.lshift"
+    />
+  
+  <error
+    line="643"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 10.500
+    | Effort: 3277.7
+    | Volume: 312.16
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.rshift"
+    />
+  
+  <error
+    line="653"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 12.000
+    | Effort: 4976.7
+    | Volume: 414.73
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.grade"
+    />
+  
+  <error
+    line="670"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 14.000
+    | Effort: 4780.1
+    | Volume: 341.43
+    | Vocabulary: 20"
+    source="&lt;anonymous&gt;.cross"
+    />
+  
+  <error
+    line="686"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 9.6923
+    | Effort: 3170.3
+    | Volume: 327.09
+    | Vocabulary: 19"
+    source="&lt;anonymous&gt;.norm"
+    />
+  
+  <error
+    line="689"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 9.0909
+    | Effort: 2654.5
+    | Volume: 292.00
+    | Vocabulary: 16"
+    source="&lt;anonymous&gt;.quad"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/Euclidean2.js">
+  
+  <error
+    line="46"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 20.313
+    | Effort: 9670.4
+    | Volume: 476.08
+    | Vocabulary: 29"
+    source="addE2"
+    />
+  
+  <error
+    line="84"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 20.313
+    | Effort: 9670.4
+    | Volume: 476.08
+    | Vocabulary: 29"
+    source="subE2"
+    />
+  
+  <error
+    line="122"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 34.688
+    | Effort: 25090
+    | Volume: 723.31
+    | Vocabulary: 31"
+    source="mulE2"
+    />
+  
+  <error
+    line="160"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 28.125
+    | Effort: 16442
+    | Volume: 584.60
+    | Vocabulary: 31"
+    source="extE2"
+    />
+  
+  <error
+    line="198"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 28.125
+    | Effort: 16442
+    | Volume: 584.60
+    | Vocabulary: 31"
+    source="lcoE2"
+    />
+  
+  <error
+    line="236"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 30.000
+    | Effort: 18000
+    | Volume: 600.00
+    | Vocabulary: 32"
+    source="rcoE2"
+    />
+  
+  <error
+    line="274"
+    severity="warning"
+    message="Cyclomatic: 5,
+    Halstead: 24.367
+    | Effort: 9503.0
+    | Volume: 390.00
+    | Vocabulary: 32"
+    source="stringFromCoordinates"
+    />
+  
+  <error
+    line="278"
+    severity="warning"
+    message="Cyclomatic: 6,
+    Halstead: 12.333
+    | Effort: 3894.6
+    | Volume: 315.78
+    | Vocabulary: 25"
+    source="append"
+    />
+  
+  <error
+    line="313"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 32.378
+    | Effort: 56409
+    | Volume: 1742.2
+    | Vocabulary: 56"
+    source="divide"
+    />
+  
+  <error
+    line="350"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 8.7619
+    | Effort: 7486.8
+    | Volume: 854.47
+    | Vocabulary: 25"
+    source="&lt;anonymous&gt;"
+    />
+  
+  <error
+    line="380"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 10.826
+    | Effort: 5785.2
+    | Volume: 534.38
+    | Vocabulary: 29"
+    source="Euclidean2.add"
+    />
+  
+  <error
+    line="401"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26"
+    source="Euclidean2.sub"
+    />
+  
+  <error
+    line="422"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26"
+    source="Euclidean2.mul"
+    />
+  
+  <error
+    line="438"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 12.100
+    | Effort: 3469.4
+    | Volume: 286.73
+    | Vocabulary: 26"
+    source="&lt;anonymous&gt;.mul"
+    />
+  
+  <error
+    line="448"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 17.000
+    | Effort: 4334.9
+    | Volume: 254.99
+    | Vocabulary: 20"
+    source="&lt;anonymous&gt;.div"
+    />
+  
+  <error
+    line="456"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26"
+    source="Euclidean2.wedge"
+    />
+  
+  <error
+    line="477"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26"
+    source="Euclidean2.lshift"
+    />
+  
+  <error
+    line="498"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.050
+    | Effort: 6992.8
+    | Volume: 535.85
+    | Vocabulary: 26"
+    source="Euclidean2.rshift"
+    />
+  
+  <error
+    line="519"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 8.7000
+    | Effort: 1600.8
+    | Volume: 184.00
+    | Vocabulary: 16"
+    source="&lt;anonymous&gt;.grade"
+    />
+  
+  <error
+    line="531"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.333
+    | Effort: 2725.0
+    | Volume: 204.37
+    | Vocabulary: 17"
+    source="&lt;anonymous&gt;.norm"
+    />
+  
+  <error
+    line="539"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 14.000
+    | Effort: 2451.9
+    | Volume: 175.14
+    | Vocabulary: 14"
+    source="&lt;anonymous&gt;.quad"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/Dimensions.js">
+  
+  <error
+    line="2"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 8.9444
+    | Effort: 3655.2
+    | Volume: 408.66
+    | Vocabulary: 25"
+    source="&lt;anonymous&gt;"
+    />
+  
+  <error
+    line="3"
+    severity="warning"
+    message="Cyclomatic: 16,
+    Halstead: 35.414
+    | Effort: 56334
+    | Volume: 1590.7
+    | Vocabulary: 42"
+    source="Dimensions"
+    />
+  
+  <error
+    line="111"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 13.529
+    | Effort: 5854.1
+    | Volume: 432.69
+    | Vocabulary: 27"
+    source="&lt;anonymous&gt;.compatible"
+    />
+  
+  <error
+    line="141"
+    severity="warning"
+    message="Cyclomatic: 4,
+    Halstead: 7.6667
+    | Effort: 1377.8
+    | Volume: 179.72
+    | Vocabulary: 15"
+    source="stringify"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/Unit.js">
+  
+  <error
+    line="3"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 9.7500
+    | Effort: 1596.2
+    | Volume: 163.72
+    | Vocabulary: 14"
+    source="Unit"
+    />
+  
+  <error
+    line="14"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 11.000
+    | Effort: 1238.5
+    | Volume: 112.59
+    | Vocabulary: 18"
+    source="&lt;anonymous&gt;.compatible"
+    />
+  
+  <error
+    line="24"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 9.0000
+    | Effort: 1276.0
+    | Volume: 141.78
+    | Vocabulary: 18"
+    source="&lt;anonymous&gt;.add"
+    />
+  
+  <error
+    line="32"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 10.000
+    | Effort: 1444.3
+    | Volume: 144.43
+    | Vocabulary: 19"
+    source="&lt;anonymous&gt;.sub"
+    />
+  
+  <error
+    line="40"
+    severity="warning"
+    message="Cyclomatic: 3,
+    Halstead: 16.800
+    | Effort: 4045.6
+    | Volume: 240.81
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.mul"
+    />
+  
+  <error
+    line="51"
+    severity="warning"
+    message="Cyclomatic: 3,
+    Halstead: 16.800
+    | Effort: 4045.6
+    | Volume: 240.81
+    | Vocabulary: 22"
+    source="&lt;anonymous&gt;.div"
+    />
+  
+  <error
+    line="62"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 8.1818
+    | Effort: 1221.9
+    | Volume: 149.34
+    | Vocabulary: 21"
+    source="&lt;anonymous&gt;.pow"
+    />
+  
+  <error
+    line="73"
+    severity="warning"
+    message="Cyclomatic: 3,
+    Halstead: 15.911
+    | Effort: 12362
+    | Volume: 776.95
+    | Vocabulary: 39"
+    source="&lt;anonymous&gt;.toString"
+    />
+  
+  <error
+    line="77"
+    severity="warning"
+    message="Cyclomatic: 4,
+    Halstead: 7.6667
+    | Effort: 1377.8
+    | Volume: 179.72
+    | Vocabulary: 15"
+    source="stringify"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/Rational.js">
+  
+  <error
+    line="2"
+    severity="warning"
+    message="Cyclomatic: 1,
+    Halstead: 13.688
+    | Effort: 9183.0
+    | Volume: 670.90
+    | Vocabulary: 33"
+    source="&lt;anonymous&gt;"
+    />
+  
+  <error
+    line="3"
+    severity="warning"
+    message="Cyclomatic: 4,
+    Halstead: 16.250
+    | Effort: 5022.3
+    | Volume: 309.07
+    | Vocabulary: 27"
+    source="Rational"
+    />
+  
+  <error
+    line="5"
+    severity="warning"
+    message="Cyclomatic: 7,
+    Halstead: 30.000
+    | Effort: 6212.0
+    | Volume: 207.07
+    | Vocabulary: 15"
+    source="gcd"
+    />
+  
+  <error
+    line="59"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 18.000
+    | Effort: 3305.2
+    | Volume: 183.62
+    | Vocabulary: 15"
+    source="&lt;anonymous&gt;.add"
+    />
+  
+  <error
+    line="67"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 18.000
+    | Effort: 3305.2
+    | Volume: 183.62
+    | Vocabulary: 15"
+    source="&lt;anonymous&gt;.sub"
+    />
+  
+  <error
+    line="75"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 12.000
+    | Effort: 1599.1
+    | Volume: 133.26
+    | Vocabulary: 14"
+    source="&lt;anonymous&gt;.mul"
+    />
+  
+  <error
+    line="84"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 12.000
+    | Effort: 1599.1
+    | Volume: 133.26
+    | Vocabulary: 14"
+    source="&lt;anonymous&gt;.div"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/Measure.js">
+  
+  <error
+    line="3"
+    severity="warning"
+    message="Cyclomatic: 2,
+    Halstead: 9.7222
+    | Effort: 1672.2
+    | Volume: 172.00
+    | Vocabulary: 16"
+    source="Measure"
+    />
+  
+  <error
+    line="29"
+    severity="warning"
+    message="Cyclomatic: 4,
+    Halstead: 17.000
+    | Effort: 4996.1
+    | Volume: 293.89
+    | Vocabulary: 20"
+    source="&lt;anonymous&gt;.mul"
+    />
+  
+  <error
+    line="43"
+    severity="warning"
+    message="Cyclomatic: 4,
+    Halstead: 17.000
+    | Effort: 4996.1
+    | Volume: 293.89
+    | Vocabulary: 20"
+    source="&lt;anonymous&gt;.div"
+    />
+  
+</file>
+
+
+
+<file name="amd/blade/core.js">
+  
+</file>
+
+
+
+<file name="amd/blade/Field.js">
+  
+</file>
+
+
+
+<file name="amd/blade/GeometricQuantity.js">
+  
+</file>
+
+
+
+</checkstyle>
