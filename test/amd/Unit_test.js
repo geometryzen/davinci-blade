@@ -1,14 +1,25 @@
+define([
+    'davinci-blade/Rational',
+    'davinci-blade/Dimensions',
+    'davinci-blade/Unit',
+    'davinci-blade'
+], function(
+    Rational,
+    Dimensions,
+    Unit,
+    blade
+) {
 describe("Unit", function() {
     var labels;
     labels = ["kg", "m", "s", "C", "K", "mol", "cd"];
     it("Construction", function() {
       var meter;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
       return expect(meter.scale).toBe(1);
     });
     it("toString", function() {
       var dimensionless;
-      dimensionless = new blade.Unit(1234, new blade.Dimensions(0, 0, 0, 0, 0, 0, 0), labels);
+      dimensionless = new Unit(1234, new Dimensions(0, 0, 0, 0, 0, 0, 0), labels);
       expect(blade.UNIT_DIMLESS.toString()).toBe("");
       expect(blade.UNIT_METER.toString()).toBe("m");
       expect(blade.UNIT_KILOGRAM.toString()).toBe("kg");
@@ -21,7 +32,7 @@ describe("Unit", function() {
     });
     it("mul", function() {
       var angstrom, centimeter, foot, inch, meter, micron, mile, nanometer, yard;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
       centimeter = meter.mul(0.01);
       inch = centimeter.mul(2.54);
       foot = inch.mul(12);
@@ -42,13 +53,13 @@ describe("Unit", function() {
     });
     it("mul by number", function() {
       var meter, yard;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
       return yard = meter.mul(2.54 * 36 / 100);
     });
     it("mul by Unit", function() {
       var areaUnit, meter, second;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
-      second = new blade.Unit(1, new blade.Dimensions(0, 0, 1, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      second = new Unit(1, new Dimensions(0, 0, 1, 0, 0, 0, 0), labels);
       areaUnit = meter.mul(second);
       expect(meter.toString()).toBe("m");
       expect(second.toString()).toBe("s");
@@ -56,15 +67,15 @@ describe("Unit", function() {
     });
     it("div by number", function() {
       var centimeter, meter;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
       centimeter = meter.div(100);
       expect(meter.toString()).toBe("m");
       return expect(centimeter.toString()).toBe("0.01 m");
     });
     it("div by Unit", function() {
       var meter, second, speedUnit;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
-      second = new blade.Unit(1, new blade.Dimensions(0, 0, 1, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      second = new Unit(1, new Dimensions(0, 0, 1, 0, 0, 0, 0), labels);
       speedUnit = meter.div(second);
       expect(meter.toString()).toBe("m");
       expect(second.toString()).toBe("s");
@@ -72,15 +83,15 @@ describe("Unit", function() {
     });
     it("pow by number", function() {
       var meter, radian, square;
-      meter = new blade.Unit(1, new blade.Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
+      meter = new Unit(1, new Dimensions(0, 1, 0, 0, 0, 0, 0), labels);
       square = meter.pow(2);
-      radian = new blade.Unit(1, new blade.Dimensions(0, 0, 0, 0, 0, 0, 0), labels);
+      radian = new Unit(1, new Dimensions(0, 0, 0, 0, 0, 0, 0), labels);
       expect(meter.toString()).toBe("m");
       return expect(square.toString()).toBe("m ** 2");
     });
     return it("inverse", function() {
       var dimensionless;
-      dimensionless = new blade.Unit(1234, new blade.Dimensions(0, 0, 0, 0, 0, 0, 0), labels);
+      dimensionless = new Unit(1234, new Dimensions(0, 0, 0, 0, 0, 0, 0), labels);
       expect(blade.UNIT_DIMLESS.inverse().toString()).toBe("");
       expect(blade.UNIT_METER.inverse().toString()).toBe("m ** -1");
       expect(blade.UNIT_KILOGRAM.inverse().toString()).toBe("kg ** -1");
@@ -91,3 +102,4 @@ describe("Unit", function() {
       return expect(blade.UNIT_CANDELA.inverse().toString()).toBe("cd ** -1");
     });
   });
+});
