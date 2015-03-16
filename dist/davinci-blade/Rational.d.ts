@@ -6,7 +6,7 @@ declare class Rational implements Field<Rational> {
      * The Rational class represents a rational number.
      *
      * @class Rational
-     * @extends Field<Rational>
+     * @extends Field
      * @constructor
      * @param {number} n The numerator.
      * @param {number} d The denominator.

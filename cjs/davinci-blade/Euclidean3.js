@@ -537,13 +537,21 @@ function stringFromCoordinates(coordinates, labels) {
     }
     return str;
 }
-/**
- * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
- *
- * @class Euclidean3
- *
- */
 var Euclidean3 = (function () {
+    /**
+     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
+     *
+     * @class Euclidean3
+     * @constructor
+     * @param {number} w The scalar part of the multivector.
+     * @param {number} x The vector component of the multivector in the x-direction.
+     * @param {number} y The vector component of the multivector in the y-direction.
+     * @param {number} z The vector component of the multivector in the z-direction.
+     * @param {number} xy The bivector component of the multivector in the xy-plane.
+     * @param {number} yz The bivector component of the multivector in the yz-plane.
+     * @param {number} zx The bivector component of the multivector in the zx-plane.
+     * @param {number} xyz The pseudoscalar part of the multivector.
+     */
     function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
         this.w = w || 0;
         this.x = x || 0;
@@ -605,7 +613,7 @@ var Euclidean3 = (function () {
     Euclidean3.prototype.mul = function (rhs) {
         var coord, pack;
         if (typeof rhs === 'number') {
-            return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
+            return this.scalarMultiply(rhs);
         }
         else {
             coord = function (x, n) {
@@ -616,6 +624,9 @@ var Euclidean3 = (function () {
             };
             return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
         }
+    };
+    Euclidean3.prototype.scalarMultiply = function (rhs) {
+        return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
     };
     Euclidean3.prototype.div = function (rhs) {
         if (typeof rhs === 'number') {

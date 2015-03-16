@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.0</em>
+            <em>API Docs for: 0.9.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -86,26 +86,58 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;], function (require, exports, Unit) {
-    /**
-     * A Measure is a composite consisting of a quantity and a unit of measure.
-     *
-     * @class Measure
-     *
-     */
     var Measure = (function () {
+        /**
+         * A Measure is a composite consisting of a quantity and a unit of measure.
+         *
+         * @class Measure
+         * @constructor
+         * @param {QuantityOfMeasure&lt;T&gt;} quantity The &lt;em&gt;quantity&lt;/em&gt; part of the measure.
+         * @param {Unit} uom The unit-of-measure part of the measure.
+         */
         function Measure(quantity, uom) {
             if (uom.scale === 1) {
-                this.quantity = quantity;
-                this.uom = uom;
+                this._quantity = quantity;
+                this._uom = uom;
             }
             else {
-                this.quantity = quantity.mul(uom.scale);
-                this.uom = new Unit(1, uom.dimensions, uom.labels);
+                this._quantity = quantity.scalarMultiply(uom.scale);
+                this._uom = new Unit(1, uom.dimensions, uom.labels);
             }
         }
+        Object.defineProperty(Measure.prototype, &quot;quantity&quot;, {
+            /**
+            * The quantity part of the measure.
+            *
+            * @property quantity
+            * @type {GeometricQuantity&lt;T&gt;}
+            */
+            get: function () {
+                return this._quantity;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Measure.prototype, &quot;uom&quot;, {
+            /**
+            * The unit part of the measure.
+            *
+            * @property uom
+            * @type {Unit}
+            */
+            get: function () {
+                return this._uom;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Measure.prototype.add = function (rhs) {
             if (rhs instanceof Measure) {
-                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
+                var that = rhs;
+                var qthis = this.quantity;
+                var qthat = that.quantity;
+                var qmade = qthis.add(qthat);
+                return new Measure(qmade, this.uom.compatible(that.uom));
             }
             else {
                 throw new Error(&quot;Measure.add(rhs): rhs must be a Measure.&quot;);
@@ -127,11 +159,15 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
                 return new Measure(this.quantity, this.uom.mul(rhs));
             }
             else if (typeof rhs === &#x27;number&#x27;) {
-                return new Measure(this.quantity.mul(rhs), this.uom);
+                var other = rhs;
+                return this.scalarMultiply(other);
             }
             else {
                 throw new Error(&quot;Measure.mul(rhs): rhs must be a [Measure, Unit, number]&quot;);
             }
+        };
+        Measure.prototype.scalarMultiply = function (rhs) {
+            return new Measure(this.quantity.mul(rhs), this.uom);
         };
         Measure.prototype.div = function (rhs) {
             if (rhs instanceof Measure) {

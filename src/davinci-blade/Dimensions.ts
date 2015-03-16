@@ -1,13 +1,20 @@
 import Rational = require('davinci-blade/Rational');
 
-/**
- * The Dimensions class captures the physical dimensions associated with a unit of measure.
- *
- * @class Dimensions
- *
- */
 class Dimensions {
     private _mass: Rational;
+    /**
+     * The Dimensions class captures the physical dimensions associated with a unit of measure.
+     *
+     * @class Dimensions
+     * @constructor
+     * @param {Rational} mass The mass component of the dimensions object.
+     * @param {Rational} length The length component of the dimensions object.
+     * @param {Rational} time The time component of the dimensions object.
+     * @param {Rational} charge The charge component of the dimensions object.
+     * @param {Rational} temperature The temperature component of the dimensions object.
+     * @param {Rational} amount The amount component of the dimensions object.
+     * @param {Rational} intensity The intensity component of the dimensions object.
+     */
     constructor(theMass: any, public L, public T, public Q, public temperature, public amount, public intensity) {
         var length = L;
         var time = T;
@@ -90,6 +97,12 @@ class Dimensions {
         }
     }
 
+    /**
+    * The <em>mass</em> component of this dimensions instance. 
+    * 
+    * @property M
+    * @type {Rational}
+    */
     get M(): Rational {
         return this._mass;
     }
@@ -121,6 +134,12 @@ class Dimensions {
         return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
     }
 
+    /**
+    * Determines whether all the components of the Dimensions instance are zero. 
+    *
+    * @method isZero
+    * @return {boolean} <code>true</code> if all the components are zero, otherwise <code>false</code>.
+    */
     isZero(): boolean {
         return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
     }

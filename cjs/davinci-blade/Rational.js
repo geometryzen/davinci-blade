@@ -3,7 +3,7 @@ var Rational = (function () {
      * The Rational class represents a rational number.
      *
      * @class Rational
-     * @extends Field<Rational>
+     * @extends Field
      * @constructor
      * @param {number} n The numerator.
      * @param {number} d The denominator.

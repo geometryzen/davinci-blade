@@ -2,14 +2,16 @@ import Field = require('davinci-blade/Field');
 import Dimensions = require('davinci-blade/Dimensions');
 import Rational = require('davinci-blade/Rational');
 
-/**
- * The Unit class represents the units for a measure.
- *
- * @class Unit
- *
- */
 class Unit implements Field<Unit> {
-
+    /**
+     * The Unit class represents the units for a measure.
+     *
+     * @class Unit
+     * @constructor
+     * @param {number} scale
+     * @param {Dimensions} dimensions
+     * @param {string[]} labels The label strings to use for each dimension.
+     */
     constructor(public scale: number, public dimensions: Dimensions, public labels: string[]) {
         if (labels.length !== 7) {
             throw new Error("Expecting 7 elements in the labels array.");

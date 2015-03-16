@@ -322,17 +322,21 @@ var divide = function(a00, a01, a10, a11, b00, b01, b10, b11, m) {
     }
 };
 
-/**
- * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
- *
- * @class Euclidean2
- *
- */
 class Euclidean2 implements GeometricQuantity<Euclidean2> {
     public w: number;
     public x: number;
     public y: number;
     public xy: number;
+    /**
+     * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
+     *
+     * @class Euclidean2
+     * @constructor
+     * @param {number} w The scalar part of the multivector.
+     * @param {number} x The vector component of the multivector in the x-direction.
+     * @param {number} y The vector component of the multivector in the y-direction.
+     * @param {number} xy The pseudoscalar part of the multivector.
+     */
     constructor(w: number, x: number, y: number, xy: number) {
         this.w = w || 0;
         this.x = x;
@@ -439,11 +443,15 @@ class Euclidean2 implements GeometricQuantity<Euclidean2> {
         var xs;
 
         if (typeof rhs === 'number') {
-            return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs);
+            return this.scalarMultiply(rhs);
         } else {
             xs = Euclidean2.mul(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         }
+    }
+
+    scalarMultiply(rhs: number): Euclidean2 {
+        return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs);
     }
 
     div(rhs: any): Euclidean2 {

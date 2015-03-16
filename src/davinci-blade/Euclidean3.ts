@@ -1,4 +1,4 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Geometric = require('davinci-blade/Geometric');
 
 var compute = function(f, a: number[], b: number[], coord, pack): Euclidean3 {
     var a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, x0, x1, x2, x3, x4, x5, x6, x7;
@@ -496,13 +496,7 @@ function stringFromCoordinates(coordinates: number[], labels: string[]): string 
     return str;
 }
 
-/**
- * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
- *
- * @class Euclidean3
- *
- */
-class Euclidean3 implements GeometricQuantity<Euclidean3> {
+class Euclidean3 implements Geometric<Euclidean3> {
     public w: number;
     public x: number;
     public y: number;
@@ -511,6 +505,20 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
     public yz: number;
     public zx: number;
     public xyz: number;
+    /**
+     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
+     *
+     * @class Euclidean3
+     * @constructor
+     * @param {number} w The scalar part of the multivector.
+     * @param {number} x The vector component of the multivector in the x-direction.
+     * @param {number} y The vector component of the multivector in the y-direction.
+     * @param {number} z The vector component of the multivector in the z-direction.
+     * @param {number} xy The bivector component of the multivector in the xy-plane.
+     * @param {number} yz The bivector component of the multivector in the yz-plane.
+     * @param {number} zx The bivector component of the multivector in the zx-plane.
+     * @param {number} xyz The pseudoscalar part of the multivector.
+     */
     constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number) {
         this.w = w || 0;
         this.x = x || 0;
@@ -581,7 +589,7 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
         var coord, pack;
 
         if (typeof rhs === 'number') {
-            return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
+            return this.scalarMultiply(rhs);
         } else {
             coord = function(x, n) {
                 return x[n];
@@ -591,6 +599,10 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
             };
             return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
         }
+    }
+
+    scalarMultiply(rhs: number): Euclidean3 {
+        return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
     }
 
     div(rhs: any): Euclidean3 {

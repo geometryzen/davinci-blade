@@ -790,13 +790,17 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             return new Euclidean2(x00, x01, x10, x11);
         }
     };
-    /**
-     * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
-     *
-     * @class Euclidean2
-     *
-     */
     var Euclidean2 = (function () {
+        /**
+         * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
+         *
+         * @class Euclidean2
+         * @constructor
+         * @param {number} w The scalar part of the multivector.
+         * @param {number} x The vector component of the multivector in the x-direction.
+         * @param {number} y The vector component of the multivector in the y-direction.
+         * @param {number} xy The pseudoscalar part of the multivector.
+         */
         function Euclidean2(w, x, y, xy) {
             this.w = w || 0;
             this.x = x;
@@ -887,12 +891,15 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
         Euclidean2.prototype.mul = function (rhs) {
             var xs;
             if (typeof rhs === 'number') {
-                return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs);
+                return this.scalarMultiply(rhs);
             }
             else {
                 xs = Euclidean2.mul(this.coordinates(), rhs.coordinates());
                 return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
             }
+        };
+        Euclidean2.prototype.scalarMultiply = function (rhs) {
+            return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs);
         };
         Euclidean2.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
@@ -1550,13 +1557,21 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
         }
         return str;
     }
-    /**
-     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
-     *
-     * @class Euclidean3
-     *
-     */
     var Euclidean3 = (function () {
+        /**
+         * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
+         *
+         * @class Euclidean3
+         * @constructor
+         * @param {number} w The scalar part of the multivector.
+         * @param {number} x The vector component of the multivector in the x-direction.
+         * @param {number} y The vector component of the multivector in the y-direction.
+         * @param {number} z The vector component of the multivector in the z-direction.
+         * @param {number} xy The bivector component of the multivector in the xy-plane.
+         * @param {number} yz The bivector component of the multivector in the yz-plane.
+         * @param {number} zx The bivector component of the multivector in the zx-plane.
+         * @param {number} xyz The pseudoscalar part of the multivector.
+         */
         function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
             this.w = w || 0;
             this.x = x || 0;
@@ -1618,7 +1633,7 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
         Euclidean3.prototype.mul = function (rhs) {
             var coord, pack;
             if (typeof rhs === 'number') {
-                return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
+                return this.scalarMultiply(rhs);
             }
             else {
                 coord = function (x, n) {
@@ -1629,6 +1644,9 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
                 };
                 return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
             }
+        };
+        Euclidean3.prototype.scalarMultiply = function (rhs) {
+            return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
         };
         Euclidean3.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
@@ -1730,7 +1748,7 @@ define('davinci-blade/Rational',["require", "exports"], function (require, expor
          * The Rational class represents a rational number.
          *
          * @class Rational
-         * @extends Field<Rational>
+         * @extends Field
          * @constructor
          * @param {number} n The numerator.
          * @param {number} d The denominator.
@@ -1880,13 +1898,20 @@ define('davinci-blade/Rational',["require", "exports"], function (require, expor
 });
 
 define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
-    /**
-     * The Dimensions class captures the physical dimensions associated with a unit of measure.
-     *
-     * @class Dimensions
-     *
-     */
     var Dimensions = (function () {
+        /**
+         * The Dimensions class captures the physical dimensions associated with a unit of measure.
+         *
+         * @class Dimensions
+         * @constructor
+         * @param {Rational} mass The mass component of the dimensions object.
+         * @param {Rational} length The length component of the dimensions object.
+         * @param {Rational} time The time component of the dimensions object.
+         * @param {Rational} charge The charge component of the dimensions object.
+         * @param {Rational} temperature The temperature component of the dimensions object.
+         * @param {Rational} amount The amount component of the dimensions object.
+         * @param {Rational} intensity The intensity component of the dimensions object.
+         */
         function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
             this.L = L;
             this.T = T;
@@ -1989,6 +2014,12 @@ define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational
             }
         }
         Object.defineProperty(Dimensions.prototype, "M", {
+            /**
+            * The <em>mass</em> component of this dimensions instance.
+            *
+            * @property M
+            * @type {Rational}
+            */
             get: function () {
                 return this._mass;
             },
@@ -2018,6 +2049,12 @@ define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational
         Dimensions.prototype.dimensionless = function () {
             return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         };
+        /**
+        * Determines whether all the components of the Dimensions instance are zero.
+        *
+        * @method isZero
+        * @return {boolean} <code>true</code> if all the components are zero, otherwise <code>false</code>.
+        */
         Dimensions.prototype.isZero = function () {
             return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         };
@@ -2049,13 +2086,16 @@ define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational
 });
 
 define('davinci-blade/Unit',["require", "exports"], function (require, exports) {
-    /**
-     * The Unit class represents the units for a measure.
-     *
-     * @class Unit
-     *
-     */
     var Unit = (function () {
+        /**
+         * The Unit class represents the units for a measure.
+         *
+         * @class Unit
+         * @constructor
+         * @param {number} scale
+         * @param {Dimensions} dimensions
+         * @param {string[]} labels The label strings to use for each dimension.
+         */
         function Unit(scale, dimensions, labels) {
             this.scale = scale;
             this.dimensions = dimensions;
@@ -2157,26 +2197,58 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
 });
 
 define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
-    /**
-     * A Measure is a composite consisting of a quantity and a unit of measure.
-     *
-     * @class Measure
-     *
-     */
     var Measure = (function () {
+        /**
+         * A Measure is a composite consisting of a quantity and a unit of measure.
+         *
+         * @class Measure
+         * @constructor
+         * @param {QuantityOfMeasure<T>} quantity The <em>quantity</em> part of the measure.
+         * @param {Unit} uom The unit-of-measure part of the measure.
+         */
         function Measure(quantity, uom) {
             if (uom.scale === 1) {
-                this.quantity = quantity;
-                this.uom = uom;
+                this._quantity = quantity;
+                this._uom = uom;
             }
             else {
-                this.quantity = quantity.mul(uom.scale);
-                this.uom = new Unit(1, uom.dimensions, uom.labels);
+                this._quantity = quantity.scalarMultiply(uom.scale);
+                this._uom = new Unit(1, uom.dimensions, uom.labels);
             }
         }
+        Object.defineProperty(Measure.prototype, "quantity", {
+            /**
+            * The quantity part of the measure.
+            *
+            * @property quantity
+            * @type {GeometricQuantity<T>}
+            */
+            get: function () {
+                return this._quantity;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Measure.prototype, "uom", {
+            /**
+            * The unit part of the measure.
+            *
+            * @property uom
+            * @type {Unit}
+            */
+            get: function () {
+                return this._uom;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Measure.prototype.add = function (rhs) {
             if (rhs instanceof Measure) {
-                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
+                var that = rhs;
+                var qthis = this.quantity;
+                var qthat = that.quantity;
+                var qmade = qthis.add(qthat);
+                return new Measure(qmade, this.uom.compatible(that.uom));
             }
             else {
                 throw new Error("Measure.add(rhs): rhs must be a Measure.");
@@ -2198,11 +2270,15 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
                 return new Measure(this.quantity, this.uom.mul(rhs));
             }
             else if (typeof rhs === 'number') {
-                return new Measure(this.quantity.mul(rhs), this.uom);
+                var other = rhs;
+                return this.scalarMultiply(other);
             }
             else {
                 throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
             }
+        };
+        Measure.prototype.scalarMultiply = function (rhs) {
+            return new Measure(this.quantity.mul(rhs), this.uom);
         };
         Measure.prototype.div = function (rhs) {
             if (rhs instanceof Measure) {

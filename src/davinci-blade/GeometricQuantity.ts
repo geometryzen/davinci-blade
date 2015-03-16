@@ -1,11 +1,6 @@
-import Field = require('davinci-blade/Field');
+import Geometric = require('davinci-blade/Geometric');
 
-interface GeometricQuantity<T> extends Field<T> {
-    wedge(rhs: T): T;
-    lshift(rhs: T): T;
-    rshift(rhs: T): T;
-    norm(): T;
-    quad(): T;
+interface GeometricQuantity<T> extends Geometric<T> {
 }
 
 export = GeometricQuantity;

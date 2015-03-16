@@ -1,10 +1,13 @@
-/**
- * The Unit class represents the units for a measure.
- *
- * @class Unit
- *
- */
 var Unit = (function () {
+    /**
+     * The Unit class represents the units for a measure.
+     *
+     * @class Unit
+     * @constructor
+     * @param {number} scale
+     * @param {Dimensions} dimensions
+     * @param {string[]} labels The label strings to use for each dimension.
+     */
     function Unit(scale, dimensions, labels) {
         this.scale = scale;
         this.dimensions = dimensions;

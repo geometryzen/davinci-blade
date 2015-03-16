@@ -1,11 +1,18 @@
 define(["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
-    /**
-     * The Dimensions class captures the physical dimensions associated with a unit of measure.
-     *
-     * @class Dimensions
-     *
-     */
     var Dimensions = (function () {
+        /**
+         * The Dimensions class captures the physical dimensions associated with a unit of measure.
+         *
+         * @class Dimensions
+         * @constructor
+         * @param {Rational} mass The mass component of the dimensions object.
+         * @param {Rational} length The length component of the dimensions object.
+         * @param {Rational} time The time component of the dimensions object.
+         * @param {Rational} charge The charge component of the dimensions object.
+         * @param {Rational} temperature The temperature component of the dimensions object.
+         * @param {Rational} amount The amount component of the dimensions object.
+         * @param {Rational} intensity The intensity component of the dimensions object.
+         */
         function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
             this.L = L;
             this.T = T;
@@ -108,6 +115,12 @@ define(["require", "exports", 'davinci-blade/Rational'], function (require, expo
             }
         }
         Object.defineProperty(Dimensions.prototype, "M", {
+            /**
+            * The <em>mass</em> component of this dimensions instance.
+            *
+            * @property M
+            * @type {Rational}
+            */
             get: function () {
                 return this._mass;
             },
@@ -137,6 +150,12 @@ define(["require", "exports", 'davinci-blade/Rational'], function (require, expo
         Dimensions.prototype.dimensionless = function () {
             return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         };
+        /**
+        * Determines whether all the components of the Dimensions instance are zero.
+        *
+        * @method isZero
+        * @return {boolean} <code>true</code> if all the components are zero, otherwise <code>false</code>.
+        */
         Dimensions.prototype.isZero = function () {
             return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
         };

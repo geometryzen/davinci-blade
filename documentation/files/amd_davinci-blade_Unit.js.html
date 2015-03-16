@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.0</em>
+            <em>API Docs for: 0.9.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -86,13 +86,16 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
-    /**
-     * The Unit class represents the units for a measure.
-     *
-     * @class Unit
-     *
-     */
     var Unit = (function () {
+        /**
+         * The Unit class represents the units for a measure.
+         *
+         * @class Unit
+         * @constructor
+         * @param {number} scale
+         * @param {Dimensions} dimensions
+         * @param {string[]} labels The label strings to use for each dimension.
+         */
         function Unit(scale, dimensions, labels) {
             this.scale = scale;
             this.dimensions = dimensions;
