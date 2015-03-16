@@ -1,4 +1,10 @@
 define(["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
+    /**
+     * The Dimensions class captures the physical dimensions associated with a unit of measure.
+     *
+     * @class Dimensions
+     *
+     */
     var Dimensions = (function () {
         function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
             this.L = L;

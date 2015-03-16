@@ -1,5 +1,11 @@
 import Rational = require('davinci-blade/Rational');
 
+/**
+ * The Dimensions class captures the physical dimensions associated with a unit of measure.
+ *
+ * @class Dimensions
+ *
+ */
 class Dimensions {
     private _mass: Rational;
     constructor(theMass: any, public L, public T, public Q, public temperature, public amount, public intensity) {

@@ -4,6 +4,11 @@ import Rational = require('davinci-blade/Rational');
 import Dimensions = require('davinci-blade/Dimensions');
 import Unit = require('davinci-blade/Unit');
 import Measure = require('davinci-blade/Measure');
+/**
+ * Provides the blade module
+ *
+ * @module blade
+ */
 declare var blade: {
     'VERSION': string;
     Euclidean2: typeof Euclidean2;

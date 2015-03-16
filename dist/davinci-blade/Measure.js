@@ -1,4 +1,10 @@
 define(["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    /**
+     * A Measure is a composite consisting of a quantity and a unit of measure.
+     *
+     * @class Measure
+     *
+     */
     var Measure = (function () {
         function Measure(quantity, uom) {
             if (uom.scale === 1) {

@@ -1,5 +1,14 @@
 define(["require", "exports"], function (require, exports) {
     var Rational = (function () {
+        /**
+         * The Rational class represents a rational number.
+         *
+         * @class Rational
+         * @extends Field<Rational>
+         * @constructor
+         * @param {number} n The numerator.
+         * @param {number} d The denominator.
+         */
         function Rational(n, d) {
             var g;
             var gcd = function (a, b) {
@@ -43,6 +52,12 @@ define(["require", "exports"], function (require, exports) {
             this._denom = d / g;
         }
         Object.defineProperty(Rational.prototype, "numer", {
+            /**
+            * The numerator part of the rational number.
+            *
+            * @property numer
+            * @type {number}
+            */
             get: function () {
                 return this._numer;
             },
@@ -50,12 +65,25 @@ define(["require", "exports"], function (require, exports) {
             configurable: true
         });
         Object.defineProperty(Rational.prototype, "denom", {
+            /**
+            * The denominator part of the rational number.
+            *
+            * @property denom
+            * @type {number}
+            */
             get: function () {
                 return this._denom;
             },
             enumerable: true,
             configurable: true
         });
+        /**
+        * Returns the sum of this rational number and the argument.
+        *
+        * @method add
+        * @param {Number|Rational} rhs The number used on the right hand side of the addition operator.
+        * @return {Rational} The sum of this rational number and the specified argument.
+        */
         Rational.prototype.add = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer + this._denom * rhs, this._denom);
@@ -64,6 +92,13 @@ define(["require", "exports"], function (require, exports) {
                 return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
             }
         };
+        /**
+        * Returns the difference of this rational number and the argument.
+        *
+        * @method sub
+        * @param {Number|Rational} rhs The number used on the right hand side of the subtraction operator.
+        * @return {Rational} The difference of this rational number and the specified argument.
+        */
         Rational.prototype.sub = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer - this._denom * rhs, this._denom);

@@ -496,6 +496,12 @@ function stringFromCoordinates(coordinates: number[], labels: string[]): string 
     return str;
 }
 
+/**
+ * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
+ *
+ * @class Euclidean3
+ *
+ */
 class Euclidean3 implements GeometricQuantity<Euclidean3> {
     public w: number;
     public x: number;

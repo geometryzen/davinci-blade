@@ -1,5 +1,11 @@
 import Field = require('davinci-blade/Field');
 import Dimensions = require('davinci-blade/Dimensions');
+/**
+ * The Unit class represents the units for a measure.
+ *
+ * @class Unit
+ *
+ */
 declare class Unit implements Field<Unit> {
     scale: number;
     dimensions: Dimensions;

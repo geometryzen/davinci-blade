@@ -1,6 +1,12 @@
 import Geometric = require('davinci-blade/GeometricQuantity');
 import Unit = require('davinci-blade/Unit');
 
+/**
+ * A Measure is a composite consisting of a quantity and a unit of measure.
+ *
+ * @class Measure
+ *
+ */
 class Measure<T> implements Geometric<Measure<T>> {
 
     public quantity: any;

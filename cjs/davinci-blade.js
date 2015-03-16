@@ -23,6 +23,11 @@ var UNIT_FOOT = new Unit(0.3048, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNI
 var UNIT_YARD = new Unit(0.9144, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 var UNIT_MILE = new Unit(1609.344, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
 var UNIT_POUND = new Unit(0.45359237, new Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+/**
+ * Provides the blade module
+ *
+ * @module blade
+ */
 var blade = {
     'VERSION': core.VERSION,
     Euclidean2: Euclidean2,
@@ -31,6 +36,14 @@ var blade = {
     Dimensions: Dimensions,
     Unit: Unit,
     Measure: Measure,
+    /**
+     * A dimensionless unit.
+     *
+     * @property UNIT_DIMLESS
+     * @type Unit
+     * @static
+     * @final
+     */
     UNIT_DIMLESS: UNIT_DIMLESS,
     UNIT_KILOGRAM: UNIT_KILOGRAM,
     UNIT_METER: UNIT_METER,

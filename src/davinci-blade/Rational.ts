@@ -4,6 +4,15 @@ class Rational implements Field<Rational> {
     private _numer: number;
     private _denom: number;
 
+    /**
+     * The Rational class represents a rational number.
+     *
+     * @class Rational
+     * @extends Field<Rational>
+     * @constructor
+     * @param {number} n The numerator.
+     * @param {number} d The denominator.
+     */
     constructor(n: number, d: number) {
         var g;
 
@@ -50,14 +59,33 @@ class Rational implements Field<Rational> {
         this._denom = d / g;
     }
 
+    /**
+    * The numerator part of the rational number. 
+    * 
+    * @property numer
+    * @type {number}
+    */
     get numer(): number {
         return this._numer;
     }
 
+    /**
+    * The denominator part of the rational number. 
+    * 
+    * @property denom
+    * @type {number}
+    */
     get denom(): number {
         return this._denom;
     }
 
+    /**
+    * Returns the sum of this rational number and the argument. 
+    *
+    * @method add
+    * @param {Number|Rational} rhs The number used on the right hand side of the addition operator.
+    * @return {Rational} The sum of this rational number and the specified argument.
+    */
     add(rhs): Rational {
         if (typeof rhs === 'number') {
             return new Rational(this._numer + this._denom * rhs, this._denom);
@@ -66,6 +94,13 @@ class Rational implements Field<Rational> {
         }
     }
 
+    /**
+    * Returns the difference of this rational number and the argument. 
+    *
+    * @method sub
+    * @param {Number|Rational} rhs The number used on the right hand side of the subtraction operator.
+    * @return {Rational} The difference of this rational number and the specified argument.
+    */
     sub(rhs): Rational {
         if (typeof rhs === 'number') {
             return new Rational(this._numer - this._denom * rhs, this._denom);

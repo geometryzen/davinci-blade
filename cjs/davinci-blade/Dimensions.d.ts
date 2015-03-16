@@ -1,4 +1,10 @@
 import Rational = require('davinci-blade/Rational');
+/**
+ * The Dimensions class captures the physical dimensions associated with a unit of measure.
+ *
+ * @class Dimensions
+ *
+ */
 declare class Dimensions {
     L: any;
     T: any;

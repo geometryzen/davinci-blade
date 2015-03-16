@@ -537,6 +537,12 @@ function stringFromCoordinates(coordinates, labels) {
     }
     return str;
 }
+/**
+ * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
+ *
+ * @class Euclidean3
+ *
+ */
 var Euclidean3 = (function () {
     function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
         this.w = w || 0;

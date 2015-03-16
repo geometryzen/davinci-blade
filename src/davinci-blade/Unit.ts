@@ -2,6 +2,12 @@ import Field = require('davinci-blade/Field');
 import Dimensions = require('davinci-blade/Dimensions');
 import Rational = require('davinci-blade/Rational');
 
+/**
+ * The Unit class represents the units for a measure.
+ *
+ * @class Unit
+ *
+ */
 class Unit implements Field<Unit> {
 
     constructor(public scale: number, public dimensions: Dimensions, public labels: string[]) {

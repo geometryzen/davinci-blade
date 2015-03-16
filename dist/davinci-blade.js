@@ -790,6 +790,12 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             return new Euclidean2(x00, x01, x10, x11);
         }
     };
+    /**
+     * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
+     *
+     * @class Euclidean2
+     *
+     */
     var Euclidean2 = (function () {
         function Euclidean2(w, x, y, xy) {
             this.w = w || 0;
@@ -1544,6 +1550,12 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
         }
         return str;
     }
+    /**
+     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
+     *
+     * @class Euclidean3
+     *
+     */
     var Euclidean3 = (function () {
         function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
             this.w = w || 0;
@@ -1714,6 +1726,15 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
 
 define('davinci-blade/Rational',["require", "exports"], function (require, exports) {
     var Rational = (function () {
+        /**
+         * The Rational class represents a rational number.
+         *
+         * @class Rational
+         * @extends Field<Rational>
+         * @constructor
+         * @param {number} n The numerator.
+         * @param {number} d The denominator.
+         */
         function Rational(n, d) {
             var g;
             var gcd = function (a, b) {
@@ -1757,6 +1778,12 @@ define('davinci-blade/Rational',["require", "exports"], function (require, expor
             this._denom = d / g;
         }
         Object.defineProperty(Rational.prototype, "numer", {
+            /**
+            * The numerator part of the rational number.
+            *
+            * @property numer
+            * @type {number}
+            */
             get: function () {
                 return this._numer;
             },
@@ -1764,12 +1791,25 @@ define('davinci-blade/Rational',["require", "exports"], function (require, expor
             configurable: true
         });
         Object.defineProperty(Rational.prototype, "denom", {
+            /**
+            * The denominator part of the rational number.
+            *
+            * @property denom
+            * @type {number}
+            */
             get: function () {
                 return this._denom;
             },
             enumerable: true,
             configurable: true
         });
+        /**
+        * Returns the sum of this rational number and the argument.
+        *
+        * @method add
+        * @param {Number|Rational} rhs The number used on the right hand side of the addition operator.
+        * @return {Rational} The sum of this rational number and the specified argument.
+        */
         Rational.prototype.add = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer + this._denom * rhs, this._denom);
@@ -1778,6 +1818,13 @@ define('davinci-blade/Rational',["require", "exports"], function (require, expor
                 return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
             }
         };
+        /**
+        * Returns the difference of this rational number and the argument.
+        *
+        * @method sub
+        * @param {Number|Rational} rhs The number used on the right hand side of the subtraction operator.
+        * @return {Rational} The difference of this rational number and the specified argument.
+        */
         Rational.prototype.sub = function (rhs) {
             if (typeof rhs === 'number') {
                 return new Rational(this._numer - this._denom * rhs, this._denom);
@@ -1833,6 +1880,12 @@ define('davinci-blade/Rational',["require", "exports"], function (require, expor
 });
 
 define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
+    /**
+     * The Dimensions class captures the physical dimensions associated with a unit of measure.
+     *
+     * @class Dimensions
+     *
+     */
     var Dimensions = (function () {
         function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
             this.L = L;
@@ -1996,6 +2049,12 @@ define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational
 });
 
 define('davinci-blade/Unit',["require", "exports"], function (require, exports) {
+    /**
+     * The Unit class represents the units for a measure.
+     *
+     * @class Unit
+     *
+     */
     var Unit = (function () {
         function Unit(scale, dimensions, labels) {
             this.scale = scale;
@@ -2098,6 +2157,12 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
 });
 
 define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    /**
+     * A Measure is a composite consisting of a quantity and a unit of measure.
+     *
+     * @class Measure
+     *
+     */
     var Measure = (function () {
         function Measure(quantity, uom) {
             if (uom.scale === 1) {
@@ -2210,6 +2275,11 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
     var UNIT_YARD = new Unit(0.9144, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
     var UNIT_MILE = new Unit(1609.344, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
     var UNIT_POUND = new Unit(0.45359237, new Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+    /**
+     * Provides the blade module
+     *
+     * @module blade
+     */
     var blade = {
         'VERSION': core.VERSION,
         Euclidean2: Euclidean2,
@@ -2218,6 +2288,14 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
         Dimensions: Dimensions,
         Unit: Unit,
         Measure: Measure,
+        /**
+         * A dimensionless unit.
+         *
+         * @property UNIT_DIMLESS
+         * @type Unit
+         * @static
+         * @final
+         */
         UNIT_DIMLESS: UNIT_DIMLESS,
         UNIT_KILOGRAM: UNIT_KILOGRAM,
         UNIT_METER: UNIT_METER,

@@ -1,4 +1,10 @@
 import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+/**
+ * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
+ *
+ * @class Euclidean2
+ *
+ */
 declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
     w: number;
     x: number;

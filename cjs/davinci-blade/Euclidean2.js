@@ -346,6 +346,12 @@ var divide = function (a00, a01, a10, a11, b00, b01, b10, b11, m) {
         return new Euclidean2(x00, x01, x10, x11);
     }
 };
+/**
+ * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
+ *
+ * @class Euclidean2
+ *
+ */
 var Euclidean2 = (function () {
     function Euclidean2(w, x, y, xy) {
         this.w = w || 0;

@@ -322,6 +322,12 @@ var divide = function(a00, a01, a10, a11, b00, b01, b10, b11, m) {
     }
 };
 
+/**
+ * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
+ *
+ * @class Euclidean2
+ *
+ */
 class Euclidean2 implements GeometricQuantity<Euclidean2> {
     public w: number;
     public x: number;

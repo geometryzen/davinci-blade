@@ -1,3 +1,9 @@
+/**
+ * The Unit class represents the units for a measure.
+ *
+ * @class Unit
+ *
+ */
 var Unit = (function () {
     function Unit(scale, dimensions, labels) {
         this.scale = scale;
