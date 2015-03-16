@@ -436,7 +436,7 @@ define("../vendor/almond/almond", function(){});
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
         // TODO: Automatically synchronize with bower.json
-        VERSION: '0.9.3'
+        VERSION: '0.9.4'
     };
     return blade;
 });
@@ -2390,7 +2390,7 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
     return blade;
 });
 
-  var library = require('blade');
+  var library = require('davinci-blade');
   if(typeof module !== 'undefined' && module.exports) {
     module.exports = library;
   } else if(globalDefine) {

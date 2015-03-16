@@ -28,7 +28,7 @@ requirejs.config({
               // check for amd loader on global namespace
            "  var globalDefine = global.define;\n",
 
-    end:   "  var library = require('blade');\n"+
+    end:   "  var library = require('davinci-blade');\n"+
            "  if(typeof module !== 'undefined' && module.exports) {\n"+
                 // export library for node
            "    module.exports = library;\n"+
