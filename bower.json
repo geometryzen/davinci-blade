@@ -1,6 +1,6 @@
 {
   "name": "davinci-blade",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "TypeScript Geometric Physics library.",
   "author":
   {
@@ -38,15 +38,15 @@
   "ignore":
   [
     ".settings",
-    "node_modules",
-    "amd",
-    "cjs",
-    "manual",
-    "reports",
-    "src",
-    "test",
-    "typings",
-    "vendor",
+    "/node_modules",
+    "/amd",
+    "/cjs",
+    "/manual",
+    "/reports",
+    "/src",
+    "/test",
+    "/typings",
+    "/vendor",
     ".bowerrc",
     ".c9revisions",
     ".gitignore",
