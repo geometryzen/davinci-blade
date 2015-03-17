@@ -436,7 +436,7 @@ define("../vendor/almond/almond", function(){});
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
         // TODO: Automatically synchronize with bower.json
-        VERSION: '0.9.5'
+        VERSION: '0.9.6'
     };
     return blade;
 });
