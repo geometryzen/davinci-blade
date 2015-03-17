@@ -40,8 +40,8 @@ module.exports = function(grunt) {
     copy: {
       main: {
         expand: true,
-        cwd: 'amd/',
-        src: ['**'],
+        cwd: 'src/modules/',
+        src: ['davinci-blade.d.ts'],
         dest: 'dist/'
       }
     },
