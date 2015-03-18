@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.7</em>
+            <em>API Docs for: 0.9.8</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -86,6 +86,114 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
+    var dumbString = function (scale, dimensions, labels) {
+        var operatorStr;
+        var scaleString;
+        var unitsString;
+        var stringify = function (rational, label) {
+            if (rational.numer === 0) {
+                return null;
+            }
+            else if (rational.denom === 1) {
+                if (rational.numer === 1) {
+                    return &quot;&quot; + label;
+                }
+                else {
+                    return &quot;&quot; + label + &quot; ** &quot; + rational.numer;
+                }
+            }
+            return &quot;&quot; + label + &quot; ** &quot; + rational;
+        };
+        operatorStr = scale === 1 || dimensions.isZero() ? &quot;&quot; : &quot; &quot;;
+        scaleString = scale === 1 ? &quot;&quot; : &quot;&quot; + scale;
+        unitsString = [stringify(dimensions.M, labels[0]), stringify(dimensions.L, labels[1]), stringify(dimensions.T, labels[2]), stringify(dimensions.Q, labels[3]), stringify(dimensions.temperature, labels[4]), stringify(dimensions.amount, labels[5]), stringify(dimensions.intensity, labels[6])].filter(function (x) {
+            return typeof x === &#x27;string&#x27;;
+        }).join(&quot; &quot;);
+        return &quot;&quot; + scaleString + operatorStr + unitsString;
+    };
+    var unitString = function (scale, dimensions, labels) {
+        var patterns = [
+            [-1, 1, -3, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, -2, 1, 1, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, -2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, 3, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 0, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 0, 1, -1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -3, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [0, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, -1, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, -1, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1]
+        ];
+        var decodes = [
+            [&quot;F/m&quot;],
+            [&quot;S&quot;],
+            [&quot;F&quot;],
+            [&quot;N·m ** 2/kg ** 2&quot;],
+            [&quot;Hz&quot;],
+            [&quot;A&quot;],
+            [&quot;m/s ** 2&quot;],
+            [&quot;m/s&quot;],
+            [&quot;kg·m/s&quot;],
+            [&quot;Pa&quot;],
+            [&quot;Pa·s&quot;],
+            [&quot;W/m ** 2&quot;],
+            [&quot;N/m&quot;],
+            [&quot;T&quot;],
+            [&quot;W/(m·K)&quot;],
+            [&quot;V/m&quot;],
+            [&quot;N&quot;],
+            [&quot;H/m&quot;],
+            [&quot;J/K&quot;],
+            [&quot;J/(kg·K)&quot;],
+            [&quot;J/(mol·K)&quot;],
+            [&quot;J/mol&quot;],
+            [&quot;J&quot;],
+            [&quot;J·s&quot;],
+            [&quot;W&quot;],
+            [&quot;V&quot;],
+            [&quot;Ω&quot;],
+            [&quot;H&quot;],
+            [&quot;Wb&quot;]
+        ];
+        var M = dimensions.M;
+        var L = dimensions.L;
+        var T = dimensions.T;
+        var Q = dimensions.Q;
+        var temperature = dimensions.temperature;
+        var amount = dimensions.amount;
+        var intensity = dimensions.intensity;
+        for (var i = 0, len = patterns.length; i &lt; len; i++) {
+            var pattern = patterns[i];
+            if (M.numer === pattern[0] &amp;&amp; M.denom === pattern[1] &amp;&amp; L.numer === pattern[2] &amp;&amp; L.denom === pattern[3] &amp;&amp; T.numer === pattern[4] &amp;&amp; T.denom === pattern[5] &amp;&amp; Q.numer === pattern[6] &amp;&amp; Q.denom === pattern[7] &amp;&amp; temperature.numer === pattern[8] &amp;&amp; temperature.denom === pattern[9] &amp;&amp; amount.numer === pattern[10] &amp;&amp; amount.denom === pattern[11] &amp;&amp; intensity.numer === pattern[12] &amp;&amp; intensity.denom === pattern[13]) {
+                if (scale !== 1) {
+                    return scale + &quot; * &quot; + decodes[i][0];
+                }
+                else {
+                    return decodes[i][0];
+                }
+            }
+        }
+        return dumbString(scale, dimensions, labels);
+    };
     var Unit = (function () {
         /**
          * The Unit class represents the units for a measure.
@@ -167,29 +275,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
         };
         Unit.prototype.toString = function () {
-            var operatorStr;
-            var scaleString;
-            var unitsString;
-            var stringify = function (rational, label) {
-                if (rational.numer === 0) {
-                    return null;
-                }
-                else if (rational.denom === 1) {
-                    if (rational.numer === 1) {
-                        return &quot;&quot; + label;
-                    }
-                    else {
-                        return &quot;&quot; + label + &quot; ** &quot; + rational.numer;
-                    }
-                }
-                return &quot;&quot; + label + &quot; ** &quot; + rational;
-            };
-            operatorStr = this.scale === 1 || this.dimensions.isZero() ? &quot;&quot; : &quot; &quot;;
-            scaleString = this.scale === 1 ? &quot;&quot; : &quot;&quot; + this.scale;
-            unitsString = [stringify(this.dimensions.M, this.labels[0]), stringify(this.dimensions.L, this.labels[1]), stringify(this.dimensions.T, this.labels[2]), stringify(this.dimensions.Q, this.labels[3]), stringify(this.dimensions.temperature, this.labels[4]), stringify(this.dimensions.amount, this.labels[5]), stringify(this.dimensions.intensity, this.labels[6])].filter(function (x) {
-                return typeof x === &#x27;string&#x27;;
-            }).join(&quot; &quot;);
-            return &quot;&quot; + scaleString + operatorStr + unitsString;
+            return unitString(this.scale, this.dimensions, this.labels);
         };
         return Unit;
     })();

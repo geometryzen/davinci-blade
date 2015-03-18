@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.7",
+        "version": "0.9.8",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -87,7 +87,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "amd/davinci-blade/Unit.js",
-            "line": 3,
+            "line": 111,
             "description": "Provides the blade module"
         }
     },
@@ -298,7 +298,7 @@
             "extension_for": [],
             "module": "blade",
             "file": "amd/davinci-blade/Unit.js",
-            "line": 3,
+            "line": 111,
             "description": "The Unit class represents the units for a measure.",
             "is_constructor": 1,
             "params": [
@@ -423,7 +423,7 @@
         },
         {
             "file": "amd/davinci-blade.js",
-            "line": 33,
+            "line": 45,
             "description": "A dimensionless unit.",
             "itemtype": "property",
             "name": "UNIT_DIMLESS",

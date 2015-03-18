@@ -31,5 +31,17 @@ declare var blade: {
     UNIT_YARD: Unit;
     UNIT_MILE: Unit;
     UNIT_POUND: Unit;
+    UNIT_NEWTON: Unit;
+    UNIT_JOULE: Unit;
+    UNIT_WATT: Unit;
+    UNIT_VOLT: Unit;
+    UNIT_WEBER: Unit;
+    UNIT_TESLA: Unit;
+    UNIT_OHM: Unit;
+    UNIT_SIEMEN: Unit;
+    UNIT_FARAD: Unit;
+    UNIT_HENRY: Unit;
+    UNIT_HERTZ: Unit;
+    UNIT_PASCAL: Unit;
 };
 export = blade;

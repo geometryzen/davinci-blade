@@ -436,7 +436,7 @@ define("../vendor/almond/almond", function(){});
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
         // TODO: Automatically synchronize with bower.json
-        VERSION: '0.9.7'
+        VERSION: '0.9.8'
     };
     return blade;
 });
@@ -2086,6 +2086,114 @@ define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational
 });
 
 define('davinci-blade/Unit',["require", "exports"], function (require, exports) {
+    var dumbString = function (scale, dimensions, labels) {
+        var operatorStr;
+        var scaleString;
+        var unitsString;
+        var stringify = function (rational, label) {
+            if (rational.numer === 0) {
+                return null;
+            }
+            else if (rational.denom === 1) {
+                if (rational.numer === 1) {
+                    return "" + label;
+                }
+                else {
+                    return "" + label + " ** " + rational.numer;
+                }
+            }
+            return "" + label + " ** " + rational;
+        };
+        operatorStr = scale === 1 || dimensions.isZero() ? "" : " ";
+        scaleString = scale === 1 ? "" : "" + scale;
+        unitsString = [stringify(dimensions.M, labels[0]), stringify(dimensions.L, labels[1]), stringify(dimensions.T, labels[2]), stringify(dimensions.Q, labels[3]), stringify(dimensions.temperature, labels[4]), stringify(dimensions.amount, labels[5]), stringify(dimensions.intensity, labels[6])].filter(function (x) {
+            return typeof x === 'string';
+        }).join(" ");
+        return "" + scaleString + operatorStr + unitsString;
+    };
+    var unitString = function (scale, dimensions, labels) {
+        var patterns = [
+            [-1, 1, -3, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, -2, 1, 1, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, -2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, 3, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 0, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 0, 1, -1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -3, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [0, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, -1, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, -1, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1]
+        ];
+        var decodes = [
+            ["F/m"],
+            ["S"],
+            ["F"],
+            ["N·m ** 2/kg ** 2"],
+            ["Hz"],
+            ["A"],
+            ["m/s ** 2"],
+            ["m/s"],
+            ["kg·m/s"],
+            ["Pa"],
+            ["Pa·s"],
+            ["W/m ** 2"],
+            ["N/m"],
+            ["T"],
+            ["W/(m·K)"],
+            ["V/m"],
+            ["N"],
+            ["H/m"],
+            ["J/K"],
+            ["J/(kg·K)"],
+            ["J/(mol·K)"],
+            ["J/mol"],
+            ["J"],
+            ["J·s"],
+            ["W"],
+            ["V"],
+            ["Ω"],
+            ["H"],
+            ["Wb"]
+        ];
+        var M = dimensions.M;
+        var L = dimensions.L;
+        var T = dimensions.T;
+        var Q = dimensions.Q;
+        var temperature = dimensions.temperature;
+        var amount = dimensions.amount;
+        var intensity = dimensions.intensity;
+        for (var i = 0, len = patterns.length; i < len; i++) {
+            var pattern = patterns[i];
+            if (M.numer === pattern[0] && M.denom === pattern[1] && L.numer === pattern[2] && L.denom === pattern[3] && T.numer === pattern[4] && T.denom === pattern[5] && Q.numer === pattern[6] && Q.denom === pattern[7] && temperature.numer === pattern[8] && temperature.denom === pattern[9] && amount.numer === pattern[10] && amount.denom === pattern[11] && intensity.numer === pattern[12] && intensity.denom === pattern[13]) {
+                if (scale !== 1) {
+                    return scale + " * " + decodes[i][0];
+                }
+                else {
+                    return decodes[i][0];
+                }
+            }
+        }
+        return dumbString(scale, dimensions, labels);
+    };
     var Unit = (function () {
         /**
          * The Unit class represents the units for a measure.
@@ -2167,29 +2275,7 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
             return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
         };
         Unit.prototype.toString = function () {
-            var operatorStr;
-            var scaleString;
-            var unitsString;
-            var stringify = function (rational, label) {
-                if (rational.numer === 0) {
-                    return null;
-                }
-                else if (rational.denom === 1) {
-                    if (rational.numer === 1) {
-                        return "" + label;
-                    }
-                    else {
-                        return "" + label + " ** " + rational.numer;
-                    }
-                }
-                return "" + label + " ** " + rational;
-            };
-            operatorStr = this.scale === 1 || this.dimensions.isZero() ? "" : " ";
-            scaleString = this.scale === 1 ? "" : "" + this.scale;
-            unitsString = [stringify(this.dimensions.M, this.labels[0]), stringify(this.dimensions.L, this.labels[1]), stringify(this.dimensions.T, this.labels[2]), stringify(this.dimensions.Q, this.labels[3]), stringify(this.dimensions.temperature, this.labels[4]), stringify(this.dimensions.amount, this.labels[5]), stringify(this.dimensions.intensity, this.labels[6])].filter(function (x) {
-                return typeof x === 'string';
-            }).join(" ");
-            return "" + scaleString + operatorStr + unitsString;
+            return unitString(this.scale, this.dimensions, this.labels);
         };
         return Unit;
     })();
@@ -2351,6 +2437,18 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
     var UNIT_YARD = new Unit(0.9144, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
     var UNIT_MILE = new Unit(1609.344, new Dimensions(R0, R1, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
     var UNIT_POUND = new Unit(0.45359237, new Dimensions(R1, R0, R0, R0, R0, R0, R0), UNIT_SYMBOLS);
+    var UNIT_NEWTON = UNIT_METER.mul(UNIT_KILOGRAM).div(UNIT_SECOND.mul(UNIT_SECOND));
+    var UNIT_JOULE = UNIT_NEWTON.mul(UNIT_METER);
+    var UNIT_WATT = UNIT_JOULE.div(UNIT_SECOND);
+    var UNIT_VOLT = UNIT_JOULE.div(UNIT_COULOMB);
+    var UNIT_WEBER = UNIT_VOLT.mul(UNIT_SECOND);
+    var UNIT_TESLA = UNIT_WEBER.div(UNIT_METER.mul(UNIT_METER));
+    var UNIT_OHM = UNIT_VOLT.div(UNIT_AMPERE);
+    var UNIT_SIEMEN = UNIT_AMPERE.div(UNIT_VOLT);
+    var UNIT_FARAD = UNIT_COULOMB.div(UNIT_VOLT);
+    var UNIT_HENRY = UNIT_TESLA.mul(UNIT_METER.mul(UNIT_METER)).div(UNIT_AMPERE);
+    var UNIT_HERTZ = UNIT_DIMLESS.div(UNIT_SECOND);
+    var UNIT_PASCAL = UNIT_NEWTON.div(UNIT_METER.mul(UNIT_METER));
     /**
      * Provides the blade module
      *
@@ -2385,7 +2483,19 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
         UNIT_FOOT: UNIT_FOOT,
         UNIT_YARD: UNIT_YARD,
         UNIT_MILE: UNIT_MILE,
-        UNIT_POUND: UNIT_POUND
+        UNIT_POUND: UNIT_POUND,
+        UNIT_NEWTON: UNIT_NEWTON,
+        UNIT_JOULE: UNIT_JOULE,
+        UNIT_WATT: UNIT_WATT,
+        UNIT_VOLT: UNIT_VOLT,
+        UNIT_WEBER: UNIT_WEBER,
+        UNIT_TESLA: UNIT_TESLA,
+        UNIT_OHM: UNIT_OHM,
+        UNIT_SIEMEN: UNIT_SIEMEN,
+        UNIT_FARAD: UNIT_FARAD,
+        UNIT_HENRY: UNIT_HENRY,
+        UNIT_HERTZ: UNIT_HERTZ,
+        UNIT_PASCAL: UNIT_PASCAL
     };
     return blade;
 });
