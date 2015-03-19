@@ -436,7 +436,7 @@ define("../vendor/almond/almond", function(){});
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
         // TODO: Automatically synchronize with bower.json
-        VERSION: '0.9.8'
+        VERSION: '0.9.9'
     };
     return blade;
 });
@@ -1608,6 +1608,25 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
                     return this.xyz;
                 default:
                     throw new Error("index must be in the range [0..7]");
+            }
+        };
+        Euclidean3.prototype.__add__ = function (rhs) {
+            if (rhs instanceof Euclidean3) {
+                return this.add(rhs);
+            }
+            else if (typeof rhs === 'number') {
+                return this.add(new Euclidean3(rhs, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__radd__ = function (lhs) {
+            if (typeof lhs === 'number') {
+                return new Euclidean3(lhs, 0, 0, 0, 0, 0, 0, 0).add(this);
+            }
+            else {
+                return;
             }
         };
         Euclidean3.prototype.add = function (rhs) {

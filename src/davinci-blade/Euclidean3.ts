@@ -561,6 +561,27 @@ class Euclidean3 implements Geometric<Euclidean3> {
         }
     }
 
+    __add__(rhs: any): Euclidean3 {
+        if (rhs instanceof Euclidean3) {
+            return this.add(rhs);
+        }
+        else if (typeof rhs === 'number') {
+            return this.add(new Euclidean3(rhs,0,0,0,0,0,0,0));
+        }
+        else {
+            return;
+        }
+    }
+
+    __radd__(lhs: any): Euclidean3 {
+        if (typeof lhs === 'number') {
+            return new Euclidean3(lhs,0,0,0,0,0,0,0).add(this);
+        }
+        else {
+            return;
+        }
+    }
+
     add(rhs: Euclidean3): Euclidean3 {
         var coord, pack;
 

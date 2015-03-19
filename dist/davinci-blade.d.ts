@@ -176,4 +176,16 @@ declare module blade {
     var UNIT_YARD: Unit;
     var UNIT_MILE: Unit;
     var UNIT_POUND: Unit;
+    var UNIT_NEWTON: Unit;
+    var UNIT_JOULE: Unit;
+    var UNIT_WATT: Unit;
+    var UNIT_VOLT: Unit;
+    var UNIT_WEBER: Unit;
+    var UNIT_TESLA: Unit;
+    var UNIT_OHM: Unit;
+    var UNIT_SIEMEN: Unit;
+    var UNIT_FARAD: Unit;
+    var UNIT_HENRY: Unit;
+    var UNIT_HERTZ: Unit;
+    var UNIT_PASCAL: Unit;
 }

@@ -26,6 +26,8 @@ declare class Euclidean3 implements Geometric<Euclidean3> {
     static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number): Euclidean3;
     coordinates(): number[];
     coordinate(index: number): number;
+    __add__(rhs: any): Euclidean3;
+    __radd__(lhs: any): Euclidean3;
     add(rhs: Euclidean3): Euclidean3;
     sub(rhs: Euclidean3): Euclidean3;
     mul(rhs: any): Euclidean3;

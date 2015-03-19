@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.8</em>
+            <em>API Docs for: 0.9.9</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -676,6 +676,25 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                     return this.xyz;
                 default:
                     throw new Error(&quot;index must be in the range [0..7]&quot;);
+            }
+        };
+        Euclidean3.prototype.__add__ = function (rhs) {
+            if (rhs instanceof Euclidean3) {
+                return this.add(rhs);
+            }
+            else if (typeof rhs === &#x27;number&#x27;) {
+                return this.add(new Euclidean3(rhs, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__radd__ = function (lhs) {
+            if (typeof lhs === &#x27;number&#x27;) {
+                return new Euclidean3(lhs, 0, 0, 0, 0, 0, 0, 0).add(this);
+            }
+            else {
+                return;
             }
         };
         Euclidean3.prototype.add = function (rhs) {
