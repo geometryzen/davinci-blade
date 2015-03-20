@@ -436,7 +436,7 @@ define("../vendor/almond/almond", function(){});
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
         // TODO: Automatically synchronize with bower.json
-        VERSION: '0.9.9'
+        VERSION: '0.9.10'
     };
     return blade;
 });
@@ -1610,25 +1610,6 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
                     throw new Error("index must be in the range [0..7]");
             }
         };
-        Euclidean3.prototype.__add__ = function (rhs) {
-            if (rhs instanceof Euclidean3) {
-                return this.add(rhs);
-            }
-            else if (typeof rhs === 'number') {
-                return this.add(new Euclidean3(rhs, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
-            }
-        };
-        Euclidean3.prototype.__radd__ = function (lhs) {
-            if (typeof lhs === 'number') {
-                return new Euclidean3(lhs, 0, 0, 0, 0, 0, 0, 0).add(this);
-            }
-            else {
-                return;
-            }
-        };
         Euclidean3.prototype.add = function (rhs) {
             var coord, pack;
             coord = function (x, n) {
@@ -1639,6 +1620,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
             };
             return compute(addE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
         };
+        Euclidean3.prototype.__add__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.add(other);
+            }
+            else if (typeof other === 'number') {
+                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__radd__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.add(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).add(this);
+            }
+            else {
+                return;
+            }
+        };
         Euclidean3.prototype.sub = function (rhs) {
             var coord, pack;
             coord = function (x, n) {
@@ -1648,6 +1651,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(subE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        };
+        Euclidean3.prototype.__sub__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.sub(other);
+            }
+            else if (typeof other === 'number') {
+                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rsub__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.sub(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).sub(this);
+            }
+            else {
+                return;
+            }
         };
         Euclidean3.prototype.mul = function (rhs) {
             var coord, pack;
@@ -1664,6 +1689,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
                 return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
             }
         };
+        Euclidean3.prototype.__mul__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.mul(other);
+            }
+            else if (typeof other === 'number') {
+                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rmul__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.mul(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
+            }
+            else {
+                return;
+            }
+        };
         Euclidean3.prototype.scalarMultiply = function (rhs) {
             return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
         };
@@ -1673,6 +1720,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
             }
             else {
                 return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, void 0);
+            }
+        };
+        Euclidean3.prototype.__div__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.div(other);
+            }
+            else if (typeof other === 'number') {
+                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rdiv__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.div(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).div(this);
+            }
+            else {
+                return;
             }
         };
         Euclidean3.prototype.wedge = function (rhs) {
@@ -1685,6 +1754,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
             };
             return compute(extE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
         };
+        Euclidean3.prototype.__wedge__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.wedge(other);
+            }
+            else if (typeof other === 'number') {
+                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rwedge__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.wedge(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).wedge(this);
+            }
+            else {
+                return;
+            }
+        };
         Euclidean3.prototype.lshift = function (rhs) {
             var coord, pack;
             coord = function (x, n) {
@@ -1695,6 +1786,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
             };
             return compute(lcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
         };
+        Euclidean3.prototype.__lshift__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.lshift(other);
+            }
+            else if (typeof other === 'number') {
+                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rlshift__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.lshift(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).lshift(this);
+            }
+            else {
+                return;
+            }
+        };
         Euclidean3.prototype.rshift = function (rhs) {
             var coord, pack;
             coord = function (x, n) {
@@ -1704,6 +1817,28 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(rcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        };
+        Euclidean3.prototype.__rshift__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.rshift(other);
+            }
+            else if (typeof other === 'number') {
+                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rrshift__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.rshift(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).rshift(this);
+            }
+            else {
+                return;
+            }
         };
         Euclidean3.prototype.grade = function (index) {
             switch (index) {
