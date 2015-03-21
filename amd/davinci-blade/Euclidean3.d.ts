@@ -48,6 +48,8 @@ declare class Euclidean3 implements Geometric<Euclidean3> {
     rshift(rhs: Euclidean3): Euclidean3;
     __rshift__(other: any): Euclidean3;
     __rrshift__(other: any): Euclidean3;
+    __pos__(): Euclidean3;
+    __neg__(): Euclidean3;
     grade(index: number): Euclidean3;
     dot(vector: Euclidean3): number;
     cross(vector: Euclidean3): Euclidean3;

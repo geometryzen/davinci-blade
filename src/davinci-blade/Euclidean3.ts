@@ -817,6 +817,14 @@ class Euclidean3 implements Geometric<Euclidean3> {
         }
     }
 
+    __pos__(): Euclidean3 {
+        return this;
+    }
+
+    __neg__(): Euclidean3 {
+        return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+    }
+
     grade(index: number): Euclidean3 {
         switch (index) {
             case 0:

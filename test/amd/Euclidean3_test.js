@@ -651,6 +651,30 @@ define([
         expect(e.zx).toBe(b.zx);
         expect(e.xyz).toBe(b.xyz);
       });
+      it("Unary +", function() {
+        var e = zero.add(x);
+        var a = x.__pos__();
+        expect(e.w).toBe(a.w);
+        expect(e.x).toBe(a.x);
+        expect(e.y).toBe(a.y);
+        expect(e.z).toBe(a.z);
+        expect(e.xy).toBe(a.xy);
+        expect(e.yz).toBe(a.yz);
+        expect(e.zx).toBe(a.zx);
+        expect(e.xyz).toBe(a.xyz);
+      });
+      it("Unary -", function() {
+        var e = zero.sub(x);
+        var a = x.__neg__();
+        expect(e.w).toBe(a.w);
+        expect(e.x).toBe(a.x);
+        expect(e.y).toBe(a.y);
+        expect(e.z).toBe(a.z);
+        expect(e.xy).toBe(a.xy);
+        expect(e.yz).toBe(a.yz);
+        expect(e.zx).toBe(a.zx);
+        expect(e.xyz).toBe(a.xyz);
+      });
     });
   });
 });

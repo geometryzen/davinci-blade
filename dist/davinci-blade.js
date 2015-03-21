@@ -435,8 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        // TODO: Automatically synchronize with bower.json
-        VERSION: '0.9.10'
+        VERSION: '0.9.11'
     };
     return blade;
 });
@@ -1839,6 +1838,12 @@ define('davinci-blade/Euclidean3',["require", "exports"], function (require, exp
             else {
                 return;
             }
+        };
+        Euclidean3.prototype.__pos__ = function () {
+            return this;
+        };
+        Euclidean3.prototype.__neg__ = function () {
+            return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
         };
         Euclidean3.prototype.grade = function (index) {
             switch (index) {
