@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.11",
+        "version": "0.9.12",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -423,7 +423,7 @@
         },
         {
             "file": "amd/davinci-blade.js",
-            "line": 45,
+            "line": 46,
             "description": "A dimensionless unit.",
             "itemtype": "property",
             "name": "UNIT_DIMLESS",

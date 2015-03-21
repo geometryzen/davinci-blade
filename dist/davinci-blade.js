@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.11'
+        VERSION: '0.9.12'
     };
     return blade;
 });
@@ -2577,7 +2577,84 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
     return Measure;
 });
 
-define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure'], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure) {
+define('davinci-blade/Complex',["require", "exports"], function (require, exports) {
+    var Complex = (function () {
+        function Complex(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Complex.prototype.__add__ = function (other) {
+            if (other instanceof Complex) {
+                return new Complex(this.x + other.x, this.y + other.y);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(this.x + other, this.y);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.__radd__ = function (other) {
+            if (other instanceof Complex) {
+                return new Complex(other.x + this.x, other.y + this.y);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(other + this.x, this.y);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.__sub__ = function (other) {
+            if (other instanceof Complex) {
+                return new Complex(this.x - other.x, this.y - other.y);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(this.x - other, this.y);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.__rsub__ = function (other) {
+            if (other instanceof Complex) {
+                return new Complex(other.x - this.x, other.y - this.y);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(other - this.x, this.y);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.__mul__ = function (other) {
+            if (other instanceof Complex) {
+                return new Complex(this.x * other.x - this.y * other.y, this.x * other.y + this.y * other.x);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(this.x * other, this.y * other);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.__rmul__ = function (other) {
+            if (other instanceof Complex) {
+                return new Complex(other.x * this.x - other.y * this.y, other.x * this.y + other.y * this.x);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(other * this.x, other * this.y);
+            }
+            else {
+                return;
+            }
+        };
+        return Complex;
+    })();
+    return Complex;
+});
+
+define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex'], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -2615,6 +2692,7 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
      */
     var blade = {
         'VERSION': core.VERSION,
+        Complex: Complex,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
         Rational: Rational,

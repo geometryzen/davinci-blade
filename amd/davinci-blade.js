@@ -1,4 +1,4 @@
-define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure'], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure) {
+define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex'], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -36,6 +36,7 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 
      */
     var blade = {
         'VERSION': core.VERSION,
+        Complex: Complex,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
         Rational: Rational,

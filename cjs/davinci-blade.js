@@ -5,6 +5,7 @@ var Rational = require('davinci-blade/Rational');
 var Dimensions = require('davinci-blade/Dimensions');
 var Unit = require('davinci-blade/Unit');
 var Measure = require('davinci-blade/Measure');
+var Complex = require('davinci-blade/Complex');
 var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
 var R0 = Rational.ZERO;
 var R1 = Rational.ONE;
@@ -42,6 +43,7 @@ var UNIT_PASCAL = UNIT_NEWTON.div(UNIT_METER.mul(UNIT_METER));
  */
 var blade = {
     'VERSION': core.VERSION,
+    Complex: Complex,
     Euclidean2: Euclidean2,
     Euclidean3: Euclidean3,
     Rational: Rational,

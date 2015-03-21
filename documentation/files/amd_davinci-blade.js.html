@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.11</em>
+            <em>API Docs for: 0.9.12</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -85,7 +85,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;, &#x27;davinci-blade/Euclidean2&#x27;, &#x27;davinci-blade/Euclidean3&#x27;, &#x27;davinci-blade/Rational&#x27;, &#x27;davinci-blade/Dimensions&#x27;, &#x27;davinci-blade/Unit&#x27;, &#x27;davinci-blade/Measure&#x27;], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;, &#x27;davinci-blade/Euclidean2&#x27;, &#x27;davinci-blade/Euclidean3&#x27;, &#x27;davinci-blade/Rational&#x27;, &#x27;davinci-blade/Dimensions&#x27;, &#x27;davinci-blade/Unit&#x27;, &#x27;davinci-blade/Measure&#x27;, &#x27;davinci-blade/Complex&#x27;], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex) {
     var UNIT_SYMBOLS = [&quot;kg&quot;, &quot;m&quot;, &quot;s&quot;, &quot;C&quot;, &quot;K&quot;, &quot;mol&quot;, &quot;cd&quot;];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -123,6 +123,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;
      */
     var blade = {
         &#x27;VERSION&#x27;: core.VERSION,
+        Complex: Complex,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
         Rational: Rational,
