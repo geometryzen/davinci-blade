@@ -164,6 +164,8 @@ declare module blade {
     class Complex {
         public x: number;
         public y: number;
+        constructor(x: number, y: number);
+        public toString(): string;
     }
 }
 declare module blade {
