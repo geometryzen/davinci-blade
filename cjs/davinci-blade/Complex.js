@@ -69,6 +69,9 @@ var Complex = (function () {
             return;
         }
     };
+    Complex.prototype.toString = function () {
+        return "Complex(" + this.x + ", " + this.y + ")";
+    };
     return Complex;
 })();
 module.exports = Complex;

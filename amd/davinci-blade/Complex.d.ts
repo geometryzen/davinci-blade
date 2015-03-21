@@ -8,5 +8,6 @@ declare class Complex {
     __rsub__(other: any): Complex;
     __mul__(other: any): Complex;
     __rmul__(other: any): Complex;
+    toString(): string;
 }
 export = Complex;

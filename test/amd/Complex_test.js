@@ -10,6 +10,13 @@ define(['davinci-blade/Complex'], function(Complex) {
       expect(z.y).toBe(y);
     });
 
+    it("toString", function() {
+      var x = Math.random();
+      var y = Math.random();
+      var z = new Complex(x, y);
+      expect(z.toString()).toBe("Complex("+ x + ", " + y + ")");
+    });
+
     describe("Operator Overloading", function() {
 
       describe("Binary +", function() {

@@ -70,6 +70,9 @@ define(["require", "exports"], function (require, exports) {
                 return;
             }
         };
+        Complex.prototype.toString = function () {
+            return "Complex(" + this.x + ", " + this.y + ")";
+        };
         return Complex;
     })();
     return Complex;

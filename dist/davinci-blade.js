@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.12'
+        VERSION: '0.9.13'
     };
     return blade;
 });
@@ -2648,6 +2648,9 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
             else {
                 return;
             }
+        };
+        Complex.prototype.toString = function () {
+            return "Complex(" + this.x + ", " + this.y + ")";
         };
         return Complex;
     })();

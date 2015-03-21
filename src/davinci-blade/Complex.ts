@@ -98,6 +98,10 @@ class Complex
         return;
       }
     }
+
+    toString(): string {
+      return "Complex(" + this.x + ", " + this.y + ")";
+    }
 }
 
 export = Complex;

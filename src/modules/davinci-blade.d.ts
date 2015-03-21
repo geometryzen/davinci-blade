@@ -161,6 +161,12 @@ declare module blade {
     }
 }
 declare module blade {
+    class Complex {
+        public x: number;
+        public y: number;
+    }
+}
+declare module blade {
     var VERSION: string;
     var UNIT_DIMLESS: Unit;
     var UNIT_KILOGRAM: Unit;
