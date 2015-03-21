@@ -17,6 +17,27 @@ define(['davinci-blade/Complex'], function(Complex) {
       expect(z.toString()).toBe("Complex("+ x + ", " + y + ")");
     });
 
+    it("arg", function() {
+      var x = Math.random();
+      var y = Math.random();
+      var z = new Complex(x, y);
+      expect(z.arg()).toBe(Math.atan2(y, x));
+    });
+
+    it("norm", function() {
+      var x = Math.random();
+      var y = Math.random();
+      var z = new Complex(x, y);
+      expect(z.norm()).toBe(Math.sqrt(x * x + y * y));
+    });
+
+    it("quad", function() {
+      var x = Math.random();
+      var y = Math.random();
+      var z = new Complex(x, y);
+      expect(z.quad()).toBe(x * x + y * y);
+    });
+
     describe("Operator Overloading", function() {
 
       describe("Binary +", function() {
@@ -112,6 +133,43 @@ define(['davinci-blade/Complex'], function(Complex) {
           expect(z instanceof Complex).toBe(true);
           expect(z.x).toBe(s * a.x);
           expect(z.y).toBe(s * a.y);
+        });
+      });
+
+      describe("Binary /", function() {
+        var a = new Complex(Math.random(), Math.random());
+        var b = new Complex(Math.random(), Math.random());
+        var s = Math.random();
+
+        it("__div__(Complex)", function() {
+          var z = a.__div__(b);
+          var q = b.quad();
+          var re = (a.x * b.x + a.y * b.y) / q;
+          var im = (a.y * b.x - a.x * b.y) / q;
+          expect(z.x).toBe(re);
+          expect(z.y).toBe(im);
+        });
+
+        it("__div__(number)", function() {
+          var z = a.__div__(s);
+          expect(z instanceof Complex).toBe(true);
+          expect(z.x).toBe(a.x / s);
+          expect(z.y).toBe(a.y / s);
+        });
+
+        it("__rdiv__(Complex)", function() {
+          var z = b.__rdiv__(a);
+          var expected = a.__div__(b);
+          expect(z.x).toBe(expected.x);
+          expect(z.y).toBe(expected.y);
+        });
+
+        it("__rdiv__(number)", function() {
+          var z = a.__rdiv__(s);
+          var expected = new Complex(s, 0).__div__(a);
+          expect(z instanceof Complex).toBe(true);
+          expect(z.x).toBe(expected.x);
+          expect(z.y).toBe(expected.y);
         });
       });
     });

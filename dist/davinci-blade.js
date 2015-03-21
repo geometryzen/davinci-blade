@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.14'
+        VERSION: '0.9.15'
     };
     return blade;
 });
@@ -2578,6 +2578,12 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
 });
 
 define('davinci-blade/Complex',["require", "exports"], function (require, exports) {
+    function divide(a, b) {
+        var q = b.x * b.x + b.y * b.y;
+        var x = (a.x * b.x + a.y * b.y) / q;
+        var y = (a.y * b.x - a.x * b.y) / q;
+        return new Complex(x, y);
+    }
     var Complex = (function () {
         function Complex(x, y) {
             this.x = x;
@@ -2648,6 +2654,37 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
             else {
                 return;
             }
+        };
+        Complex.prototype.__div__ = function (other) {
+            if (other instanceof Complex) {
+                return divide(this, other);
+            }
+            else if (typeof other === 'number') {
+                return new Complex(this.x / other, this.y / other);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.__rdiv__ = function (other) {
+            if (other instanceof Complex) {
+                return divide(other, this);
+            }
+            else if (typeof other === 'number') {
+                return divide(new Complex(other, 0), this);
+            }
+            else {
+                return;
+            }
+        };
+        Complex.prototype.norm = function () {
+            return Math.sqrt(this.quad());
+        };
+        Complex.prototype.quad = function () {
+            return this.x * this.x + this.y * this.y;
+        };
+        Complex.prototype.arg = function () {
+            return Math.atan2(this.y, this.x);
         };
         Complex.prototype.toString = function () {
             return "Complex(" + this.x + ", " + this.y + ")";

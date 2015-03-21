@@ -165,6 +165,9 @@ declare module blade {
         public x: number;
         public y: number;
         constructor(x: number, y: number);
+        public arg(): number;
+        public norm(): number;
+        public quad(): number;
         public toString(): string;
     }
 }
