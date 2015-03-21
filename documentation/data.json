@@ -2,11 +2,18 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.15",
+        "version": "0.9.16",
         "url": "",
         "logo": "../assets/logo.png"
     },
     "files": {
+        "amd/davinci-blade/Color.js": {
+            "name": "amd/davinci-blade/Color.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "amd/davinci-blade/Dimensions.js": {
             "name": "amd/davinci-blade/Dimensions.js",
             "modules": {},
@@ -322,6 +329,12 @@
     },
     "classitems": [
         {
+            "file": "amd/davinci-blade/Color.js",
+            "line": 21,
+            "description": "Converts an angle, radius, height to a color on a color wheel.",
+            "class": "Dimensions"
+        },
+        {
             "file": "amd/davinci-blade/Dimensions.js",
             "line": 118,
             "description": "The <em>mass</em> component of this dimensions instance.",
@@ -423,7 +436,7 @@
         },
         {
             "file": "amd/davinci-blade.js",
-            "line": 46,
+            "line": 47,
             "description": "A dimensionless unit.",
             "itemtype": "property",
             "name": "UNIT_DIMLESS",
@@ -435,6 +448,10 @@
         }
     ],
     "warnings": [
+        {
+            "message": "Missing item type\nConverts an angle, radius, height to a color on a color wheel.",
+            "line": " amd/davinci-blade/Color.js:21"
+        },
         {
             "message": "Missing item type",
             "line": " amd/davinci-blade/Euclidean3.js:162"

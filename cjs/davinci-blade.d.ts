@@ -5,6 +5,7 @@ import Dimensions = require('davinci-blade/Dimensions');
 import Unit = require('davinci-blade/Unit');
 import Measure = require('davinci-blade/Measure');
 import Complex = require('davinci-blade/Complex');
+import Color = require('davinci-blade/Color');
 /**
  * Provides the blade module
  *
@@ -12,6 +13,7 @@ import Complex = require('davinci-blade/Complex');
  */
 declare var blade: {
     'VERSION': string;
+    Color: typeof Color;
     Complex: typeof Complex;
     Euclidean2: typeof Euclidean2;
     Euclidean3: typeof Euclidean3;
