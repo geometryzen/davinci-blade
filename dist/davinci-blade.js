@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.18'
+        VERSION: '0.9.19'
     };
     return blade;
 });
@@ -2353,6 +2353,18 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
         }
         return dumbString(scale, dimensions, labels);
     };
+    function add(lhs, rhs) {
+        return new Unit(lhs.scale + rhs.scale, lhs.dimensions.compatible(rhs.dimensions), lhs.labels);
+    }
+    function sub(lhs, rhs) {
+        return new Unit(lhs.scale - rhs.scale, lhs.dimensions.compatible(rhs.dimensions), lhs.labels);
+    }
+    function mul(lhs, rhs) {
+        return new Unit(lhs.scale * rhs.scale, lhs.dimensions.mul(rhs.dimensions), lhs.labels);
+    }
+    function div(lhs, rhs) {
+        return new Unit(lhs.scale / rhs.scale, lhs.dimensions.div(rhs.dimensions), lhs.labels);
+    }
     var Unit = (function () {
         /**
          * The Unit class represents the units for a measure.
@@ -2386,18 +2398,50 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
         };
         Unit.prototype.add = function (rhs) {
             if (rhs instanceof Unit) {
-                return new Unit(this.scale + rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
+                return add(this, rhs);
             }
             else {
                 throw new Error("Illegal Argument for Unit.add: " + rhs);
             }
         };
+        Unit.prototype.__add__ = function (other) {
+            if (other instanceof Unit) {
+                return add(this, other);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__radd__ = function (other) {
+            if (other instanceof Unit) {
+                return add(other, this);
+            }
+            else {
+                return;
+            }
+        };
         Unit.prototype.sub = function (rhs) {
             if (rhs instanceof Unit) {
-                return new Unit(this.scale - rhs.scale, this.dimensions.compatible(rhs.dimensions), this.labels);
+                return sub(this, rhs);
             }
             else {
                 throw new Error("Illegal Argument for Unit.sub: " + rhs);
+            }
+        };
+        Unit.prototype.__sub__ = function (other) {
+            if (other instanceof Unit) {
+                return sub(this, other);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__rsub__ = function (other) {
+            if (other instanceof Unit) {
+                return sub(other, this);
+            }
+            else {
+                return;
             }
         };
         Unit.prototype.mul = function (rhs) {
@@ -2405,10 +2449,26 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
                 return new Unit(this.scale * rhs, this.dimensions, this.labels);
             }
             else if (rhs instanceof Unit) {
-                return new Unit(this.scale * rhs.scale, this.dimensions.mul(rhs.dimensions), this.labels);
+                return mul(this, rhs);
             }
             else {
                 throw new Error("Illegal Argument for mul: " + rhs);
+            }
+        };
+        Unit.prototype.__mul__ = function (other) {
+            if (other instanceof Unit) {
+                return mul(this, other);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__rmul__ = function (other) {
+            if (other instanceof Unit) {
+                return mul(other, this);
+            }
+            else {
+                return;
             }
         };
         Unit.prototype.div = function (rhs) {
@@ -2416,10 +2476,26 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
                 return new Unit(this.scale / rhs, this.dimensions, this.labels);
             }
             else if (rhs instanceof Unit) {
-                return new Unit(this.scale / rhs.scale, this.dimensions.div(rhs.dimensions), this.labels);
+                return div(this, rhs);
             }
             else {
                 throw new Error("Illegal Argument for div: " + rhs);
+            }
+        };
+        Unit.prototype.__div__ = function (other) {
+            if (other instanceof Unit) {
+                return div(this, other);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__rdiv__ = function (other) {
+            if (other instanceof Unit) {
+                return div(other, this);
+            }
+            else {
+                return;
             }
         };
         Unit.prototype.pow = function (rhs) {

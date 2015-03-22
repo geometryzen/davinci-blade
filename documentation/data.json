@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.18",
+        "version": "0.9.19",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -94,7 +94,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "amd/davinci-blade/Unit.js",
-            "line": 111,
+            "line": 123,
             "description": "Provides the blade module"
         }
     },
@@ -305,7 +305,7 @@
             "extension_for": [],
             "module": "blade",
             "file": "amd/davinci-blade/Unit.js",
-            "line": 111,
+            "line": 123,
             "description": "The Unit class represents the units for a measure.",
             "is_constructor": 1,
             "params": [

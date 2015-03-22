@@ -2,11 +2,13 @@ define([
     'davinci-blade/Rational',
     'davinci-blade/Dimensions',
     'davinci-blade/Unit',
+    'davinci-blade/Complex',
     'davinci-blade'
 ], function(
     Rational,
     Dimensions,
     Unit,
+    Complex,
     blade
 ) {
 describe("Unit", function() {
@@ -156,6 +158,120 @@ describe("Unit", function() {
     it("angular momentum", function() {
       expect(blade.UNIT_JOULE.mul(blade.UNIT_SECOND).toString()).toBe("J·s");
     });
+
+    describe("Operator Overloading", function() {
+
+      var m = blade.units.meter;
+      var kg = blade.units.kilogram;
+      var s = blade.units.second;
+
+      describe("Binary +", function() {
+
+        it("m.__add__(m)", function() {
+          var actual = m.__add__(m);
+          expect(actual.scale).toBe(2);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+        it("m.__radd__(m)", function() {
+          var actual = m.__radd__(m);
+          expect(actual.scale).toBe(2);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+      });
+
+      describe("Binary -", function() {
+
+        it("m.__sub__(m)", function() {
+          var actual = m.__sub__(m);
+          expect(actual.scale).toBe(0);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+        it("m.__rsub__(m)", function() {
+          var actual = m.__rsub__(m);
+          expect(actual.scale).toBe(0);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+      });
+
+      describe("Binary *", function() {
+
+        it("m.__mul__(m)", function() {
+          var actual = m.__mul__(m);
+          expect(actual.toString()).toBe("m ** 2");
+          expect(actual.scale).toBe(1);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(2);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+        it("m.__rmul__(m)", function() {
+          var actual = m.__rmul__(m);
+          expect(actual.scale).toBe(1);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(2);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+      });
+
+      describe("Binary /", function() {
+
+        it("m.__div__(m)", function() {
+          var actual = m.__div__(m);
+          expect(actual.toString()).toBe("");
+          expect(actual.scale).toBe(1);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(0);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+        it("m.__rdiv__(m)", function() {
+          var actual = m.__rdiv__(m);
+          expect(actual.scale).toBe(1);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(0);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+      });
+
+    });
+
 });
 
 });

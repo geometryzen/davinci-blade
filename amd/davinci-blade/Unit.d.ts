@@ -16,9 +16,17 @@ declare class Unit implements Field<Unit> {
     constructor(scale: number, dimensions: Dimensions, labels: string[]);
     compatible(rhs: Unit): Unit;
     add(rhs: Unit): Unit;
+    __add__(other: any): Unit;
+    __radd__(other: any): Unit;
     sub(rhs: Unit): Unit;
+    __sub__(other: any): Unit;
+    __rsub__(other: any): Unit;
     mul(rhs: any): Unit;
+    __mul__(other: any): Unit;
+    __rmul__(other: any): Unit;
     div(rhs: any): Unit;
+    __div__(other: any): Unit;
+    __rdiv__(other: any): Unit;
     pow(rhs: number): Unit;
     inverse(): Unit;
     toString(): string;

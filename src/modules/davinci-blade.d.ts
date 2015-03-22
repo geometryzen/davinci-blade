@@ -191,6 +191,10 @@ declare module blade {
     var VERSION: string;
     var UNIT_DIMLESS: Unit;
     var UNIT_KILOGRAM: Unit;
+    /**
+     * The meter is the length of the path travelled by light in vacuum
+     * during a time interval of 1 / 299 792 458 of a second.
+     */
     var UNIT_METER: Unit;
     var UNIT_SECOND: Unit;
     var UNIT_AMPERE: Unit;
