@@ -1,6 +1,11 @@
 import Unit = require('davinci-blade/Unit');
 import GeometricNumber = require('davinci-blade/GeometricNumber');
 
+function mul<T extends GeometricNumber>(lhs: Measure<T>, rhs: Measure<T>): Measure<T>
+{
+    return new Measure<T>(lhs.quantity.mul(rhs.quantity), lhs.uom.mul(rhs.uom));
+}
+
 class Measure<T extends GeometricNumber> {
 
     private _quantity: T;
@@ -78,6 +83,46 @@ class Measure<T extends GeometricNumber> {
             return this.scalarMultiply(other);
         } else {
             throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
+        }
+    }
+
+    __mul__(other: any): any
+    {
+        if (other instanceof Measure)
+        {
+            return mul(this, other);
+        }
+        else if (other instanceof Unit)
+        {
+            return new Measure<T>(this.quantity, this.uom.mul(other));
+        }
+        else if (typeof other === 'number')
+        {
+            return this.scalarMultiply(other);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    __rmul__(other: any): any
+    {
+        if (other instanceof Measure)
+        {
+            return mul(other, this);
+        }
+        else if (other instanceof Unit)
+        {
+            return new Measure<T>(this.quantity, this.uom.mul(other));
+        }
+        else if (typeof other === 'number')
+        {
+            return this.scalarMultiply(other);
+        }
+        else
+        {
+            return;
         }
     }
 

@@ -1,8 +1,5 @@
-define([
-    'davinci-blade/Rational'
-], function(
-    Rational
-) {
+define(['davinci-blade/Rational'], function(Rational)
+{
     describe("Rational", function() {
         describe("constructor", function() {
             it("numer matches construction argument", function() {

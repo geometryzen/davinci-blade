@@ -1,6 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.21'
+        VERSION: '0.9.22'
     };
     return blade;
 });

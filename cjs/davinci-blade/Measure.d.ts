@@ -29,6 +29,8 @@ declare class Measure<T extends GeometricNumber> {
     add(rhs: Measure<T>): Measure<T>;
     sub(rhs: Measure<T>): Measure<T>;
     mul(rhs: Measure<T>): Measure<T>;
+    __mul__(other: any): any;
+    __rmul__(other: any): any;
     scalarMultiply(rhs: number): Measure<T>;
     div(rhs: Measure<T>): Measure<T>;
     wedge(rhs: Measure<T>): Measure<T>;

@@ -1,4 +1,7 @@
 define(["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    function mul(lhs, rhs) {
+        return new Measure(lhs.quantity.mul(rhs.quantity), lhs.uom.mul(rhs.uom));
+    }
     var Measure = (function () {
         /**
          * A Measure is a composite consisting of a quantity and a unit of measure.
@@ -73,6 +76,34 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             }
             else {
                 throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
+            }
+        };
+        Measure.prototype.__mul__ = function (other) {
+            if (other instanceof Measure) {
+                return mul(this, other);
+            }
+            else if (other instanceof Unit) {
+                return new Measure(this.quantity, this.uom.mul(other));
+            }
+            else if (typeof other === 'number') {
+                return this.scalarMultiply(other);
+            }
+            else {
+                return;
+            }
+        };
+        Measure.prototype.__rmul__ = function (other) {
+            if (other instanceof Measure) {
+                return mul(other, this);
+            }
+            else if (other instanceof Unit) {
+                return new Measure(this.quantity, this.uom.mul(other));
+            }
+            else if (typeof other === 'number') {
+                return this.scalarMultiply(other);
+            }
+            else {
+                return;
             }
         };
         Measure.prototype.scalarMultiply = function (rhs) {
