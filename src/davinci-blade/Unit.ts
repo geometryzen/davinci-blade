@@ -138,6 +138,11 @@ function mul(lhs: Unit, rhs: Unit): Unit
   return new Unit(lhs.scale * rhs.scale, lhs.dimensions.mul(rhs.dimensions), lhs.labels);
 }
 
+function scalarMultiply(alpha: number, unit: Unit): Unit
+{
+  return new Unit(alpha * unit.scale, unit.dimensions, unit.labels);
+}
+
 function div(lhs: Unit, rhs: Unit): Unit
 {
   return new Unit(lhs.scale / rhs.scale, lhs.dimensions.div(rhs.dimensions), lhs.labels);
@@ -249,7 +254,7 @@ class Unit implements Field<Unit> {
     {
       if (typeof rhs === 'number')
       {
-          return new Unit(this.scale * rhs, this.dimensions, this.labels);
+        return scalarMultiply(rhs, this);
       }
       else if (rhs instanceof Unit)
       {
@@ -267,6 +272,10 @@ class Unit implements Field<Unit> {
       {
         return mul(this, other);
       }
+      else if (typeof other === 'number')
+      {
+        return scalarMultiply(other, this);
+      }
       else
       {
         return;
@@ -278,6 +287,10 @@ class Unit implements Field<Unit> {
       if (other instanceof Unit)
       {
         return mul(other, this);
+      }
+      else if (typeof other === 'number')
+      {
+        return scalarMultiply(other, this);
       }
       else
       {
@@ -307,6 +320,10 @@ class Unit implements Field<Unit> {
       {
         return div(this, other);
       }
+      else if (typeof other === 'number')
+      {
+        return new Unit(this.scale / other, this.dimensions, this.labels);
+      }
       else
       {
         return;
@@ -319,25 +336,35 @@ class Unit implements Field<Unit> {
       {
         return div(other, this);
       }
+      else if (typeof other === 'number')
+      {
+        return new Unit(other / this.scale, this.dimensions.negative(), this.labels);
+      }
       else
       {
         return;
       }
     }
 
-    pow(rhs: number): Unit {
-        if (typeof rhs === 'number') {
-            return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
-        } else {
-            throw new Error("Illegal Argument for div: " + rhs);
-        }
+    pow(rhs: number): Unit
+    {
+      if (typeof rhs === 'number')
+      {
+          return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
+      }
+      else
+      {
+          throw new Error("Illegal Argument for div: " + rhs);
+      }
     }
 
-    inverse(): Unit {
+    inverse(): Unit
+    {
         return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
     }
 
-    toString(): string {
+    toString(): string
+    {
         return unitString(this.scale, this.dimensions, this.labels);
     }
 }

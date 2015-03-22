@@ -230,12 +230,35 @@ describe("Unit", function() {
           expect(actual.dimensions.T.denom).toBe(1);
         });
 
+        it("m * 5", function() {
+          var actual = m.__mul__(5);
+          expect(actual.toString()).toBe("5 m");
+          expect(actual.scale).toBe(5);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
         it("m.__rmul__(m)", function() {
           var actual = m.__rmul__(m);
           expect(actual.scale).toBe(1);
           expect(actual.dimensions.M.numer).toBe(0);
           expect(actual.dimensions.M.denom).toBe(1);
           expect(actual.dimensions.L.numer).toBe(2);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+        it("5 * m", function() {
+          var actual = m.__rmul__(5);
+          expect(actual.scale).toBe(5);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
           expect(actual.dimensions.L.denom).toBe(1);
           expect(actual.dimensions.T.numer).toBe(0);
           expect(actual.dimensions.T.denom).toBe(1);
@@ -257,12 +280,36 @@ describe("Unit", function() {
           expect(actual.dimensions.T.denom).toBe(1);
         });
 
+        it("m / 5", function() {
+          var actual = m.__div__(5);
+          expect(actual.toString()).toBe("0.2 m");
+          expect(actual.scale).toBe(1/5);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(1);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
         it("m.__rdiv__(m)", function() {
           var actual = m.__rdiv__(m);
           expect(actual.scale).toBe(1);
           expect(actual.dimensions.M.numer).toBe(0);
           expect(actual.dimensions.M.denom).toBe(1);
           expect(actual.dimensions.L.numer).toBe(0);
+          expect(actual.dimensions.L.denom).toBe(1);
+          expect(actual.dimensions.T.numer).toBe(0);
+          expect(actual.dimensions.T.denom).toBe(1);
+        });
+
+        it("5 / m", function() {
+          var actual = m.__rdiv__(5);
+          expect(actual instanceof Unit).toBe(true);
+          expect(actual.scale).toBe(5);
+          expect(actual.dimensions.M.numer).toBe(0);
+          expect(actual.dimensions.M.denom).toBe(1);
+          expect(actual.dimensions.L.numer).toBe(-1);
           expect(actual.dimensions.L.denom).toBe(1);
           expect(actual.dimensions.T.numer).toBe(0);
           expect(actual.dimensions.T.denom).toBe(1);

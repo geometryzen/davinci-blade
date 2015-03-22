@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.19'
+        VERSION: '0.9.20'
     };
     return blade;
 });
@@ -2362,6 +2362,9 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
     function mul(lhs, rhs) {
         return new Unit(lhs.scale * rhs.scale, lhs.dimensions.mul(rhs.dimensions), lhs.labels);
     }
+    function scalarMultiply(alpha, unit) {
+        return new Unit(alpha * unit.scale, unit.dimensions, unit.labels);
+    }
     function div(lhs, rhs) {
         return new Unit(lhs.scale / rhs.scale, lhs.dimensions.div(rhs.dimensions), lhs.labels);
     }
@@ -2446,7 +2449,7 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
         };
         Unit.prototype.mul = function (rhs) {
             if (typeof rhs === 'number') {
-                return new Unit(this.scale * rhs, this.dimensions, this.labels);
+                return scalarMultiply(rhs, this);
             }
             else if (rhs instanceof Unit) {
                 return mul(this, rhs);
@@ -2459,6 +2462,9 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
             if (other instanceof Unit) {
                 return mul(this, other);
             }
+            else if (typeof other === 'number') {
+                return scalarMultiply(other, this);
+            }
             else {
                 return;
             }
@@ -2466,6 +2472,9 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
         Unit.prototype.__rmul__ = function (other) {
             if (other instanceof Unit) {
                 return mul(other, this);
+            }
+            else if (typeof other === 'number') {
+                return scalarMultiply(other, this);
             }
             else {
                 return;
@@ -2486,6 +2495,9 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
             if (other instanceof Unit) {
                 return div(this, other);
             }
+            else if (typeof other === 'number') {
+                return new Unit(this.scale / other, this.dimensions, this.labels);
+            }
             else {
                 return;
             }
@@ -2493,6 +2505,9 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
         Unit.prototype.__rdiv__ = function (other) {
             if (other instanceof Unit) {
                 return div(other, this);
+            }
+            else if (typeof other === 'number') {
+                return new Unit(other / this.scale, this.dimensions.negative(), this.labels);
             }
             else {
                 return;

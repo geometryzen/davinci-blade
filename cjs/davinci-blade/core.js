@@ -1,4 +1,4 @@
 var blade = {
-    VERSION: '0.9.19'
+    VERSION: '0.9.20'
 };
 module.exports = blade;
