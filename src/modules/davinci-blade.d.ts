@@ -217,6 +217,10 @@ declare module blade {
     var UNIT_PASCAL: Unit;
     var units:
     {
+        /**
+         * The meter is the length of the path travelled by light in vacuum
+         * during a time interval of 1 / 299 792 458 of a second.
+         */
         meter: Unit;
         kilogram: Unit;
         second: Unit;
