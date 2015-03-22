@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.20</em>
+            <em>API Docs for: 0.9.21</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -133,11 +133,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         });
         Measure.prototype.add = function (rhs) {
             if (rhs instanceof Measure) {
-                var that = rhs;
-                var qthis = this.quantity;
-                var qthat = that.quantity;
-                var qmade = qthis.add(qthat);
-                return new Measure(qmade, this.uom.compatible(that.uom));
+                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
             }
             else {
                 throw new Error(&quot;Measure.add(rhs): rhs must be a Measure.&quot;);

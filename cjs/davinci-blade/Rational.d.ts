@@ -1,5 +1,4 @@
-import Field = require('davinci-blade/Field');
-declare class Rational implements Field<Rational> {
+declare class Rational {
     private _numer;
     private _denom;
     /**

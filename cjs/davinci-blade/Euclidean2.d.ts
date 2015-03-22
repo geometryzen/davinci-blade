@@ -1,5 +1,4 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
-declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
+declare class Euclidean2 {
     w: number;
     x: number;
     y: number;

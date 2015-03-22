@@ -1,4 +1,3 @@
-import Field = require('davinci-blade/Field');
 import Dimensions = require('davinci-blade/Dimensions');
 import Rational = require('davinci-blade/Rational');
 
@@ -148,7 +147,7 @@ function div(lhs: Unit, rhs: Unit): Unit
   return new Unit(lhs.scale / rhs.scale, lhs.dimensions.div(rhs.dimensions), lhs.labels);
 }
 
-class Unit implements Field<Unit> {
+class Unit {
     /**
      * The Unit class represents the units for a measure.
      *

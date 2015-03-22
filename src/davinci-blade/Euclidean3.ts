@@ -1,4 +1,5 @@
-import Geometric = require('davinci-blade/Geometric');
+import Measure = require('davinci-blade/Measure');
+import Unit = require('davinci-blade/Unit');
 
 var compute = function(f, a: number[], b: number[], coord, pack): Euclidean3 {
     var a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, x0, x1, x2, x3, x4, x5, x6, x7;
@@ -496,7 +497,7 @@ function stringFromCoordinates(coordinates: number[], labels: string[]): string 
     return str;
 }
 
-class Euclidean3 implements Geometric<Euclidean3> {
+class Euclidean3 {
     public w: number;
     public x: number;
     public y: number;
@@ -649,26 +650,42 @@ class Euclidean3 implements Geometric<Euclidean3> {
         }
     }
 
-    __mul__(other: any): Euclidean3 {
-        if (other instanceof Euclidean3) {
+    __mul__(other: any): any
+    {
+        if (other instanceof Euclidean3)
+        {
             return this.mul(other);
         }
-        else if (typeof other === 'number') {
+        else if (typeof other === 'number')
+        {
             return this.mul(new Euclidean3(other,0,0,0,0,0,0,0));
         }
-        else {
+        else if (other instanceof Unit)
+        {
+            return new Measure<Euclidean3>(this, other);
+        }
+        else
+        {
             return;
         }
     }
 
-    __rmul__(other: any): Euclidean3 {
-        if (other instanceof Euclidean3) {
+    __rmul__(other: any): any
+    {
+        if (other instanceof Euclidean3)
+        {
             return other.mul(this);
         }
-        else if (typeof other === 'number') {
+        else if (typeof other === 'number')
+        {
             return new Euclidean3(other,0,0,0,0,0,0,0).mul(this);
         }
-        else {
+        else if (other instanceof Unit)
+        {
+            return new Measure<Euclidean3>(this, other);
+        }
+        else
+        {
             return;
         }
     }

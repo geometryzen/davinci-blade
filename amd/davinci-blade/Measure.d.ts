@@ -1,6 +1,6 @@
-import Geometric = require('davinci-blade/Geometric');
 import Unit = require('davinci-blade/Unit');
-declare class Measure<T> implements Geometric<Measure<T>> {
+import GeometricNumber = require('davinci-blade/GeometricNumber');
+declare class Measure<T extends GeometricNumber> {
     private _quantity;
     private _uom;
     /**
@@ -11,14 +11,14 @@ declare class Measure<T> implements Geometric<Measure<T>> {
      * @param {QuantityOfMeasure<T>} quantity The <em>quantity</em> part of the measure.
      * @param {Unit} uom The unit-of-measure part of the measure.
      */
-    constructor(quantity: any, uom: Unit);
+    constructor(quantity: T, uom: Unit);
     /**
     * The quantity part of the measure.
     *
     * @property quantity
     * @type {GeometricQuantity<T>}
     */
-    quantity: any;
+    quantity: T;
     /**
     * The unit part of the measure.
     *

@@ -46,11 +46,7 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         });
         Measure.prototype.add = function (rhs) {
             if (rhs instanceof Measure) {
-                var that = rhs;
-                var qthis = this.quantity;
-                var qthat = that.quantity;
-                var qmade = qthis.add(qthat);
-                return new Measure(qmade, this.uom.compatible(that.uom));
+                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
             }
             else {
                 throw new Error("Measure.add(rhs): rhs must be a Measure.");

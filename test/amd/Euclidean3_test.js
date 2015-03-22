@@ -2,12 +2,16 @@ define([
     'davinci-blade/Rational',
     'davinci-blade/Dimensions',
     'davinci-blade/Unit',
-    'davinci-blade/Euclidean3'
+    'davinci-blade/Euclidean3',
+    'davinci-blade/Measure',
+    'davinci-blade'
 ], function(
     Rational,
     Dimensions,
     Unit,
-    Euclidean3
+    Euclidean3,
+    Measure,
+    blade
 ) {
   describe("Euclidean3", function() {
 
@@ -546,26 +550,36 @@ define([
         expect(e.zx).toBe(b.zx);
         expect(e.xyz).toBe(b.xyz);
       });
-      it("*", function() {
-        var e = x.mul(y);
-        var a = x.__mul__(y);
-        var b = y.__rmul__(x);
-        expect(e.w).toBe(a.w);
-        expect(e.x).toBe(a.x);
-        expect(e.y).toBe(a.y);
-        expect(e.z).toBe(a.z);
-        expect(e.xy).toBe(a.xy);
-        expect(e.yz).toBe(a.yz);
-        expect(e.zx).toBe(a.zx);
-        expect(e.xyz).toBe(a.xyz);
-        expect(e.w).toBe(b.w);
-        expect(e.x).toBe(b.x);
-        expect(e.y).toBe(b.y);
-        expect(e.z).toBe(b.z);
-        expect(e.xy).toBe(b.xy);
-        expect(e.yz).toBe(b.yz);
-        expect(e.zx).toBe(b.zx);
-        expect(e.xyz).toBe(b.xyz);
+      describe("*", function(){
+        it("Euclidean3 * Euclidean3", function() {
+          var e = x.mul(y);
+          var a = x.__mul__(y);
+          var b = y.__rmul__(x);
+          expect(e.w).toBe(a.w);
+          expect(e.x).toBe(a.x);
+          expect(e.y).toBe(a.y);
+          expect(e.z).toBe(a.z);
+          expect(e.xy).toBe(a.xy);
+          expect(e.yz).toBe(a.yz);
+          expect(e.zx).toBe(a.zx);
+          expect(e.xyz).toBe(a.xyz);
+          expect(e.w).toBe(b.w);
+          expect(e.x).toBe(b.x);
+          expect(e.y).toBe(b.y);
+          expect(e.z).toBe(b.z);
+          expect(e.xy).toBe(b.xy);
+          expect(e.yz).toBe(b.yz);
+          expect(e.zx).toBe(b.zx);
+          expect(e.xyz).toBe(b.xyz);
+        });
+        it("Euclidean3 * Unit", function() {
+          var m = x.__mul__(blade.units.meter);
+          expect(m instanceof Measure).toBe(true);
+        });
+        it("Unit * Euclidean3", function() {
+          var m = x.__rmul__(blade.units.meter);
+          expect(m instanceof Measure).toBe(true);
+        });
       });
       it("/", function() {
         var e = x.div(y);

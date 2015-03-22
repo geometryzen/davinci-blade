@@ -1,10 +1,9 @@
-import Geometric = require('davinci-blade/Geometric');
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
 import Unit = require('davinci-blade/Unit');
+import GeometricNumber = require('davinci-blade/GeometricNumber');
 
-class Measure<T> implements Geometric<Measure<T>> {
+class Measure<T extends GeometricNumber> {
 
-    private _quantity: any;
+    private _quantity: T;
     private _uom: Unit;
 
     /**
@@ -15,12 +14,15 @@ class Measure<T> implements Geometric<Measure<T>> {
      * @param {QuantityOfMeasure<T>} quantity The <em>quantity</em> part of the measure.
      * @param {Unit} uom The unit-of-measure part of the measure.
      */
-    constructor(quantity: any, uom: Unit) {
-
-        if (uom.scale === 1) {
+    constructor(quantity: T, uom: Unit)
+    {
+        if (uom.scale === 1)
+        {
             this._quantity = quantity;
             this._uom = uom;
-        } else {
+        }
+        else
+        {
             this._quantity = quantity.scalarMultiply(uom.scale);
             this._uom = new Unit(1, uom.dimensions, uom.labels);
         }
@@ -32,7 +34,7 @@ class Measure<T> implements Geometric<Measure<T>> {
     * @property quantity
     * @type {GeometricQuantity<T>}
     */
-    get quantity(): any {
+    get quantity(): T {
         return this._quantity;
     }
 
@@ -46,14 +48,14 @@ class Measure<T> implements Geometric<Measure<T>> {
         return this._uom;
     }
 
-    add(rhs: Measure<T>): Measure<T> {
-        if (rhs instanceof Measure) {
-            var that: Measure<T> = rhs;
-            var qthis: any = this.quantity;
-            var qthat: any = that.quantity;
-            var qmade: any = qthis.add(qthat);
-            return new Measure<T>(qmade, this.uom.compatible(that.uom));
-        } else {
+    add(rhs: Measure<T>): Measure<T>
+    {
+        if (rhs instanceof Measure)
+        {
+            return new Measure<T>(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
+        }
+        else
+        {
             throw new Error("Measure.add(rhs): rhs must be a Measure.");
         }
     }
