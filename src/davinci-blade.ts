@@ -114,6 +114,12 @@ var blade = {
     UNIT_FARAD: UNIT_FARAD,
     UNIT_HENRY: UNIT_HENRY,
     UNIT_HERTZ: UNIT_HERTZ,
-    UNIT_PASCAL: UNIT_PASCAL
+    UNIT_PASCAL: UNIT_PASCAL,
+    units:
+    {
+        meter: UNIT_METER,
+        kilogram: UNIT_KILOGRAM,
+        second: UNIT_SECOND
+    }
 };
 export = blade;

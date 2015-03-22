@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.16'
+        VERSION: '0.9.17'
     };
     return blade;
 });
@@ -2843,7 +2843,12 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
         UNIT_FARAD: UNIT_FARAD,
         UNIT_HENRY: UNIT_HENRY,
         UNIT_HERTZ: UNIT_HERTZ,
-        UNIT_PASCAL: UNIT_PASCAL
+        UNIT_PASCAL: UNIT_PASCAL,
+        units: {
+            meter: UNIT_METER,
+            kilogram: UNIT_KILOGRAM,
+            second: UNIT_SECOND
+        }
     };
     return blade;
 });

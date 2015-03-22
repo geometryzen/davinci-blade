@@ -215,4 +215,10 @@ declare module blade {
     var UNIT_HENRY: Unit;
     var UNIT_HERTZ: Unit;
     var UNIT_PASCAL: Unit;
+    var units:
+    {
+        meter: Unit;
+        kilogram: Unit;
+        second: Unit;
+    };
 }

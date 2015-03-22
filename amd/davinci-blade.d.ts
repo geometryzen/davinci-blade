@@ -47,5 +47,10 @@ declare var blade: {
     UNIT_HENRY: Unit;
     UNIT_HERTZ: Unit;
     UNIT_PASCAL: Unit;
+    units: {
+        meter: Unit;
+        kilogram: Unit;
+        second: Unit;
+    };
 };
 export = blade;

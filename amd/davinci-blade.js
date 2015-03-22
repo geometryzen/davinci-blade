@@ -77,7 +77,12 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 
         UNIT_FARAD: UNIT_FARAD,
         UNIT_HENRY: UNIT_HENRY,
         UNIT_HERTZ: UNIT_HERTZ,
-        UNIT_PASCAL: UNIT_PASCAL
+        UNIT_PASCAL: UNIT_PASCAL,
+        units: {
+            meter: UNIT_METER,
+            kilogram: UNIT_KILOGRAM,
+            second: UNIT_SECOND
+        }
     };
     return blade;
 });
