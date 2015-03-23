@@ -678,7 +678,8 @@ define(["require", "exports", 'davinci-blade/Measure', 'davinci-blade/Unit'], fu
                 return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
             }
             else if (other instanceof Measure) {
-                return new Measure(this.mul(other.quantity), other.unit);
+                var m = other;
+                return new Measure(this.mul(m.quantity), m.uom);
             }
             else if (other instanceof Unit) {
                 return new Measure(this, other);
@@ -695,7 +696,8 @@ define(["require", "exports", 'davinci-blade/Measure', 'davinci-blade/Unit'], fu
                 return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
             }
             else if (other instanceof Measure) {
-                return new Measure(other.quantity.mul(this), other.unit);
+                var m = other;
+                return new Measure(m.quantity.mul(this), m.uom);
             }
             else if (other instanceof Unit) {
                 return new Measure(this, other);

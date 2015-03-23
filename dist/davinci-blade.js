@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.23'
+        VERSION: '0.9.24'
     };
     return blade;
 });
@@ -2147,7 +2147,8 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
             }
             else if (other instanceof Measure) {
-                return new Measure(this.mul(other.quantity), other.unit);
+                var m = other;
+                return new Measure(this.mul(m.quantity), m.uom);
             }
             else if (other instanceof Unit) {
                 return new Measure(this, other);
@@ -2164,7 +2165,8 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
             }
             else if (other instanceof Measure) {
-                return new Measure(other.quantity.mul(this), other.unit);
+                var m = other;
+                return new Measure(m.quantity.mul(this), m.uom);
             }
             else if (other instanceof Unit) {
                 return new Measure(this, other);

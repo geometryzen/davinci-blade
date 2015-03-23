@@ -661,7 +661,8 @@ class Euclidean3 {
         }
         else if (other instanceof Measure)
         {
-            return new Measure<Euclidean3>(this.mul(other.quantity), other.unit);
+            var m: Measure<Euclidean3> = other;
+            return new Measure<Euclidean3>(this.mul(m.quantity), m.uom);
         }
         else if (other instanceof Unit)
         {
@@ -685,7 +686,8 @@ class Euclidean3 {
         }
         else if (other instanceof Measure)
         {
-            return new Measure<Euclidean3>(other.quantity.mul(this), other.unit);
+            var m: Measure<Euclidean3> = other;
+            return new Measure<Euclidean3>(m.quantity.mul(this), m.uom);
         }
         else if (other instanceof Unit)
         {
