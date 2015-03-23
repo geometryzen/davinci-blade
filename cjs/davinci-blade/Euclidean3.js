@@ -678,6 +678,9 @@ var Euclidean3 = (function () {
         else if (typeof other === 'number') {
             return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
         }
+        else if (other instanceof Measure) {
+            return new Measure(this.mul(other.quantity), other.unit);
+        }
         else if (other instanceof Unit) {
             return new Measure(this, other);
         }
@@ -691,6 +694,9 @@ var Euclidean3 = (function () {
         }
         else if (typeof other === 'number') {
             return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
+        }
+        else if (other instanceof Measure) {
+            return new Measure(other.quantity.mul(this), other.unit);
         }
         else if (other instanceof Unit) {
             return new Measure(this, other);

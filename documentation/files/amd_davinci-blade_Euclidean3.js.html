@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.22</em>
+            <em>API Docs for: 0.9.23</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -764,6 +764,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Measure&#x
             else if (typeof other === &#x27;number&#x27;) {
                 return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
             }
+            else if (other instanceof Measure) {
+                return new Measure(this.mul(other.quantity), other.unit);
+            }
             else if (other instanceof Unit) {
                 return new Measure(this, other);
             }
@@ -777,6 +780,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Measure&#x
             }
             else if (typeof other === &#x27;number&#x27;) {
                 return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
+            }
+            else if (other instanceof Measure) {
+                return new Measure(other.quantity.mul(this), other.unit);
             }
             else if (other instanceof Unit) {
                 return new Measure(this, other);

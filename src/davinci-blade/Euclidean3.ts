@@ -634,20 +634,19 @@ class Euclidean3 {
         }
     }
 
-    mul(rhs: any): Euclidean3 {
-        var coord, pack;
-
-        if (typeof rhs === 'number') {
-            return this.scalarMultiply(rhs);
-        } else {
-            coord = function(x, n) {
-                return x[n];
-            };
-            pack = function(w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
-            };
-            return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
-        }
+    mul(rhs: any): Euclidean3
+    {
+      var coord, pack;
+      if (typeof rhs === 'number')
+      {
+        return this.scalarMultiply(rhs);
+      }
+      else
+      {
+        coord = function(x, n) {return x[n];};
+        pack = function(w, x, y, z, xy, yz, zx, xyz) {return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);};
+        return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+      }
     }
 
     __mul__(other: any): any
@@ -659,6 +658,10 @@ class Euclidean3 {
         else if (typeof other === 'number')
         {
             return this.mul(new Euclidean3(other,0,0,0,0,0,0,0));
+        }
+        else if (other instanceof Measure)
+        {
+            return new Measure<Euclidean3>(this.mul(other.quantity), other.unit);
         }
         else if (other instanceof Unit)
         {
@@ -679,6 +682,10 @@ class Euclidean3 {
         else if (typeof other === 'number')
         {
             return new Euclidean3(other,0,0,0,0,0,0,0).mul(this);
+        }
+        else if (other instanceof Measure)
+        {
+            return new Measure<Euclidean3>(other.quantity.mul(this), other.unit);
         }
         else if (other instanceof Unit)
         {
@@ -702,26 +709,34 @@ class Euclidean3 {
         }
     }
 
-    __div__(other: any): Euclidean3 {
-        if (other instanceof Euclidean3) {
+    __div__(other: any): Euclidean3
+    {
+        if (other instanceof Euclidean3)
+        {
             return this.div(other);
         }
-        else if (typeof other === 'number') {
+        else if (typeof other === 'number')
+        {
             return this.div(new Euclidean3(other,0,0,0,0,0,0,0));
         }
-        else {
+        else
+        {
             return;
         }
     }
 
-    __rdiv__(other: any): Euclidean3 {
-        if (other instanceof Euclidean3) {
+    __rdiv__(other: any): Euclidean3
+    {
+        if (other instanceof Euclidean3)
+        {
             return other.div(this);
         }
-        else if (typeof other === 'number') {
+        else if (typeof other === 'number')
+        {
             return new Euclidean3(other,0,0,0,0,0,0,0).div(this);
         }
-        else {
+        else
+        {
             return;
         }
     }
