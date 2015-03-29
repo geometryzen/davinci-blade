@@ -1308,6 +1308,9 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
     function mul(lhs, rhs) {
         return new Measure(lhs.quantity.mul(rhs.quantity), lhs.uom.mul(rhs.uom));
     }
+    function div(lhs, rhs) {
+        return new Measure(lhs.quantity.div(rhs.quantity), lhs.uom.div(rhs.uom));
+    }
     var Measure = (function () {
         /**
          * A Measure is a composite consisting of a quantity and a unit of measure.
@@ -1381,12 +1384,12 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
                 return this.scalarMultiply(other);
             }
             else {
-                throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number]");
+                throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number].");
             }
         };
         Measure.prototype.__mul__ = function (other) {
             if (other instanceof Measure) {
-                return mul(this, other);
+                return new Measure(this.quantity.mul(other.quantity), this.uom.mul(other.uom));
             }
             else if (other instanceof Unit) {
                 return new Measure(this.quantity, this.uom.mul(other));
@@ -1426,7 +1429,29 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
                 return new Measure(this.quantity.div(rhs), this.uom);
             }
             else {
-                throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number]");
+                throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number].");
+            }
+        };
+        Measure.prototype.__div__ = function (other) {
+            if (other instanceof Measure) {
+                return new Measure(this.quantity.div(other.quantity), this.uom.div(other.uom));
+            }
+            else if (other instanceof Unit) {
+                return new Measure(this.quantity, this.uom.div(other));
+            }
+            else if (typeof other === 'number') {
+                return new Measure(this.quantity.div(other), this.uom);
+            }
+            else {
+                return;
+            }
+        };
+        Measure.prototype.__rdiv__ = function (other) {
+            if (other instanceof Measure) {
+                return div(other, this);
+            }
+            else {
+                return;
             }
         };
         Measure.prototype.wedge = function (rhs) {
@@ -1434,15 +1459,18 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
                 return new Measure(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
             }
             else {
-                throw new Error("Measure.wedge(rhs): rhs must be a Measure");
+                throw new Error("Measure.wedge(rhs): rhs must be a Measure.");
             }
+        };
+        Measure.prototype.foo = function () {
+            return;
         };
         Measure.prototype.lshift = function (rhs) {
             if (rhs instanceof Measure) {
                 return new Measure(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
             }
             else {
-                throw new Error("Measure.lshift(rhs): rhs must be a Measure");
+                throw new Error("Measure.lshift(rhs): rhs must be a Measure.");
             }
         };
         Measure.prototype.rshift = function (rhs) {
@@ -1450,7 +1478,7 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
                 return new Measure(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
             }
             else {
-                throw new Error("Measure.rshift(rhs): rhs must be a Measure");
+                throw new Error("Measure.rshift(rhs): rhs must be a Measure.");
             }
         };
         Measure.prototype.norm = function () {
@@ -2837,10 +2865,10 @@ define('davinci-blade/Color',["require", "exports"], function (require, exports)
             return Color.luminance(this._red, this._green, this._blue);
         };
         Color.prototype.toString = function () {
-            return "rgb(" + this._red + ", " + this._green + "," + this._blue + ")";
+            return "Color(" + this._red + ", " + this._green + ", " + this._blue + ")";
         };
         Color.prototype.asFillStyle = function () {
-            return "rgb(" + Math.floor(this._red * 255) + ", " + Math.floor(this._green * 255) + "," + Math.floor(this._blue * 255) + ")";
+            return "rgb(" + Math.floor(this._red * 255) + ", " + Math.floor(this._green * 255) + ", " + Math.floor(this._blue * 255) + ")";
         };
         Color.luminance = function (red, green, blue) {
             var gamma = 2.2;

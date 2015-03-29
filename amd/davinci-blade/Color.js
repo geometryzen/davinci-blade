@@ -9,10 +9,10 @@ define(["require", "exports"], function (require, exports) {
             return Color.luminance(this._red, this._green, this._blue);
         };
         Color.prototype.toString = function () {
-            return "rgb(" + this._red + ", " + this._green + "," + this._blue + ")";
+            return "Color(" + this._red + ", " + this._green + ", " + this._blue + ")";
         };
         Color.prototype.asFillStyle = function () {
-            return "rgb(" + Math.floor(this._red * 255) + ", " + Math.floor(this._green * 255) + "," + Math.floor(this._blue * 255) + ")";
+            return "rgb(" + Math.floor(this._red * 255) + ", " + Math.floor(this._green * 255) + ", " + Math.floor(this._blue * 255) + ")";
         };
         Color.luminance = function (red, green, blue) {
             var gamma = 2.2;

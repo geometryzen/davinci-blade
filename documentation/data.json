@@ -252,7 +252,7 @@
             "extension_for": [],
             "module": "blade",
             "file": "amd/davinci-blade/Measure.js",
-            "line": 6,
+            "line": 9,
             "description": "A Measure is a composite consisting of a quantity and a unit of measure.",
             "is_constructor": 1,
             "params": [
@@ -362,7 +362,7 @@
         },
         {
             "file": "amd/davinci-blade/Measure.js",
-            "line": 25,
+            "line": 28,
             "description": "The quantity part of the measure.",
             "itemtype": "property",
             "name": "quantity",
@@ -371,7 +371,7 @@
         },
         {
             "file": "amd/davinci-blade/Measure.js",
-            "line": 38,
+            "line": 41,
             "description": "The unit part of the measure.",
             "itemtype": "property",
             "name": "uom",

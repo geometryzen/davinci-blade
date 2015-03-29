@@ -96,10 +96,10 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             return Color.luminance(this._red, this._green, this._blue);
         };
         Color.prototype.toString = function () {
-            return &quot;rgb(&quot; + this._red + &quot;, &quot; + this._green + &quot;,&quot; + this._blue + &quot;)&quot;;
+            return &quot;Color(&quot; + this._red + &quot;, &quot; + this._green + &quot;, &quot; + this._blue + &quot;)&quot;;
         };
         Color.prototype.asFillStyle = function () {
-            return &quot;rgb(&quot; + Math.floor(this._red * 255) + &quot;, &quot; + Math.floor(this._green * 255) + &quot;,&quot; + Math.floor(this._blue * 255) + &quot;)&quot;;
+            return &quot;rgb(&quot; + Math.floor(this._red * 255) + &quot;, &quot; + Math.floor(this._green * 255) + &quot;, &quot; + Math.floor(this._blue * 255) + &quot;)&quot;;
         };
         Color.luminance = function (red, green, blue) {
             var gamma = 2.2;

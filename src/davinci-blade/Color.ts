@@ -11,10 +11,10 @@ class Color {
     return Color.luminance(this._red, this._green, this._blue);
   }
   public toString(): string {
-    return "rgb(" + this._red + ", " + this._green + "," + this._blue + ")"
+    return "Color(" + this._red + ", " + this._green + ", " + this._blue + ")"
   }
   public asFillStyle() {
-    return "rgb(" + Math.floor(this._red*255) + ", " + Math.floor(this._green*255) + "," + Math.floor(this._blue*255) + ")"
+    return "rgb(" + Math.floor(this._red*255) + ", " + Math.floor(this._green*255) + ", " + Math.floor(this._blue*255) + ")"
   }
   public static luminance(red: number, green: number, blue: number): number {
     var gamma = 2.2;
