@@ -859,6 +859,13 @@ class Euclidean3 {
         return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
     }
 
+    /**
+     * ~ (tilde) produces reversion.
+     */
+    __tilde__(): Euclidean3 {
+        return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+    }
+
     grade(index: number): Euclidean3 {
         switch (index) {
             case 0:

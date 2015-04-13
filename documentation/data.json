@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.24",
+        "version": "0.9.26",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -361,6 +361,12 @@
             "class": "Euclidean3"
         },
         {
+            "file": "amd/davinci-blade/Euclidean3.js",
+            "line": 844,
+            "description": "~ (tilde) produces reversion.",
+            "class": "Euclidean3"
+        },
+        {
             "file": "amd/davinci-blade/Measure.js",
             "line": 28,
             "description": "The quantity part of the measure.",
@@ -455,6 +461,10 @@
         {
             "message": "Missing item type",
             "line": " amd/davinci-blade/Euclidean3.js:162"
+        },
+        {
+            "message": "Missing item type\n~ (tilde) produces reversion.",
+            "line": " amd/davinci-blade/Euclidean3.js:844"
         }
     ]
 }

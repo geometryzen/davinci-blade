@@ -49,6 +49,10 @@ declare class Euclidean3 {
     __rrshift__(other: any): Euclidean3;
     __pos__(): Euclidean3;
     __neg__(): Euclidean3;
+    /**
+     * ~ (tilde) produces reversion.
+     */
+    __tilde__(): Euclidean3;
     grade(index: number): Euclidean3;
     dot(vector: Euclidean3): number;
     cross(vector: Euclidean3): Euclidean3;

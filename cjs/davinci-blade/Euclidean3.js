@@ -842,6 +842,12 @@ var Euclidean3 = (function () {
     Euclidean3.prototype.__neg__ = function () {
         return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
     };
+    /**
+     * ~ (tilde) produces reversion.
+     */
+    Euclidean3.prototype.__tilde__ = function () {
+        return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+    };
     Euclidean3.prototype.grade = function (index) {
         switch (index) {
             case 0:
