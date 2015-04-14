@@ -87,7 +87,7 @@ define(['davinci-blade/Complex'], function(Complex) {
           var z = a.__sub__(s);
           expect(z instanceof Complex).toBe(true);
           expect(z.x).toBe(a.x - s);
-          expect(z.y).toBe(a.y);
+          expect(z.y).toBe(a.y - 0);
         });
 
         it("__rsub__(Complex)", function() {
@@ -100,7 +100,7 @@ define(['davinci-blade/Complex'], function(Complex) {
           var z = a.__rsub__(s);
           expect(z instanceof Complex).toBe(true);
           expect(z.x).toBe(s - a.x);
-          expect(z.y).toBe(a.y);
+          expect(z.y).toBe(0 - a.y);
         });
       });
 

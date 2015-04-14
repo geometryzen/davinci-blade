@@ -5,10 +5,18 @@ function divide(a, b) {
     return new Complex(x, y);
 }
 var Complex = (function () {
+    /**
+     * Constructs a complex number z = (x, y).
+     * @param x The real part of the complex number.
+     * @param y The imaginary part of the complex number.
+     */
     function Complex(x, y) {
         this.x = x;
         this.y = y;
     }
+    /**
+     * __add__ supports operator +(Complex, any)
+     */
     Complex.prototype.__add__ = function (other) {
         if (other instanceof Complex) {
             return new Complex(this.x + other.x, this.y + other.y);
@@ -20,6 +28,9 @@ var Complex = (function () {
             return;
         }
     };
+    /**
+     * __radd__ supports operator +(any, Complex)
+     */
     Complex.prototype.__radd__ = function (other) {
         if (other instanceof Complex) {
             return new Complex(other.x + this.x, other.y + this.y);
@@ -47,7 +58,7 @@ var Complex = (function () {
             return new Complex(other.x - this.x, other.y - this.y);
         }
         else if (typeof other === 'number') {
-            return new Complex(other - this.x, this.y);
+            return new Complex(other - this.x, -this.y);
         }
         else {
             return;

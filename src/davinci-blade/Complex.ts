@@ -8,25 +8,42 @@ function divide(a: Complex, b: Complex): Complex
 
 class Complex
 {
-    constructor(public x: number, public y: number) {
+    /**
+     * The real part of the complex number.
+     */
+    public x: number;
+    /**
+     * The imaginary part of the complex number.
+     */
+    public y: number;
+    /**
+     * Constructs a complex number z = (x, y).
+     * @param x The real part of the complex number.
+     * @param y The imaginary part of the complex number.
+     */
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
     }
 
-    __add__(other: any): Complex
-    {
-      if (other instanceof Complex)
-      {
-        return new Complex(this.x + other.x, this.y + other.y);
-      }
-      else if (typeof other === 'number')
-      {
-        return new Complex(this.x + other, this.y);
-      }
-      else
-      {
-        return;
-      }
+    /**
+     * __add__ supports operator +(Complex, any)
+     */
+    __add__(other: any): Complex {
+        if (other instanceof Complex) {
+            return new Complex(this.x + other.x, this.y + other.y);
+        }
+        else if (typeof other === 'number') {
+            return new Complex(this.x + other, this.y);
+        }
+        else {
+            return;
+        }
     }
 
+    /**
+     * __radd__ supports operator +(any, Complex)
+     */
     __radd__(other: any): Complex
     {
       if (other instanceof Complex)
@@ -67,7 +84,7 @@ class Complex
       }
       else if (typeof other === 'number')
       {
-        return new Complex(other - this.x, this.y);
+        return new Complex(other - this.x, -this.y);
       }
       else
       {

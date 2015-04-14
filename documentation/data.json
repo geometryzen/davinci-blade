@@ -2,13 +2,20 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.26",
+        "version": "0.9.27",
         "url": "",
         "logo": "../assets/logo.png"
     },
     "files": {
         "amd/davinci-blade/Color.js": {
             "name": "amd/davinci-blade/Color.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "amd/davinci-blade/Complex.js": {
+            "name": "amd/davinci-blade/Complex.js",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -335,6 +342,34 @@
             "class": "Dimensions"
         },
         {
+            "file": "amd/davinci-blade/Complex.js",
+            "line": 9,
+            "description": "Constructs a complex number z = (x, y).",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The real part of the complex number."
+                },
+                {
+                    "name": "y",
+                    "description": "The imaginary part of the complex number."
+                }
+            ],
+            "class": "Dimensions"
+        },
+        {
+            "file": "amd/davinci-blade/Complex.js",
+            "line": 18,
+            "description": "__add__ supports operator +(Complex, any)",
+            "class": "Dimensions"
+        },
+        {
+            "file": "amd/davinci-blade/Complex.js",
+            "line": 32,
+            "description": "__radd__ supports operator +(any, Complex)",
+            "class": "Dimensions"
+        },
+        {
             "file": "amd/davinci-blade/Dimensions.js",
             "line": 118,
             "description": "The <em>mass</em> component of this dimensions instance.",
@@ -457,6 +492,18 @@
         {
             "message": "Missing item type\nConverts an angle, radius, height to a color on a color wheel.",
             "line": " amd/davinci-blade/Color.js:21"
+        },
+        {
+            "message": "Missing item type\nConstructs a complex number z = (x, y).",
+            "line": " amd/davinci-blade/Complex.js:9"
+        },
+        {
+            "message": "Missing item type\n__add__ supports operator +(Complex, any)",
+            "line": " amd/davinci-blade/Complex.js:18"
+        },
+        {
+            "message": "Missing item type\n__radd__ supports operator +(any, Complex)",
+            "line": " amd/davinci-blade/Complex.js:32"
         },
         {
             "message": "Missing item type",

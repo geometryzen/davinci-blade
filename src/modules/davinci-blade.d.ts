@@ -178,13 +178,38 @@ declare module blade {
 }
 declare module blade {
     class Complex {
-        public x: number;
-        public y: number;
+        /**
+         * The real part of the complex number.
+         */
+        x: number;
+        /**
+         * The imaginary part of the complex number.
+         */
+        y: number;
+        /**
+         * Constructs a complex number z = (x, y) or z = x + i * y.
+         * @param x The real part of the complex number.
+         * @param y The imaginary part of the complex number.
+         */
         constructor(x: number, y: number);
-        public arg(): number;
-        public norm(): number;
-        public quad(): number;
-        public toString(): string;
+        /**
+         * __add__ supports operator +(Complex, any)
+         */
+        __add__(other: any): Complex;
+        /**
+         * __radd__ supports operator +(any, Complex)
+         */
+        __radd__(other: any): Complex;
+        __sub__(other: any): Complex;
+        __rsub__(other: any): Complex;
+        __mul__(other: any): Complex;
+        __rmul__(other: any): Complex;
+        __div__(other: any): Complex;
+        __rdiv__(other: any): Complex;
+        norm(): number;
+        quad(): number;
+        arg(): number;
+        toString(): string;
     }
 }
 declare module blade {
