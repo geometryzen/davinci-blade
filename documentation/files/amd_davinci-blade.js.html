@@ -85,7 +85,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;, &#x27;davinci-blade/Euclidean2&#x27;, &#x27;davinci-blade/Euclidean3&#x27;, &#x27;davinci-blade/Rational&#x27;, &#x27;davinci-blade/Dimensions&#x27;, &#x27;davinci-blade/Unit&#x27;, &#x27;davinci-blade/Measure&#x27;, &#x27;davinci-blade/Complex&#x27;, &#x27;davinci-blade/Color&#x27;], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;, &#x27;davinci-blade/Euclidean2&#x27;, &#x27;davinci-blade/Euclidean3&#x27;, &#x27;davinci-blade/Rational&#x27;, &#x27;davinci-blade/Dimensions&#x27;, &#x27;davinci-blade/Unit&#x27;, &#x27;davinci-blade/Measure&#x27;, &#x27;davinci-blade/Complex&#x27;, &#x27;davinci-blade/Color&#x27;, &#x27;davinci-blade/e3ga/scalarE3&#x27;, &#x27;davinci-blade/e3ga/vectorE3&#x27;, &#x27;davinci-blade/e3ga/bivectorE3&#x27;], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
     var UNIT_SYMBOLS = [&quot;kg&quot;, &quot;m&quot;, &quot;s&quot;, &quot;C&quot;, &quot;K&quot;, &quot;mol&quot;, &quot;cd&quot;];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -127,6 +127,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;
         Complex: Complex,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
+        scalarE3: scalarE3,
+        vectorE3: vectorE3,
+        bivectorE3: bivectorE3,
         Rational: Rational,
         Dimensions: Dimensions,
         Unit: Unit,

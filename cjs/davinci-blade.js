@@ -7,6 +7,9 @@ var Unit = require('davinci-blade/Unit');
 var Measure = require('davinci-blade/Measure');
 var Complex = require('davinci-blade/Complex');
 var Color = require('davinci-blade/Color');
+var scalarE3 = require('davinci-blade/e3ga/scalarE3');
+var vectorE3 = require('davinci-blade/e3ga/vectorE3');
+var bivectorE3 = require('davinci-blade/e3ga/bivectorE3');
 var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
 var R0 = Rational.ZERO;
 var R1 = Rational.ONE;
@@ -48,6 +51,9 @@ var blade = {
     Complex: Complex,
     Euclidean2: Euclidean2,
     Euclidean3: Euclidean3,
+    scalarE3: scalarE3,
+    vectorE3: vectorE3,
+    bivectorE3: bivectorE3,
     Rational: Rational,
     Dimensions: Dimensions,
     Unit: Unit,

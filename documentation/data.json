@@ -7,6 +7,13 @@
         "logo": "../assets/logo.png"
     },
     "files": {
+        "amd/davinci-blade/e3ga/vectorE3.js": {
+            "name": "amd/davinci-blade/e3ga/vectorE3.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "amd/davinci-blade/Color.js": {
             "name": "amd/davinci-blade/Color.js",
             "modules": {},
@@ -336,6 +343,26 @@
     },
     "classitems": [
         {
+            "file": "amd/davinci-blade/e3ga/vectorE3.js",
+            "line": 2,
+            "description": "Constructs and returns a Euclidean 3D vector from its cartesian components.",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x component of the vector."
+                },
+                {
+                    "name": "y",
+                    "description": "The y component of the vector."
+                },
+                {
+                    "name": "z",
+                    "description": "The z component of the vector."
+                }
+            ],
+            "class": "Dimensions"
+        },
+        {
             "file": "amd/davinci-blade/Color.js",
             "line": 21,
             "description": "Converts an angle, radius, height to a color on a color wheel.",
@@ -477,7 +504,7 @@
         },
         {
             "file": "amd/davinci-blade.js",
-            "line": 47,
+            "line": 50,
             "description": "A dimensionless unit.",
             "itemtype": "property",
             "name": "UNIT_DIMLESS",
@@ -489,6 +516,10 @@
         }
     ],
     "warnings": [
+        {
+            "message": "Missing item type\nConstructs and returns a Euclidean 3D vector from its cartesian components.",
+            "line": " amd/davinci-blade/e3ga/vectorE3.js:2"
+        },
         {
             "message": "Missing item type\nConverts an angle, radius, height to a color on a color wheel.",
             "line": " amd/davinci-blade/Color.js:21"

@@ -17,6 +17,9 @@ declare var blade: {
     Complex: typeof Complex;
     Euclidean2: typeof Euclidean2;
     Euclidean3: typeof Euclidean3;
+    scalarE3: (w: number) => Euclidean3;
+    vectorE3: (x: number, y: number, z: number) => Euclidean3;
+    bivectorE3: (xy: number, yz: number, zx: number) => Euclidean3;
     Rational: typeof Rational;
     Dimensions: typeof Dimensions;
     Unit: typeof Unit;

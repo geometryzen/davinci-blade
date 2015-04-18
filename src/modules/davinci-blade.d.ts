@@ -112,6 +112,8 @@ declare module blade {
         static mul(a: number[], b: number[]): number[];
         public mul(rhs: any): Euclidean2;
         public div(rhs: any): Euclidean2;
+        static splat(a: number[], b: number[]): number[];
+        public splat(rhs: Euclidean2): Euclidean2;
         static wedge(a: number[], b: number[]): number[];
         public wedge(rhs: Euclidean2): Euclidean2;
         static lshift(a: number[], b: number[]): number[];
@@ -145,6 +147,7 @@ declare module blade {
         public sub(rhs: Euclidean3): Euclidean3;
         public mul(rhs: any): Euclidean3;
         public div(rhs: any): Euclidean3;
+        public splat(rhs: Euclidean3): Euclidean3;
         public wedge(rhs: Euclidean3): Euclidean3;
         public lshift(rhs: Euclidean3): Euclidean3;
         public rshift(rhs: Euclidean3): Euclidean3;
