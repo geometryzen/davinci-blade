@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.27",
+        "version": "0.9.28",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -203,7 +203,7 @@
             "extension_for": [],
             "module": "blade",
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 542,
+            "line": 608,
             "description": "The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.",
             "is_constructor": 1,
             "params": [
@@ -397,7 +397,7 @@
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 844,
+            "line": 942,
             "description": "~ (tilde) produces reversion.",
             "class": "Euclidean3"
         },
@@ -511,7 +511,7 @@
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
-            "line": " amd/davinci-blade/Euclidean3.js:844"
+            "line": " amd/davinci-blade/Euclidean3.js:942"
         }
     ]
 }

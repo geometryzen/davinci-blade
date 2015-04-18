@@ -1,6 +1,6 @@
 var blade =
 {
-    VERSION: '0.9.27'
+    VERSION: '0.9.28'
 };
 
 export = blade;

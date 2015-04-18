@@ -38,7 +38,10 @@ declare class Euclidean3 {
     div(rhs: any): Euclidean3;
     __div__(other: any): Euclidean3;
     __rdiv__(other: any): Euclidean3;
+    splat(rhs: Euclidean3): Euclidean3;
     wedge(rhs: Euclidean3): Euclidean3;
+    __vbar__(other: any): Euclidean3;
+    __rvbar__(other: any): Euclidean3;
     __wedge__(other: any): Euclidean3;
     __rwedge__(other: any): Euclidean3;
     lshift(rhs: Euclidean3): Euclidean3;

@@ -32,6 +32,7 @@ define([
     var jk   = new Euclidean3(0, 0, 0, 0, 0, 1, 0, 0);
     var ki   = new Euclidean3(0, 0, 0, 0, 0, 0, 1, 0);
     var I    = new Euclidean3(0, 0, 0, 0, 0, 0, 0, 1);
+    var mone = new Euclidean3(-1, 0, 0, 0, 0, 0, 0, 0);
 
     beforeEach(function() {
       jasmine.addMatchers({
@@ -275,6 +276,82 @@ define([
         expect(b.grade(1)).toBeNear(zero);
         expect(b.grade(2)).toBeNear(zero);
         expect(b.grade(3)).toBeNear(zero);
+      });
+    });
+
+    describe("interior product", function() {
+      it("", function() {
+        expect(one.splat(one)).toBeNear(one);
+        expect(one.splat(i)).toBeNear(zero);
+        expect(one.splat(j)).toBeNear(zero);
+        expect(one.splat(k)).toBeNear(zero);
+        expect(one.splat(ij)).toBeNear(zero);
+        expect(one.splat(jk)).toBeNear(zero);
+        expect(one.splat(ki)).toBeNear(zero);
+        expect(one.splat(I)).toBeNear(zero);
+
+        expect(i.splat(one)).toBeNear(zero);
+        expect(i.splat(i)).toBeNear(one);
+        expect(i.splat(j)).toBeNear(zero);
+        expect(i.splat(k)).toBeNear(zero);
+        expect(i.splat(ij)).toBeNear(zero);
+        expect(i.splat(jk)).toBeNear(zero);
+        expect(i.splat(ki)).toBeNear(zero);
+        expect(i.splat(I)).toBeNear(zero);
+
+        expect(j.splat(one)).toBeNear(zero);
+        expect(j.splat(i)).toBeNear(zero);
+        expect(j.splat(j)).toBeNear(one);
+        expect(j.splat(k)).toBeNear(zero);
+        expect(j.splat(ij)).toBeNear(zero);
+        expect(j.splat(jk)).toBeNear(zero);
+        expect(j.splat(ki)).toBeNear(zero);
+        expect(j.splat(I)).toBeNear(zero);
+
+        expect(k.splat(one)).toBeNear(zero);
+        expect(k.splat(i)).toBeNear(zero);
+        expect(k.splat(j)).toBeNear(zero);
+        expect(k.splat(k)).toBeNear(one);
+        expect(k.splat(ij)).toBeNear(zero);
+        expect(k.splat(jk)).toBeNear(zero);
+        expect(k.splat(ki)).toBeNear(zero);
+        expect(k.splat(I)).toBeNear(zero);
+
+        expect(ij.splat(one)).toBeNear(zero);
+        expect(ij.splat(i)).toBeNear(zero);
+        expect(ij.splat(j)).toBeNear(zero);
+        expect(ij.splat(k)).toBeNear(zero);
+        expect(ij.splat(ij)).toBeNear(mone);
+        expect(ij.splat(jk)).toBeNear(zero);
+        expect(ij.splat(ki)).toBeNear(zero);
+        expect(ij.splat(I)).toBeNear(zero);
+
+        expect(jk.splat(one)).toBeNear(zero);
+        expect(jk.splat(i)).toBeNear(zero);
+        expect(jk.splat(j)).toBeNear(zero);
+        expect(jk.splat(k)).toBeNear(zero);
+        expect(jk.splat(ij)).toBeNear(zero);
+        expect(jk.splat(jk)).toBeNear(mone);
+        expect(jk.splat(ki)).toBeNear(zero);
+        expect(jk.splat(I)).toBeNear(zero);
+
+        expect(ki.splat(one)).toBeNear(zero);
+        expect(ki.splat(i)).toBeNear(zero);
+        expect(ki.splat(j)).toBeNear(zero);
+        expect(ki.splat(k)).toBeNear(zero);
+        expect(ki.splat(ij)).toBeNear(zero);
+        expect(ki.splat(jk)).toBeNear(zero);
+        expect(ki.splat(ki)).toBeNear(mone);
+        expect(ki.splat(I)).toBeNear(zero);
+
+        expect(I.splat(one)).toBeNear(zero);
+        expect(I.splat(i)).toBeNear(zero);
+        expect(I.splat(j)).toBeNear(zero);
+        expect(I.splat(k)).toBeNear(zero);
+        expect(I.splat(ij)).toBeNear(zero);
+        expect(I.splat(jk)).toBeNear(zero);
+        expect(I.splat(ki)).toBeNear(zero);
+        expect(I.splat(I)).toBeNear(mone);
       });
     });
 

@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.27'
+        VERSION: '0.9.28'
     };
     return blade;
 });
@@ -1725,6 +1725,72 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
         }
         return +x;
     }
+    function scpE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
+        a0 = +a0;
+        a1 = +a1;
+        a2 = +a2;
+        a3 = +a3;
+        a4 = +a4;
+        a5 = +a5;
+        a6 = +a6;
+        a7 = +a7;
+        b0 = +b0;
+        b1 = +b1;
+        b2 = +b2;
+        b3 = +b3;
+        b4 = +b4;
+        b5 = +b5;
+        b6 = +b6;
+        b7 = +b7;
+        index = index | 0;
+        var x = 0.0;
+        switch (~(~index)) {
+            case 0:
+                {
+                    x = +(a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3 - a4 * b4 - a5 * b5 - a6 * b6 - a7 * b7);
+                }
+                break;
+            case 1:
+                {
+                    x = 0;
+                }
+                break;
+            case 2:
+                {
+                    x = 0;
+                }
+                break;
+            case 3:
+                {
+                    x = 0;
+                }
+                break;
+            case 4:
+                {
+                    x = 0;
+                }
+                break;
+            case 5:
+                {
+                    x = 0;
+                }
+                break;
+            case 6:
+                {
+                    x = 0;
+                }
+                break;
+            case 7:
+                {
+                    x = 0;
+                }
+                break;
+            default: {
+                throw new Error("index must be in the range [0..7]");
+            }
+        }
+        return +x;
+    }
     function extE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
@@ -2236,6 +2302,16 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return;
             }
         };
+        Euclidean3.prototype.splat = function (rhs) {
+            var coord, pack;
+            coord = function (x, n) {
+                return x[n];
+            };
+            pack = function (w, x, y, z, xy, yz, zx, xyz) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            };
+            return compute(scpE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        };
         Euclidean3.prototype.wedge = function (rhs) {
             var coord, pack;
             coord = function (x, n) {
@@ -2245,6 +2321,28 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
             };
             return compute(extE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        };
+        Euclidean3.prototype.__vbar__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return this.splat(other);
+            }
+            else if (typeof other === 'number') {
+                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean3.prototype.__rvbar__ = function (other) {
+            if (other instanceof Euclidean3) {
+                return other.splat(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).splat(this);
+            }
+            else {
+                return;
+            }
         };
         Euclidean3.prototype.__wedge__ = function (other) {
             if (other instanceof Euclidean3) {
