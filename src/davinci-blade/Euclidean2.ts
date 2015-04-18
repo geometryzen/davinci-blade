@@ -390,10 +390,32 @@ class Euclidean2 {
     }
 
     add(rhs: Euclidean2): Euclidean2 {
-        var xs;
-
-        xs = Euclidean2.add(this.coordinates(), rhs.coordinates());
+        var xs = Euclidean2.add(this.coordinates(), rhs.coordinates());
         return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+    }
+
+    __add__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return this.add(other);
+        }
+        else if (typeof other === 'number') {
+            return this.add(new Euclidean2(other,0,0,0));
+        }
+        else {
+            return;
+        }
+    }
+
+    __radd__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return other.add(this);
+        }
+        else if (typeof other === 'number') {
+            return new Euclidean2(other,0,0,0).add(this);
+        }
+        else {
+            return;
+        }
     }
 
     static sub(a: number[], b: number[]): number[] {
@@ -419,6 +441,30 @@ class Euclidean2 {
 
         xs = Euclidean2.sub(this.coordinates(), rhs.coordinates());
         return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+    }
+
+    __sub__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return this.sub(other);
+        }
+        else if (typeof other === 'number') {
+            return this.sub(new Euclidean2(other,0,0,0));
+        }
+        else {
+            return;
+        }
+    }
+
+    __rsub__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return other.sub(this);
+        }
+        else if (typeof other === 'number') {
+            return new Euclidean2(other,0,0,0).sub(this);
+        }
+        else {
+            return;
+        }
     }
 
     static mul(a: number[], b: number[]): number[] {
@@ -450,6 +496,30 @@ class Euclidean2 {
         }
     }
 
+    __mul__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return this.mul(other);
+        }
+        else if (typeof other === 'number') {
+            return this.mul(new Euclidean2(other,0,0,0));
+        }
+        else {
+            return;
+        }
+    }
+
+    __rmul__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return other.mul(this);
+        }
+        else if (typeof other === 'number') {
+            return new Euclidean2(other,0,0,0).mul(this);
+        }
+        else {
+            return;
+        }
+    }
+
     scalarMultiply(rhs: number): Euclidean2 {
         return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs);
     }
@@ -459,6 +529,30 @@ class Euclidean2 {
             return new Euclidean2(this.w / rhs, this.x / rhs, this.y / rhs, this.xy / rhs);
         } else {
             return divide(this.w, this.x, this.y, this.xy, rhs.w, rhs.x, rhs.y, rhs.xy, void 0);
+        }
+    }
+
+    __div__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return this.div(other);
+        }
+        else if (typeof other === 'number') {
+            return this.div(new Euclidean2(other,0,0,0));
+        }
+        else {
+            return;
+        }
+    }
+
+    __rdiv__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return other.div(this);
+        }
+        else if (typeof other === 'number') {
+            return new Euclidean2(other,0,0,0).div(this);
+        }
+        else {
+            return;
         }
     }
 

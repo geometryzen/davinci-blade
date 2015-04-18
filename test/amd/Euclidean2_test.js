@@ -11,6 +11,23 @@ define([
 ) {
   describe("Euclidean2", function() {
 
+    beforeEach(function() {
+      jasmine.addMatchers({
+        toBeNear: function(m) {
+          return {
+            compare: function (actual, expected) {
+              var tolerance = (Math.pow(10, -2) / 2);
+              var pass = (Math.abs(actual.coordinate(0) - expected.coordinate(0)) < tolerance) &&
+                         (Math.abs(actual.coordinate(1) - expected.coordinate(1)) < tolerance) &&
+                         (Math.abs(actual.coordinate(2) - expected.coordinate(2)) < tolerance) &&
+                         (Math.abs(actual.coordinate(3) - expected.coordinate(3)) < tolerance);
+              return {'pass': pass};
+            }
+          };
+        }
+      });
+    });
+
     it('Construction', function() {
       var x0 = Math.random();
       var x1 = Math.random();
@@ -35,202 +52,500 @@ define([
       expect(a.toStringIJK()).toBe("1+2*i+3*j+4*I");
     });
 
-    it('Should implement add function', function() {
-      var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
-      var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
-      
-      var c = a.add(b);
+    describe("+", function() {
+      it('add', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
 
-      expect(c.coordinate(0)).toBe(a.coordinate(0) + b.coordinate(0));
-      expect(c.coordinate(1)).toBe(a.coordinate(1) + b.coordinate(1));
-      expect(c.coordinate(2)).toBe(a.coordinate(2) + b.coordinate(2));
-      expect(c.coordinate(3)).toBe(a.coordinate(3) + b.coordinate(3));
+        var c = a.add(b);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) + b.coordinate(0));
+        expect(c.coordinate(1)).toBe(a.coordinate(1) + b.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2) + b.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3) + b.coordinate(3));
+      });
+      it('Euclidean2 + Euclidean2', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = a.__add__(b);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) + b.coordinate(0));
+        expect(c.coordinate(1)).toBe(a.coordinate(1) + b.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2) + b.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3) + b.coordinate(3));
+      });
+      it('Euclidean2 + number', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = Math.random();
+
+        var c = a.__add__(b);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) + b);
+        expect(c.coordinate(1)).toBe(a.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3));
+      });
+      it('Euclidean2 + string', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = '';
+
+        var c = a.__add__(b);
+
+        expect(typeof c).toBe('undefined');
+      });
+      it('Euclidean2 + Euclidean2', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = b.__radd__(a);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) + b.coordinate(0));
+        expect(c.coordinate(1)).toBe(a.coordinate(1) + b.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2) + b.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3) + b.coordinate(3));
+      });
+      it('number + Euclidean2', function() {
+        var a = Math.random();
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = b.__radd__(a);
+
+        expect(c.coordinate(0)).toBe(a + b.coordinate(0));
+        expect(c.coordinate(1)).toBe(0 + b.coordinate(1));
+        expect(c.coordinate(2)).toBe(0 + b.coordinate(2));
+        expect(c.coordinate(3)).toBe(0 + b.coordinate(3));
+      });
+      it('string + Euclidean2', function() {
+        var a = '';
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = b.__radd__(a);
+
+        expect(typeof c).toBe('undefined');
+      });
     });
 
-    it('Should implement sub function', function() {
-      var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
-      var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
-      
-      var c = a.sub(b);
+    describe("-", function() {
+      it('sub', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
 
-      expect(c.coordinate(0)).toBe(a.coordinate(0) - b.coordinate(0));
-      expect(c.coordinate(1)).toBe(a.coordinate(1) - b.coordinate(1));
-      expect(c.coordinate(2)).toBe(a.coordinate(2) - b.coordinate(2));
-      expect(c.coordinate(3)).toBe(a.coordinate(3) - b.coordinate(3));
+        var c = a.sub(b);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) - b.coordinate(0));
+        expect(c.coordinate(1)).toBe(a.coordinate(1) - b.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2) - b.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3) - b.coordinate(3));
+      });
+      it('Euclidean2 - Euclidean2', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = a.__sub__(b);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) - b.coordinate(0));
+        expect(c.coordinate(1)).toBe(a.coordinate(1) - b.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2) - b.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3) - b.coordinate(3));
+      });
+      it('Euclidean2 - number', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = Math.random();
+
+        var c = a.__sub__(b);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) - b);
+        expect(c.coordinate(1)).toBe(a.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3));
+      });
+      it('Euclidean2 - string', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = '';
+
+        var c = a.__sub__(b);
+
+        expect(typeof c).toBe('undefined');
+      });
+      it('Euclidean2 - Euclidean2 (Right)', function() {
+        var a = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = b.__rsub__(a);
+
+        expect(c.coordinate(0)).toBe(a.coordinate(0) - b.coordinate(0));
+        expect(c.coordinate(1)).toBe(a.coordinate(1) - b.coordinate(1));
+        expect(c.coordinate(2)).toBe(a.coordinate(2) - b.coordinate(2));
+        expect(c.coordinate(3)).toBe(a.coordinate(3) - b.coordinate(3));
+      });
+      it('number - Euclidean2', function() {
+        var a = Math.random();
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = b.__rsub__(a);
+
+        expect(c.coordinate(0)).toBe(a - b.coordinate(0));
+        expect(c.coordinate(1)).toBe(0 - b.coordinate(1));
+        expect(c.coordinate(2)).toBe(0 - b.coordinate(2));
+        expect(c.coordinate(3)).toBe(0 - b.coordinate(3));
+      });
+      it('string - Euclidean2', function() {
+        var a = '';
+        var b = new Euclidean2(Math.random(), Math.random(), Math.random(), Math.random());
+
+        var c = b.__rsub__(a);
+
+        expect(typeof c).toBe('undefined');
+      });
     });
 
-    it('Should implement mul function', function() {
-      var u = new Euclidean2(1, 0, 0, 0)
-      var i = new Euclidean2(0, 1, 0, 0)
-      var j = new Euclidean2(0, 0, 1, 0)
-      var I = new Euclidean2(0, 0, 0, 1)
+    describe("*", function() {
+      var n = Math.random();
+      var u = new Euclidean2(1, 0, 0, 0);
+      var i = new Euclidean2(0, 1, 0, 0);
+      var j = new Euclidean2(0, 0, 1, 0);
+      var I = new Euclidean2(0, 0, 0, 1);
 
-      expect(u.mul(u).coordinate(0)).toBe(1);
-      expect(u.mul(u).coordinate(1)).toBe(0);
-      expect(u.mul(u).coordinate(2)).toBe(0);
-      expect(u.mul(u).coordinate(3)).toBe(0);
+      it("mul", function() {
+        expect(u.mul(u).coordinate(0)).toBe(1);
+        expect(u.mul(u).coordinate(1)).toBe(0);
+        expect(u.mul(u).coordinate(2)).toBe(0);
+        expect(u.mul(u).coordinate(3)).toBe(0);
 
-      expect(u.mul(i).coordinate(0)).toBe(0);
-      expect(u.mul(i).coordinate(1)).toBe(1);
-      expect(u.mul(i).coordinate(2)).toBe(0);
-      expect(u.mul(i).coordinate(3)).toBe(0);
+        expect(u.mul(i).coordinate(0)).toBe(0);
+        expect(u.mul(i).coordinate(1)).toBe(1);
+        expect(u.mul(i).coordinate(2)).toBe(0);
+        expect(u.mul(i).coordinate(3)).toBe(0);
 
-      expect(u.mul(j).coordinate(0)).toBe(0);
-      expect(u.mul(j).coordinate(1)).toBe(0);
-      expect(u.mul(j).coordinate(2)).toBe(1);
-      expect(u.mul(j).coordinate(3)).toBe(0);
+        expect(u.mul(j).coordinate(0)).toBe(0);
+        expect(u.mul(j).coordinate(1)).toBe(0);
+        expect(u.mul(j).coordinate(2)).toBe(1);
+        expect(u.mul(j).coordinate(3)).toBe(0);
 
-      expect(u.mul(I).coordinate(0)).toBe(0);
-      expect(u.mul(I).coordinate(1)).toBe(0);
-      expect(u.mul(I).coordinate(2)).toBe(0);
-      expect(u.mul(I).coordinate(3)).toBe(1);
+        expect(u.mul(I).coordinate(0)).toBe(0);
+        expect(u.mul(I).coordinate(1)).toBe(0);
+        expect(u.mul(I).coordinate(2)).toBe(0);
+        expect(u.mul(I).coordinate(3)).toBe(1);
 
-      expect(i.mul(u).coordinate(0)).toBe(0);
-      expect(i.mul(u).coordinate(1)).toBe(1);
-      expect(i.mul(u).coordinate(2)).toBe(0);
-      expect(i.mul(u).coordinate(3)).toBe(0);
+        expect(i.mul(u).coordinate(0)).toBe(0);
+        expect(i.mul(u).coordinate(1)).toBe(1);
+        expect(i.mul(u).coordinate(2)).toBe(0);
+        expect(i.mul(u).coordinate(3)).toBe(0);
 
-      expect(i.mul(i).coordinate(0)).toBe(1);
-      expect(i.mul(i).coordinate(1)).toBe(0);
-      expect(i.mul(i).coordinate(2)).toBe(0);
-      expect(i.mul(i).coordinate(3)).toBe(0);
+        expect(i.mul(i).coordinate(0)).toBe(1);
+        expect(i.mul(i).coordinate(1)).toBe(0);
+        expect(i.mul(i).coordinate(2)).toBe(0);
+        expect(i.mul(i).coordinate(3)).toBe(0);
 
-      expect(i.mul(j).coordinate(0)).toBe(0);
-      expect(i.mul(j).coordinate(1)).toBe(0);
-      expect(i.mul(j).coordinate(2)).toBe(0);
-      expect(i.mul(j).coordinate(3)).toBe(1);
+        expect(i.mul(j).coordinate(0)).toBe(0);
+        expect(i.mul(j).coordinate(1)).toBe(0);
+        expect(i.mul(j).coordinate(2)).toBe(0);
+        expect(i.mul(j).coordinate(3)).toBe(1);
 
-      expect(i.mul(I).coordinate(0)).toBe(0);
-      expect(i.mul(I).coordinate(1)).toBe(0);
-      expect(i.mul(I).coordinate(2)).toBe(1);
-      expect(i.mul(I).coordinate(3)).toBe(0);
+        expect(i.mul(I).coordinate(0)).toBe(0);
+        expect(i.mul(I).coordinate(1)).toBe(0);
+        expect(i.mul(I).coordinate(2)).toBe(1);
+        expect(i.mul(I).coordinate(3)).toBe(0);
 
-      expect(j.mul(u).coordinate(0)).toBe(0);
-      expect(j.mul(u).coordinate(1)).toBe(0);
-      expect(j.mul(u).coordinate(2)).toBe(1);
-      expect(j.mul(u).coordinate(3)).toBe(0);
+        expect(j.mul(u).coordinate(0)).toBe(0);
+        expect(j.mul(u).coordinate(1)).toBe(0);
+        expect(j.mul(u).coordinate(2)).toBe(1);
+        expect(j.mul(u).coordinate(3)).toBe(0);
 
-      expect(j.mul(i).coordinate(0)).toBe(0);
-      expect(j.mul(i).coordinate(1)).toBe(0);
-      expect(j.mul(i).coordinate(2)).toBe(0);
-      expect(j.mul(i).coordinate(3)).toBe(-1);
+        expect(j.mul(i).coordinate(0)).toBe(0);
+        expect(j.mul(i).coordinate(1)).toBe(0);
+        expect(j.mul(i).coordinate(2)).toBe(0);
+        expect(j.mul(i).coordinate(3)).toBe(-1);
 
-      expect(j.mul(j).coordinate(0)).toBe(1);
-      expect(j.mul(j).coordinate(1)).toBe(0);
-      expect(j.mul(j).coordinate(2)).toBe(0);
-      expect(j.mul(j).coordinate(3)).toBe(0);
+        expect(j.mul(j).coordinate(0)).toBe(1);
+        expect(j.mul(j).coordinate(1)).toBe(0);
+        expect(j.mul(j).coordinate(2)).toBe(0);
+        expect(j.mul(j).coordinate(3)).toBe(0);
 
-      expect(j.mul(I).coordinate(0)).toBe(0);
-      expect(j.mul(I).coordinate(1)).toBe(-1);
-      expect(j.mul(I).coordinate(2)).toBe(0);
-      expect(j.mul(I).coordinate(3)).toBe(0);
+        expect(j.mul(I).coordinate(0)).toBe(0);
+        expect(j.mul(I).coordinate(1)).toBe(-1);
+        expect(j.mul(I).coordinate(2)).toBe(0);
+        expect(j.mul(I).coordinate(3)).toBe(0);
 
-      expect(I.mul(u).coordinate(0)).toBe(0);
-      expect(I.mul(u).coordinate(1)).toBe(0);
-      expect(I.mul(u).coordinate(2)).toBe(0);
-      expect(I.mul(u).coordinate(3)).toBe(1);
+        expect(I.mul(u).coordinate(0)).toBe(0);
+        expect(I.mul(u).coordinate(1)).toBe(0);
+        expect(I.mul(u).coordinate(2)).toBe(0);
+        expect(I.mul(u).coordinate(3)).toBe(1);
 
-      expect(I.mul(i).coordinate(0)).toBe(0);
-      expect(I.mul(i).coordinate(1)).toBe(0);
-      expect(I.mul(i).coordinate(2)).toBe(-1);
-      expect(I.mul(i).coordinate(3)).toBe(0);
+        expect(I.mul(i).coordinate(0)).toBe(0);
+        expect(I.mul(i).coordinate(1)).toBe(0);
+        expect(I.mul(i).coordinate(2)).toBe(-1);
+        expect(I.mul(i).coordinate(3)).toBe(0);
 
-      expect(I.mul(j).coordinate(0)).toBe(0);
-      expect(I.mul(j).coordinate(1)).toBe(1);
-      expect(I.mul(j).coordinate(2)).toBe(0);
-      expect(I.mul(j).coordinate(3)).toBe(0);
+        expect(I.mul(j).coordinate(0)).toBe(0);
+        expect(I.mul(j).coordinate(1)).toBe(1);
+        expect(I.mul(j).coordinate(2)).toBe(0);
+        expect(I.mul(j).coordinate(3)).toBe(0);
 
-      expect(I.mul(I).coordinate(0)).toBe(-1);
-      expect(I.mul(I).coordinate(1)).toBe(0);
-      expect(I.mul(I).coordinate(2)).toBe(0);
-      expect(I.mul(I).coordinate(3)).toBe(0);
+        expect(I.mul(I).coordinate(0)).toBe(-1);
+        expect(I.mul(I).coordinate(1)).toBe(0);
+        expect(I.mul(I).coordinate(2)).toBe(0);
+        expect(I.mul(I).coordinate(3)).toBe(0);
+      });
+      it("u * n (L)", function() {
+        expect(u.__mul__(n).coordinate(0)).toBe(n);
+        expect(u.__mul__(n).coordinate(1)).toBe(0);
+        expect(u.__mul__(n).coordinate(2)).toBe(0);
+        expect(u.__mul__(n).coordinate(3)).toBe(0);
+      });
+      it("u * u (L)", function() {
+        expect(u.__mul__(u).coordinate(0)).toBe(1);
+        expect(u.__mul__(u).coordinate(1)).toBe(0);
+        expect(u.__mul__(u).coordinate(2)).toBe(0);
+        expect(u.__mul__(u).coordinate(3)).toBe(0);
+      });
+      it("u * i (L)", function() {
+        expect(u.__mul__(i).coordinate(0)).toBe(0);
+        expect(u.__mul__(i).coordinate(1)).toBe(1);
+        expect(u.__mul__(i).coordinate(2)).toBe(0);
+        expect(u.__mul__(i).coordinate(3)).toBe(0);
+      });
+      it("u * j (L)", function() {
+        expect(u.__mul__(j).coordinate(0)).toBe(0);
+        expect(u.__mul__(j).coordinate(1)).toBe(0);
+        expect(u.__mul__(j).coordinate(2)).toBe(1);
+        expect(u.__mul__(j).coordinate(3)).toBe(0);
+      });
+      it("u * I (L)", function() {
+        expect(u.__mul__(I).coordinate(0)).toBe(0);
+        expect(u.__mul__(I).coordinate(1)).toBe(0);
+        expect(u.__mul__(I).coordinate(2)).toBe(0);
+        expect(u.__mul__(I).coordinate(3)).toBe(1);
+      });
+      it("i * n (L)", function() {
+        expect(i.__mul__(n).coordinate(0)).toBe(0);
+        expect(i.__mul__(n).coordinate(1)).toBe(n);
+        expect(i.__mul__(n).coordinate(2)).toBe(0);
+        expect(i.__mul__(n).coordinate(3)).toBe(0);
+      });
+      it("i * u (L)", function() {
+        expect(i.__mul__(u).coordinate(0)).toBe(0);
+        expect(i.__mul__(u).coordinate(1)).toBe(1);
+        expect(i.__mul__(u).coordinate(2)).toBe(0);
+        expect(i.__mul__(u).coordinate(3)).toBe(0);
+      });
+      it("i * i (L)", function() {
+        expect(i.__mul__(i).coordinate(0)).toBe(1);
+        expect(i.__mul__(i).coordinate(1)).toBe(0);
+        expect(i.__mul__(i).coordinate(2)).toBe(0);
+        expect(i.__mul__(i).coordinate(3)).toBe(0);
+      });
+      it("i * j (L)", function() {
+        expect(i.__mul__(j).coordinate(0)).toBe(0);
+        expect(i.__mul__(j).coordinate(1)).toBe(0);
+        expect(i.__mul__(j).coordinate(2)).toBe(0);
+        expect(i.__mul__(j).coordinate(3)).toBe(1);
+      });
+      it("i * I (L)", function() {
+        expect(i.__mul__(I).coordinate(0)).toBe(0);
+        expect(i.__mul__(I).coordinate(1)).toBe(0);
+        expect(i.__mul__(I).coordinate(2)).toBe(1);
+        expect(i.__mul__(I).coordinate(3)).toBe(0);
+      });
+      it("j * n (L)", function() {
+        expect(j.__mul__(n).coordinate(0)).toBe(0);
+        expect(j.__mul__(n).coordinate(1)).toBe(0);
+        expect(j.__mul__(n).coordinate(2)).toBe(n);
+        expect(j.__mul__(n).coordinate(3)).toBe(0);
+      });
+      it("j * u (L)", function() {
+        expect(j.__mul__(u).coordinate(0)).toBe(0);
+        expect(j.__mul__(u).coordinate(1)).toBe(0);
+        expect(j.__mul__(u).coordinate(2)).toBe(1);
+        expect(j.__mul__(u).coordinate(3)).toBe(0);
+      });
+      it("j * i (L)", function() {
+        expect(j.__mul__(i).coordinate(0)).toBe(0);
+        expect(j.__mul__(i).coordinate(1)).toBe(0);
+        expect(j.__mul__(i).coordinate(2)).toBe(0);
+        expect(j.__mul__(i).coordinate(3)).toBe(-1);
+      });
+      it("j * j (L)", function() {
+        expect(j.__mul__(j).coordinate(0)).toBe(1);
+        expect(j.__mul__(j).coordinate(1)).toBe(0);
+        expect(j.__mul__(j).coordinate(2)).toBe(0);
+        expect(j.__mul__(j).coordinate(3)).toBe(0);
+      });
+      it("j * I (L)", function() {
+        expect(j.__mul__(I).coordinate(0)).toBe(0);
+        expect(j.__mul__(I).coordinate(1)).toBe(-1);
+        expect(j.__mul__(I).coordinate(2)).toBe(0);
+        expect(j.__mul__(I).coordinate(3)).toBe(0);
+      });
+      it("I * n (L)", function() {
+        expect(I.__mul__(n).coordinate(0)).toBe(0);
+        expect(I.__mul__(n).coordinate(1)).toBe(0);
+        expect(I.__mul__(n).coordinate(2)).toBe(0);
+        expect(I.__mul__(n).coordinate(3)).toBe(n);
+      });
+      it("I * u (L)", function() {
+        expect(I.__mul__(u).coordinate(0)).toBe(0);
+        expect(I.__mul__(u).coordinate(1)).toBe(0);
+        expect(I.__mul__(u).coordinate(2)).toBe(0);
+        expect(I.__mul__(u).coordinate(3)).toBe(1);
+      });
+      it("I * i (L)", function() {
+        expect(I.__mul__(i).coordinate(0)).toBe(0);
+        expect(I.__mul__(i).coordinate(1)).toBe(0);
+        expect(I.__mul__(i).coordinate(2)).toBe(-1);
+        expect(I.__mul__(i).coordinate(3)).toBe(0);
+      });
+      it("I * j (L)", function() {
+        expect(I.__mul__(j).coordinate(0)).toBe(0);
+        expect(I.__mul__(j).coordinate(1)).toBe(1);
+        expect(I.__mul__(j).coordinate(2)).toBe(0);
+        expect(I.__mul__(j).coordinate(3)).toBe(0);
+      });
+      it("I * I (L)", function() {
+        expect(I.__mul__(I).coordinate(0)).toBe(-1);
+        expect(I.__mul__(I).coordinate(1)).toBe(0);
+        expect(I.__mul__(I).coordinate(2)).toBe(0);
+        expect(I.__mul__(I).coordinate(3)).toBe(0);
+      });
+      it("n * I (R)", function() {
+        expect(I.__rmul__(n).coordinate(0)).toBe(0);
+        expect(I.__rmul__(n).coordinate(1)).toBe(0);
+        expect(I.__rmul__(n).coordinate(2)).toBe(0);
+        expect(I.__rmul__(n).coordinate(3)).toBe(n);
+      });
+      it("u * I (R)", function() {
+        expect(I.__rmul__(u).coordinate(0)).toBe(0);
+        expect(I.__rmul__(u).coordinate(1)).toBe(0);
+        expect(I.__rmul__(u).coordinate(2)).toBe(0);
+        expect(I.__rmul__(u).coordinate(3)).toBe(1);
+      });
+      it("i * I (R)", function() {
+        expect(I.__rmul__(i).coordinate(0)).toBe(0);
+        expect(I.__rmul__(i).coordinate(1)).toBe(0);
+        expect(I.__rmul__(i).coordinate(2)).toBe(1);
+        expect(I.__rmul__(i).coordinate(3)).toBe(0);
+      });
     });
 
-    it('div Euclidean2', function() {
-      var u = new Euclidean2(1, 0, 0, 0)
-      var i = new Euclidean2(0, 1, 0, 0)
-      var j = new Euclidean2(0, 0, 1, 0)
-      var I = new Euclidean2(0, 0, 0, 1)
+    describe("/", function() {
+      var n = Math.random();
+      var u = new Euclidean2(1, 0, 0, 0);
+      var i = new Euclidean2(0, 1, 0, 0);
+      var j = new Euclidean2(0, 0, 1, 0);
+      var I = new Euclidean2(0, 0, 0, 1);
 
-      expect(u.div(u).coordinate(0)).toBe(1);
-      expect(u.div(u).coordinate(1)).toBe(0);
-      expect(u.div(u).coordinate(2)).toBe(0);
-      expect(u.div(u).coordinate(3)).toBe(0);
+      it('div Euclidean2', function() {
+        expect(u.div(u).coordinate(0)).toBe(1);
+        expect(u.div(u).coordinate(1)).toBe(0);
+        expect(u.div(u).coordinate(2)).toBe(0);
+        expect(u.div(u).coordinate(3)).toBe(0);
 
-      expect(u.div(i).coordinate(0)).toBe(0);
-      expect(u.div(i).coordinate(1)).toBe(1);
-      expect(u.div(i).coordinate(2)).toBe(0);
-      expect(u.div(i).coordinate(3)).toBe(0);
+        expect(u.div(i).coordinate(0)).toBe(0);
+        expect(u.div(i).coordinate(1)).toBe(1);
+        expect(u.div(i).coordinate(2)).toBe(0);
+        expect(u.div(i).coordinate(3)).toBe(0);
 
-      expect(u.div(j).coordinate(0)).toBe(0);
-      expect(u.div(j).coordinate(1)).toBe(0);
-      expect(u.div(j).coordinate(2)).toBe(1);
-      expect(u.div(j).coordinate(3)).toBe(0);
+        expect(u.div(j).coordinate(0)).toBe(0);
+        expect(u.div(j).coordinate(1)).toBe(0);
+        expect(u.div(j).coordinate(2)).toBe(1);
+        expect(u.div(j).coordinate(3)).toBe(0);
 
-      expect(u.div(I).coordinate(0)).toBe(0);
-      expect(u.div(I).coordinate(1)).toBe(0);
-      expect(u.div(I).coordinate(2)).toBe(0);
-      expect(u.div(I).coordinate(3)).toBe(-1);
+        expect(u.div(I).coordinate(0)).toBe(0);
+        expect(u.div(I).coordinate(1)).toBe(0);
+        expect(u.div(I).coordinate(2)).toBe(0);
+        expect(u.div(I).coordinate(3)).toBe(-1);
 
-      expect(i.div(u).coordinate(0)).toBe(0);
-      expect(i.div(u).coordinate(1)).toBe(1);
-      expect(i.div(u).coordinate(2)).toBe(0);
-      expect(i.div(u).coordinate(3)).toBe(0);
+        expect(i.div(u).coordinate(0)).toBe(0);
+        expect(i.div(u).coordinate(1)).toBe(1);
+        expect(i.div(u).coordinate(2)).toBe(0);
+        expect(i.div(u).coordinate(3)).toBe(0);
 
-      expect(i.div(i).coordinate(0)).toBe(1);
-      expect(i.div(i).coordinate(1)).toBe(0);
-      expect(i.div(i).coordinate(2)).toBe(0);
-      expect(i.div(i).coordinate(3)).toBe(0);
+        expect(i.div(i).coordinate(0)).toBe(1);
+        expect(i.div(i).coordinate(1)).toBe(0);
+        expect(i.div(i).coordinate(2)).toBe(0);
+        expect(i.div(i).coordinate(3)).toBe(0);
 
-      expect(i.div(j).coordinate(0)).toBe(0);
-      expect(i.div(j).coordinate(1)).toBe(0);
-      expect(i.div(j).coordinate(2)).toBe(0);
-      expect(i.div(j).coordinate(3)).toBe(1);
+        expect(i.div(j).coordinate(0)).toBe(0);
+        expect(i.div(j).coordinate(1)).toBe(0);
+        expect(i.div(j).coordinate(2)).toBe(0);
+        expect(i.div(j).coordinate(3)).toBe(1);
 
-      expect(i.div(I).coordinate(0)).toBe(0);
-      expect(i.div(I).coordinate(1)).toBe(0);
-      expect(i.div(I).coordinate(2)).toBe(-1);
-      expect(i.div(I).coordinate(3)).toBe(0);
+        expect(i.div(I).coordinate(0)).toBe(0);
+        expect(i.div(I).coordinate(1)).toBe(0);
+        expect(i.div(I).coordinate(2)).toBe(-1);
+        expect(i.div(I).coordinate(3)).toBe(0);
 
-      expect(j.div(u).coordinate(0)).toBe(0);
-      expect(j.div(u).coordinate(1)).toBe(0);
-      expect(j.div(u).coordinate(2)).toBe(1);
-      expect(j.div(u).coordinate(3)).toBe(0);
+        expect(j.div(u).coordinate(0)).toBe(0);
+        expect(j.div(u).coordinate(1)).toBe(0);
+        expect(j.div(u).coordinate(2)).toBe(1);
+        expect(j.div(u).coordinate(3)).toBe(0);
 
-      expect(j.div(i).coordinate(0)).toBe(0);
-      expect(j.div(i).coordinate(1)).toBe(0);
-      expect(j.div(i).coordinate(2)).toBe(0);
-      expect(j.div(i).coordinate(3)).toBe(-1);
+        expect(j.div(i).coordinate(0)).toBe(0);
+        expect(j.div(i).coordinate(1)).toBe(0);
+        expect(j.div(i).coordinate(2)).toBe(0);
+        expect(j.div(i).coordinate(3)).toBe(-1);
 
-      expect(j.div(j).coordinate(0)).toBe(1);
-      expect(j.div(j).coordinate(1)).toBe(0);
-      expect(j.div(j).coordinate(2)).toBe(0);
-      expect(j.div(j).coordinate(3)).toBe(0);
+        expect(j.div(j).coordinate(0)).toBe(1);
+        expect(j.div(j).coordinate(1)).toBe(0);
+        expect(j.div(j).coordinate(2)).toBe(0);
+        expect(j.div(j).coordinate(3)).toBe(0);
 
-      expect(j.div(I).coordinate(0)).toBe(0);
-      expect(j.div(I).coordinate(1)).toBe(1);
-      expect(j.div(I).coordinate(2)).toBe(0);
-      expect(j.div(I).coordinate(3)).toBe(0);
+        expect(j.div(I).coordinate(0)).toBe(0);
+        expect(j.div(I).coordinate(1)).toBe(1);
+        expect(j.div(I).coordinate(2)).toBe(0);
+        expect(j.div(I).coordinate(3)).toBe(0);
 
-      expect(I.div(u).coordinate(0)).toBe(0);
-      expect(I.div(u).coordinate(1)).toBe(0);
-      expect(I.div(u).coordinate(2)).toBe(0);
-      expect(I.div(u).coordinate(3)).toBe(1);
+        expect(I.div(u).coordinate(0)).toBe(0);
+        expect(I.div(u).coordinate(1)).toBe(0);
+        expect(I.div(u).coordinate(2)).toBe(0);
+        expect(I.div(u).coordinate(3)).toBe(1);
 
-      expect(I.div(i).coordinate(0)).toBe(0);
-      expect(I.div(i).coordinate(1)).toBe(0);
-      expect(I.div(i).coordinate(2)).toBe(-1);
-      expect(I.div(i).coordinate(3)).toBe(0);
+        expect(I.div(i).coordinate(0)).toBe(0);
+        expect(I.div(i).coordinate(1)).toBe(0);
+        expect(I.div(i).coordinate(2)).toBe(-1);
+        expect(I.div(i).coordinate(3)).toBe(0);
 
-      expect(I.div(j).coordinate(0)).toBe(0);
-      expect(I.div(j).coordinate(1)).toBe(1);
-      expect(I.div(j).coordinate(2)).toBe(0);
-      expect(I.div(j).coordinate(3)).toBe(0);
+        expect(I.div(j).coordinate(0)).toBe(0);
+        expect(I.div(j).coordinate(1)).toBe(1);
+        expect(I.div(j).coordinate(2)).toBe(0);
+        expect(I.div(j).coordinate(3)).toBe(0);
 
-      expect(I.div(I).coordinate(0)).toBe(1);
-      expect(I.div(I).coordinate(1)).toBe(0);
-      expect(I.div(I).coordinate(2)).toBe(0);
-      expect(I.div(I).coordinate(3)).toBe(0);
+        expect(I.div(I).coordinate(0)).toBe(1);
+        expect(I.div(I).coordinate(1)).toBe(0);
+        expect(I.div(I).coordinate(2)).toBe(0);
+        expect(I.div(I).coordinate(3)).toBe(0);
+      });
+      it("u / n (L)", function() {
+        expect(u.__div__(n).coordinate(0)).toBe(1/n);
+        expect(u.__div__(n).coordinate(1)).toBe(0);
+        expect(u.__div__(n).coordinate(2)).toBe(0);
+        expect(u.__div__(n).coordinate(3)).toBe(0);
+      });
+      it("u / u (L)", function() {
+        expect(u.__div__(u).coordinate(0)).toBe(1);
+        expect(u.__div__(u).coordinate(1)).toBe(0);
+        expect(u.__div__(u).coordinate(2)).toBe(0);
+        expect(u.__div__(u).coordinate(3)).toBe(0);
+      });
+      it("i / n (L)", function() {
+        expect(i.__div__(n).coordinate(0)).toBe(0);
+        expect(i.__div__(n).coordinate(1)).toBe(1/n);
+        expect(i.__div__(n).coordinate(2)).toBe(0);
+        expect(i.__div__(n).coordinate(3)).toBe(0);
+      });
+      it("j / n (L)", function() {
+        expect(j.__div__(n).coordinate(0)).toBe(0);
+        expect(j.__div__(n).coordinate(1)).toBe(0);
+        expect(j.__div__(n).coordinate(2)).toBe(1/n);
+        expect(j.__div__(n).coordinate(3)).toBe(0);
+      });
+      it("I / n (L)", function() {
+        expect(I.__div__(n).coordinate(0)).toBe(0);
+        expect(I.__div__(n).coordinate(1)).toBe(0);
+        expect(I.__div__(n).coordinate(2)).toBe(0);
+        expect(I.__div__(n).coordinate(3)).toBe(1/n);
+      });
     });
 
     it('div number', function() {
