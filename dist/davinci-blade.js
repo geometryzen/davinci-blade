@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.32'
+        VERSION: '0.9.33'
     };
     return blade;
 });
@@ -1059,6 +1059,28 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             xs = Euclidean2.lshift(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         };
+        Euclidean2.prototype.__lshift__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return this.lshift(other);
+            }
+            else if (typeof other === 'number') {
+                return this.lshift(new Euclidean2(other, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean2.prototype.__rlshift__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return other.lshift(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean2(other, 0, 0, 0).lshift(this);
+            }
+            else {
+                return;
+            }
+        };
         Euclidean2.rshift = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
             a0 = a[0];
@@ -1079,6 +1101,28 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             var xs;
             xs = Euclidean2.rshift(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+        };
+        Euclidean2.prototype.__rshift__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return this.rshift(other);
+            }
+            else if (typeof other === 'number') {
+                return this.rshift(new Euclidean2(other, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean2.prototype.__rrshift__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return other.rshift(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean2(other, 0, 0, 0).rshift(this);
+            }
+            else {
+                return;
+            }
         };
         Euclidean2.prototype.grade = function (index) {
             switch (index) {

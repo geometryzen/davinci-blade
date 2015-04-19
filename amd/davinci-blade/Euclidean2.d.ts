@@ -40,8 +40,12 @@ declare class Euclidean2 {
     __rwedge__(other: any): Euclidean2;
     static lshift(a: number[], b: number[]): number[];
     lshift(rhs: Euclidean2): Euclidean2;
+    __lshift__(other: any): Euclidean2;
+    __rlshift__(other: any): Euclidean2;
     static rshift(a: number[], b: number[]): number[];
     rshift(rhs: Euclidean2): Euclidean2;
+    __rshift__(other: any): Euclidean2;
+    __rrshift__(other: any): Euclidean2;
     grade(index: number): Euclidean2;
     norm(): Euclidean2;
     quad(): Euclidean2;

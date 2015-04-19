@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.32",
+        "version": "0.9.33",
         "url": "",
         "logo": "../assets/logo.png"
     },
