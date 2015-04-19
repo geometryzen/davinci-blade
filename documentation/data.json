@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.34",
+        "version": "0.9.35",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -418,6 +418,12 @@
             "class": "Dimensions"
         },
         {
+            "file": "amd/davinci-blade/Euclidean2.js",
+            "line": 732,
+            "description": "~ (tilde) produces reversion.",
+            "class": "Euclidean2"
+        },
+        {
             "file": "amd/davinci-blade/Euclidean3.js",
             "line": 162,
             "class": "Euclidean3"
@@ -535,6 +541,10 @@
         {
             "message": "Missing item type\n__radd__ supports operator +(any, Complex)",
             "line": " amd/davinci-blade/Complex.js:32"
+        },
+        {
+            "message": "Missing item type\n~ (tilde) produces reversion.",
+            "line": " amd/davinci-blade/Euclidean2.js:732"
         },
         {
             "message": "Missing item type",

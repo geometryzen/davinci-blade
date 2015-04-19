@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.34'
+        VERSION: '0.9.35'
     };
     return blade;
 });
@@ -1164,6 +1164,18 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             else {
                 return;
             }
+        };
+        Euclidean2.prototype.__pos__ = function () {
+            return this;
+        };
+        Euclidean2.prototype.__neg__ = function () {
+            return new Euclidean2(-this.w, -this.x, -this.y, -this.xy);
+        };
+        /**
+         * ~ (tilde) produces reversion.
+         */
+        Euclidean2.prototype.__tilde__ = function () {
+            return new Euclidean2(this.w, this.x, this.y, -this.xy);
         };
         Euclidean2.prototype.grade = function (index) {
             switch (index) {

@@ -723,6 +723,18 @@ define(["require", "exports"], function (require, exports) {
                 return;
             }
         };
+        Euclidean2.prototype.__pos__ = function () {
+            return this;
+        };
+        Euclidean2.prototype.__neg__ = function () {
+            return new Euclidean2(-this.w, -this.x, -this.y, -this.xy);
+        };
+        /**
+         * ~ (tilde) produces reversion.
+         */
+        Euclidean2.prototype.__tilde__ = function () {
+            return new Euclidean2(this.w, this.x, this.y, -this.xy);
+        };
         Euclidean2.prototype.grade = function (index) {
             switch (index) {
                 case 0:

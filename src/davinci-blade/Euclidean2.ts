@@ -748,6 +748,21 @@ class Euclidean2 {
         }
     }
 
+    __pos__(): Euclidean2 {
+        return this;
+    }
+
+    __neg__(): Euclidean2 {
+        return new Euclidean2(-this.w, -this.x, -this.y, -this.xy);
+    }
+
+    /**
+     * ~ (tilde) produces reversion.
+     */
+    __tilde__(): Euclidean2 {
+        return new Euclidean2(this.w, this.x, this.y, -this.xy);
+    }
+
     grade(index: number): Euclidean2 {
         switch (index) {
             case 0:

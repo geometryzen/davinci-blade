@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.34</em>
+            <em>API Docs for: 0.9.35</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -809,6 +809,18 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             else {
                 return;
             }
+        };
+        Euclidean2.prototype.__pos__ = function () {
+            return this;
+        };
+        Euclidean2.prototype.__neg__ = function () {
+            return new Euclidean2(-this.w, -this.x, -this.y, -this.xy);
+        };
+        /**
+         * ~ (tilde) produces reversion.
+         */
+        Euclidean2.prototype.__tilde__ = function () {
+            return new Euclidean2(this.w, this.x, this.y, -this.xy);
         };
         Euclidean2.prototype.grade = function (index) {
             switch (index) {

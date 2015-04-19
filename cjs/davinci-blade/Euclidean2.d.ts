@@ -50,6 +50,12 @@ declare class Euclidean2 {
     __rrshift__(other: any): Euclidean2;
     __vbar__(other: any): Euclidean2;
     __rvbar__(other: any): Euclidean2;
+    __pos__(): Euclidean2;
+    __neg__(): Euclidean2;
+    /**
+     * ~ (tilde) produces reversion.
+     */
+    __tilde__(): Euclidean2;
     grade(index: number): Euclidean2;
     norm(): Euclidean2;
     quad(): Euclidean2;
