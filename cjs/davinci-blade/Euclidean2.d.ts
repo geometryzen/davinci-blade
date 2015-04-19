@@ -34,6 +34,8 @@ declare class Euclidean2 {
     div(rhs: any): Euclidean2;
     __div__(other: any): Euclidean2;
     __rdiv__(other: any): Euclidean2;
+    static splat(a: number[], b: number[]): number[];
+    splat(rhs: Euclidean2): Euclidean2;
     static wedge(a: number[], b: number[]): number[];
     wedge(rhs: Euclidean2): Euclidean2;
     __wedge__(other: any): Euclidean2;
@@ -46,6 +48,8 @@ declare class Euclidean2 {
     rshift(rhs: Euclidean2): Euclidean2;
     __rshift__(other: any): Euclidean2;
     __rrshift__(other: any): Euclidean2;
+    __vbar__(other: any): Euclidean2;
+    __rvbar__(other: any): Euclidean2;
     grade(index: number): Euclidean2;
     norm(): Euclidean2;
     quad(): Euclidean2;

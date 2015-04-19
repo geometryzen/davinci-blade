@@ -553,6 +553,26 @@ define(["require", "exports"], function (require, exports) {
                 return;
             }
         };
+        Euclidean2.splat = function (a, b) {
+            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
+            a0 = a[0];
+            a1 = a[1];
+            a2 = a[2];
+            a3 = a[3];
+            b0 = b[0];
+            b1 = b[1];
+            b2 = b[2];
+            b3 = b[3];
+            x0 = a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3;
+            x1 = 0;
+            x2 = 0;
+            x3 = 0;
+            return [x0, x1, x2, x3];
+        };
+        Euclidean2.prototype.splat = function (rhs) {
+            var xs = Euclidean2.splat(this.coordinates(), rhs.coordinates());
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+        };
         Euclidean2.wedge = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
             a0 = a[0];
@@ -570,8 +590,7 @@ define(["require", "exports"], function (require, exports) {
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.wedge = function (rhs) {
-            var xs;
-            xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
+            var xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
         };
         Euclidean2.prototype.__wedge__ = function (other) {
@@ -677,6 +696,28 @@ define(["require", "exports"], function (require, exports) {
             }
             else if (typeof other === 'number') {
                 return new Euclidean2(other, 0, 0, 0).rshift(this);
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean2.prototype.__vbar__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return this.splat(other);
+            }
+            else if (typeof other === 'number') {
+                return this.splat(new Euclidean2(other, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean2.prototype.__rvbar__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return other.splat(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean2(other, 0, 0, 0).splat(this);
             }
             else {
                 return;
