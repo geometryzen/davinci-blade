@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.31</em>
+            <em>API Docs for: 0.9.32</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -660,6 +660,28 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             var xs;
             xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+        };
+        Euclidean2.prototype.__wedge__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return this.wedge(other);
+            }
+            else if (typeof other === &#x27;number&#x27;) {
+                return this.wedge(new Euclidean2(other, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean2.prototype.__rwedge__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return other.wedge(this);
+            }
+            else if (typeof other === &#x27;number&#x27;) {
+                return new Euclidean2(other, 0, 0, 0).wedge(this);
+            }
+            else {
+                return;
+            }
         };
         Euclidean2.lshift = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;

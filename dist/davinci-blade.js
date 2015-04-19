@@ -435,7 +435,7 @@ define("../vendor/almond/almond", function(){});
 
 define('davinci-blade/core',["require", "exports"], function (require, exports) {
     var blade = {
-        VERSION: '0.9.31'
+        VERSION: '0.9.32'
     };
     return blade;
 });
@@ -1015,6 +1015,28 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             var xs;
             xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
             return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+        };
+        Euclidean2.prototype.__wedge__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return this.wedge(other);
+            }
+            else if (typeof other === 'number') {
+                return this.wedge(new Euclidean2(other, 0, 0, 0));
+            }
+            else {
+                return;
+            }
+        };
+        Euclidean2.prototype.__rwedge__ = function (other) {
+            if (other instanceof Euclidean2) {
+                return other.wedge(this);
+            }
+            else if (typeof other === 'number') {
+                return new Euclidean2(other, 0, 0, 0).wedge(this);
+            }
+            else {
+                return;
+            }
         };
         Euclidean2.lshift = function (a, b) {
             var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;

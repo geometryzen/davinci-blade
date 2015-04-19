@@ -36,6 +36,8 @@ declare class Euclidean2 {
     __rdiv__(other: any): Euclidean2;
     static wedge(a: number[], b: number[]): number[];
     wedge(rhs: Euclidean2): Euclidean2;
+    __wedge__(other: any): Euclidean2;
+    __rwedge__(other: any): Euclidean2;
     static lshift(a: number[], b: number[]): number[];
     lshift(rhs: Euclidean2): Euclidean2;
     static rshift(a: number[], b: number[]): number[];

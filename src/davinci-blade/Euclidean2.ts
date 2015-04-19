@@ -581,6 +581,30 @@ class Euclidean2 {
         return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
     }
 
+    __wedge__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return this.wedge(other);
+        }
+        else if (typeof other === 'number') {
+            return this.wedge(new Euclidean2(other,0,0,0));
+        }
+        else {
+            return;
+        }
+    }
+
+    __rwedge__(other: any): Euclidean2 {
+        if (other instanceof Euclidean2) {
+            return other.wedge(this);
+        }
+        else if (typeof other === 'number') {
+            return new Euclidean2(other,0,0,0).wedge(this);
+        }
+        else {
+            return;
+        }
+    }
+
     static lshift(a: number[], b: number[]): number[] {
         var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
 
