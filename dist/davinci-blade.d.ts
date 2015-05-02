@@ -73,8 +73,8 @@ declare module blade {
         wedge(rhs: T): T;
         lshift(rhs: T): T;
         rshift(rhs: T): T;
-        norm(): number;
-        quad(): number;
+        norm(): T;
+        quad(): T;
     }
 }
 declare module blade {
@@ -121,8 +121,8 @@ declare module blade {
         static rshift(a: number[], b: number[]): number[];
         public rshift(rhs: Euclidean2): Euclidean2;
         public grade(index: number): Euclidean2;
-        public norm(): number;
-        public quad(): number;
+        public norm(): Euclidean2;
+        public quad(): Euclidean2;
         public isNaN(): boolean;
         public toString(): string;
         public toStringIJK(): string;
@@ -220,11 +220,11 @@ declare module blade {
         /**
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
          */
-        norm(): number;
+        norm(): Euclidean3;
         /**
          * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
          */
-        quad(): number;
+        quad(): Euclidean3;
         sqrt(): Euclidean3;
         toString(): string;
         toStringIJK(): string;

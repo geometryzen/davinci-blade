@@ -767,14 +767,14 @@ define([
         expect(e.xyz).toBe(a.xyz);
       });
     });
-    describe("quad", function() {
-      it("returns a number", function() {
-        expect(typeof zero.quad()).toBe('number');
-      });
-    });
     describe("norm", function() {
       it("returns a number", function() {
-        expect(typeof zero.norm()).toBe('number');
+        expect(typeof zero.norm()).toBe('object');
+      });
+    });
+    describe("quad", function() {
+      it("returns a number", function() {
+        expect(typeof zero.quad()).toBe('object');
       });
     });
   });

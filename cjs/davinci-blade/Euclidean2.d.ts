@@ -58,8 +58,8 @@ declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
      */
     __tilde__(): Euclidean2;
     grade(index: number): Euclidean2;
-    norm(): number;
-    quad(): number;
+    norm(): Euclidean2;
+    quad(): Euclidean2;
     isNaN(): boolean;
     toString(): string;
     toStringIJK(): string;

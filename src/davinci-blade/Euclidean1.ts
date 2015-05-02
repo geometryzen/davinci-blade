@@ -20,8 +20,8 @@ class Euclidean1 implements GeometricQuantity<Euclidean1> {
     add(rhs: Euclidean1): Euclidean1 {
         return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
     }
-    norm(): number {return Math.sqrt(this.quad());}
-    quad(): number {return this.w * this.w + this.x * this.x;}
+    norm(): Euclidean1 {return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0);}
+    quad(): Euclidean1 {return new Euclidean1(this.w * this.w + this.x * this.x, 0);}
 }
 
 export = Euclidean1;

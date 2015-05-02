@@ -748,10 +748,10 @@ define(["require", "exports"], function (require, exports) {
             }
         };
         Euclidean2.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0);
         };
         Euclidean2.prototype.quad = function () {
-            return this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy;
+            return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0);
         };
         Euclidean2.prototype.isNaN = function () {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);

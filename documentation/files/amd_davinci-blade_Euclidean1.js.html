@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.0</em>
+            <em>API Docs for: 1.0.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -104,10 +104,10 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
         };
         Euclidean1.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0);
         };
         Euclidean1.prototype.quad = function () {
-            return this.w * this.w + this.x * this.x;
+            return new Euclidean1(this.w * this.w + this.x * this.x, 0);
         };
         return Euclidean1;
     })();

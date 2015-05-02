@@ -1029,12 +1029,12 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
     /**
      * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
      */
-    norm() {return Math.sqrt(this.quad());}
+    norm(): Euclidean3 {return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0,0,0,0,0,0,0);}
 
     /**
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
-    quad() {return this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz;}
+    quad(): Euclidean3 {return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0,0,0,0,0,0,0);}
 
     sqrt() {return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);}
 

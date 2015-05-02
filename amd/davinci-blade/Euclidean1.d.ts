@@ -12,7 +12,7 @@ declare class Euclidean1 implements GeometricQuantity<Euclidean1> {
      */
     constructor(w: number, x: number);
     add(rhs: Euclidean1): Euclidean1;
-    norm(): number;
-    quad(): number;
+    norm(): Euclidean1;
+    quad(): Euclidean1;
 }
 export = Euclidean1;

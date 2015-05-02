@@ -28,14 +28,16 @@ define(['davinci-blade/Complex'], function(Complex) {
       var x = Math.random();
       var y = Math.random();
       var z = new Complex(x, y);
-      expect(z.norm()).toBe(Math.sqrt(x * x + y * y));
+      expect(z.norm().x).toBe(Math.sqrt(x * x + y * y));
+      expect(z.norm().y).toBe(0);
     });
 
     it("quad", function() {
       var x = Math.random();
       var y = Math.random();
       var z = new Complex(x, y);
-      expect(z.quad()).toBe(x * x + y * y);
+      expect(z.quad().x).toBe(x * x + y * y);
+      expect(z.quad().y).toBe(0);
     });
 
     describe("Operator Overloading", function() {
@@ -144,8 +146,8 @@ define(['davinci-blade/Complex'], function(Complex) {
         it("__div__(Complex)", function() {
           var z = a.__div__(b);
           var q = b.quad();
-          var re = (a.x * b.x + a.y * b.y) / q;
-          var im = (a.y * b.x - a.x * b.y) / q;
+          var re = (a.x * b.x + a.y * b.y) / q.x;
+          var im = (a.y * b.x - a.x * b.y) / q.x;
           expect(z.x).toBe(re);
           expect(z.y).toBe(im);
         });

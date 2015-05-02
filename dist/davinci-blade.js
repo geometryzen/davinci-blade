@@ -438,7 +438,7 @@ define('davinci-blade/core',["require", "exports"], function (require, exports) 
         /**
          * The version of the blade library.
          */
-        VERSION: '1.0.0'
+        VERSION: '1.0.1'
     };
     return blade;
 });
@@ -461,10 +461,10 @@ define('davinci-blade/Euclidean1',["require", "exports"], function (require, exp
             return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
         };
         Euclidean1.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0);
         };
         Euclidean1.prototype.quad = function () {
-            return this.w * this.w + this.x * this.x;
+            return new Euclidean1(this.w * this.w + this.x * this.x, 0);
         };
         return Euclidean1;
     })();
@@ -1221,10 +1221,10 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
             }
         };
         Euclidean2.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0);
         };
         Euclidean2.prototype.quad = function () {
-            return this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy;
+            return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0);
         };
         Euclidean2.prototype.isNaN = function () {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
@@ -1523,6 +1523,12 @@ define('davinci-blade/Unit',["require", "exports"], function (require, exports) 
         Unit.prototype.inverse = function () {
             return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
         };
+        Unit.prototype.norm = function () {
+            return new Unit(Math.abs(this.scale), this.dimensions, this.labels);
+        };
+        Unit.prototype.quad = function () {
+            return new Unit(this.scale * this.scale, this.dimensions.mul(this.dimensions), this.labels);
+        };
         Unit.prototype.toString = function () {
             return unitString(this.scale, this.dimensions, this.labels);
         };
@@ -1709,10 +1715,10 @@ define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], fun
             }
         };
         Measure.prototype.norm = function () {
-            return null;
+            return new Measure(this.quantity.norm(), this.uom.norm());
         };
         Measure.prototype.quad = function () {
-            return null;
+            return new Measure(this.quantity.quad(), this.uom.quad());
         };
         Measure.prototype.toString = function () {
             return "" + this.quantity + " " + this.uom;
@@ -2708,13 +2714,13 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
          */
         Euclidean3.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
         };
         /**
          * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
          */
         Euclidean3.prototype.quad = function () {
-            return this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz;
+            return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
         };
         Euclidean3.prototype.sqrt = function () {
             return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);
@@ -3191,10 +3197,10 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
             }
         };
         Complex.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0);
         };
         Complex.prototype.quad = function () {
-            return this.x * this.x + this.y * this.y;
+            return new Complex(this.x * this.x + this.y * this.y, 0);
         };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);

@@ -984,13 +984,13 @@ define(["require", "exports", 'davinci-blade/Measure', 'davinci-blade/Unit'], fu
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
          */
         Euclidean3.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
         };
         /**
          * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
          */
         Euclidean3.prototype.quad = function () {
-            return this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz;
+            return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
         };
         Euclidean3.prototype.sqrt = function () {
             return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);

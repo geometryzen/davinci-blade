@@ -90,11 +90,11 @@ declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
     /**
      * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
      */
-    norm(): number;
+    norm(): Euclidean3;
     /**
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
-    quad(): number;
+    quad(): Euclidean3;
     sqrt(): Euclidean3;
     toString(): string;
     toStringIJK(): string;

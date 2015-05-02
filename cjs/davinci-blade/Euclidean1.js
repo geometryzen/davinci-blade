@@ -15,10 +15,10 @@ var Euclidean1 = (function () {
         return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
     };
     Euclidean1.prototype.norm = function () {
-        return Math.sqrt(this.quad());
+        return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0);
     };
     Euclidean1.prototype.quad = function () {
-        return this.w * this.w + this.x * this.x;
+        return new Euclidean1(this.w * this.w + this.x * this.x, 0);
     };
     return Euclidean1;
 })();

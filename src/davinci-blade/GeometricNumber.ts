@@ -1,5 +1,5 @@
 // The TypeScript compiler won't allow this interface to be parameterized
-// and be a constraint in the Measure class. maybe this is good enough for
+// and be a constraint in the Measure class. Maybe this is good enough for
 // TypeScripts' structural typing.
 interface GeometricNumber
 {
@@ -11,5 +11,7 @@ interface GeometricNumber
   wedge(other:any):any;
   lshift(other:any):any;
   rshift(other:any):any;
+  norm(): GeometricNumber;
+  quad(): GeometricNumber;
 }
 export = GeometricNumber;

@@ -176,10 +176,10 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             }
         };
         Measure.prototype.norm = function () {
-            return null;
+            return new Measure(this.quantity.norm(), this.uom.norm());
         };
         Measure.prototype.quad = function () {
-            return null;
+            return new Measure(this.quantity.quad(), this.uom.quad());
         };
         Measure.prototype.toString = function () {
             return "" + this.quantity + " " + this.uom;

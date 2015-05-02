@@ -113,10 +113,10 @@ define(["require", "exports"], function (require, exports) {
             }
         };
         Complex.prototype.norm = function () {
-            return Math.sqrt(this.quad());
+            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0);
         };
         Complex.prototype.quad = function () {
-            return this.x * this.x + this.y * this.y;
+            return new Complex(this.x * this.x + this.y * this.y, 0);
         };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);

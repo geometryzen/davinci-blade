@@ -1,5 +1,6 @@
 import Unit = require('davinci-blade/Unit');
 import GeometricNumber = require('davinci-blade/GeometricNumber');
+import GeometricQuantity = require('davinci-blade/GeometricQuantity');
 
 function mul<T extends GeometricNumber>(lhs: Measure<T>, rhs: Measure<T>): Measure<T>
 {
@@ -230,15 +231,14 @@ class Measure<T extends GeometricNumber> {
     }
 
     norm(): Measure<T> {
-        return null;
+      return new Measure<T>(<T>this.quantity.norm(), this.uom.norm());
     }
 
     quad(): Measure<T> {
-        return null;
+      return new Measure<T>(<T>this.quantity.quad(), this.uom.quad());
     }
 
-    toString(): string
-    {
+    toString(): string {
         return "" + this.quantity + " " + this.uom;
     }
 }

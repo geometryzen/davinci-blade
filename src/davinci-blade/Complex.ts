@@ -162,9 +162,9 @@ class Complex implements GeometricQuantity<Complex>
       }
     }
 
-    norm(): number { return Math.sqrt(this.quad()); }
+    norm(): Complex { return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0); }
 
-    quad(): number { return this.x * this.x + this.y * this.y; }
+    quad(): Complex { return new Complex(this.x * this.x + this.y * this.y, 0); }
 
     arg(): number { return Math.atan2(this.y, this.x); }
 

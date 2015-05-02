@@ -778,9 +778,9 @@ class Euclidean2 implements GeometricQuantity<Euclidean2> {
         }
     }
 
-    norm(): number {return Math.sqrt(this.quad());}
+    norm(): Euclidean2 {return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0);}
 
-    quad(): number {return this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy;}
+    quad(): Euclidean2 {return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0);}
 
     isNaN(): boolean {return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);}
 

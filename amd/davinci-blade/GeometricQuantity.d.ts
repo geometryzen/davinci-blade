@@ -6,11 +6,11 @@ interface GeometricQuantity<T> {
     /**
      * The `norm` method computes the magnitude of the GeometricQuantity.
      */
-    norm(): number;
+    norm(): T;
     /**
      * The `quad` method computes the quadrance of the GeometricQuantity.
      * The quadrance is the square of the norm.
      */
-    quad(): number;
+    quad(): T;
 }
 export = GeometricQuantity;

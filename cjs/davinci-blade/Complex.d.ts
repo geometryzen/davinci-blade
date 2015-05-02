@@ -29,8 +29,8 @@ declare class Complex implements GeometricQuantity<Complex> {
     __rmul__(other: any): Complex;
     __div__(other: any): Complex;
     __rdiv__(other: any): Complex;
-    norm(): number;
-    quad(): number;
+    norm(): Complex;
+    quad(): Complex;
     arg(): number;
     toString(): string;
 }
