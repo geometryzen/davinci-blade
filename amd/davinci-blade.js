@@ -1,4 +1,4 @@
-define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
+define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -38,6 +38,7 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 
         'VERSION': core.VERSION,
         Color: Color,
         Complex: Complex,
+        Euclidean1: Euclidean1,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
         scalarE3: scalarE3,

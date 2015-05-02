@@ -1,8 +1,8 @@
 {
     "project": {
         "name": "davinci-blade",
-        "description": "TypeScript Geometric Physics library.",
-        "version": "0.9.36",
+        "description": "JavaScript Geometric Physics library.",
+        "version": "1.0.0",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -33,6 +33,15 @@
             "modules": {},
             "classes": {
                 "Dimensions": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "amd/davinci-blade/Euclidean1.js": {
+            "name": "amd/davinci-blade/Euclidean1.js",
+            "modules": {},
+            "classes": {
+                "Euclidean1": 1
             },
             "fors": {},
             "namespaces": {}
@@ -105,6 +114,7 @@
             "submodules": {},
             "classes": {
                 "Dimensions": 1,
+                "Euclidean1": 1,
                 "Euclidean2": 1,
                 "Euclidean3": 1,
                 "Measure": 1,
@@ -168,6 +178,32 @@
                     "name": "intensity",
                     "description": "The intensity component of the dimensions object.",
                     "type": "Rational"
+                }
+            ]
+        },
+        "Euclidean1": {
+            "name": "Euclidean1",
+            "shortname": "Euclidean1",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "blade",
+            "file": "amd/davinci-blade/Euclidean1.js",
+            "line": 3,
+            "description": "The Euclidean1 class represents a multivector for a 1-dimensional linear space with a Euclidean metric.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "w",
+                    "description": "The scalar part of the multivector.",
+                    "type": "Number"
+                },
+                {
+                    "name": "x",
+                    "description": "The vector component of the multivector in the x-direction.",
+                    "type": "Number"
                 }
             ]
         },
@@ -350,13 +386,13 @@
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 18,
+            "line": 21,
             "description": "__add__ supports operator +(Complex, any)",
             "class": "Dimensions"
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 32,
+            "line": 35,
             "description": "__radd__ supports operator +(any, Complex)",
             "class": "Dimensions"
         },
@@ -541,7 +577,7 @@
         },
         {
             "file": "amd/davinci-blade.js",
-            "line": 50,
+            "line": 51,
             "description": "A dimensionless unit.",
             "itemtype": "property",
             "name": "UNIT_DIMLESS",
@@ -567,11 +603,11 @@
         },
         {
             "message": "Missing item type\n__add__ supports operator +(Complex, any)",
-            "line": " amd/davinci-blade/Complex.js:18"
+            "line": " amd/davinci-blade/Complex.js:21"
         },
         {
             "message": "Missing item type\n__radd__ supports operator +(any, Complex)",
-            "line": " amd/davinci-blade/Complex.js:32"
+            "line": " amd/davinci-blade/Complex.js:35"
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",

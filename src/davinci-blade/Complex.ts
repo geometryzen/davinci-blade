@@ -1,3 +1,5 @@
+import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+
 function divide(a: Complex, b: Complex): Complex
 {
     var q = b.x * b.x + b.y * b.y;
@@ -6,7 +8,7 @@ function divide(a: Complex, b: Complex): Complex
     return new Complex(x, y);
 }
 
-class Complex
+class Complex implements GeometricQuantity<Complex>
 {
     /**
      * The real part of the complex number.
@@ -26,12 +28,16 @@ class Complex
         this.y = y;
     }
 
+    add(rhs: Complex): Complex {
+      return new Complex(this.x + rhs.x, this.y + rhs.y);
+    }
+
     /**
      * __add__ supports operator +(Complex, any)
      */
     __add__(other: any): Complex {
         if (other instanceof Complex) {
-            return new Complex(this.x + other.x, this.y + other.y);
+            return this.add(other);
         }
         else if (typeof other === 'number') {
             return new Complex(this.x + other, this.y);

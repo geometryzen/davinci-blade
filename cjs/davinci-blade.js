@@ -1,4 +1,5 @@
 var core = require('davinci-blade/core');
+var Euclidean1 = require('davinci-blade/Euclidean1');
 var Euclidean2 = require('davinci-blade/Euclidean2');
 var Euclidean3 = require('davinci-blade/Euclidean3');
 var Rational = require('davinci-blade/Rational');
@@ -49,6 +50,7 @@ var blade = {
     'VERSION': core.VERSION,
     Color: Color,
     Complex: Complex,
+    Euclidean1: Euclidean1,
     Euclidean2: Euclidean2,
     Euclidean3: Euclidean3,
     scalarE3: scalarE3,

@@ -2,6 +2,7 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
         "Dimensions",
+        "Euclidean1",
         "Euclidean2",
         "Euclidean3",
         "Measure",

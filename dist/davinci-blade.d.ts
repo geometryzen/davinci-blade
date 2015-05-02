@@ -73,8 +73,8 @@ declare module blade {
         wedge(rhs: T): T;
         lshift(rhs: T): T;
         rshift(rhs: T): T;
-        norm(): T;
-        quad(): T;
+        norm(): number;
+        quad(): number;
     }
 }
 declare module blade {

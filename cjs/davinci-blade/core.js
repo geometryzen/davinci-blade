@@ -2,6 +2,6 @@ var blade = {
     /**
      * The version of the blade library.
      */
-    VERSION: '0.9.36'
+    VERSION: '1.0.0'
 };
 module.exports = blade;

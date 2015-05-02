@@ -1,8 +1,9 @@
+import GeometricQuantity = require('davinci-blade/GeometricQuantity');
 /**
  * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
  * @class Euclidean3
  */
-declare class Euclidean3 {
+declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
     /**
      * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
      */

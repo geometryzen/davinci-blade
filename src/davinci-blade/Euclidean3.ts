@@ -1,3 +1,4 @@
+import GeometricQuantity = require('davinci-blade/GeometricQuantity');
 import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
 
@@ -560,7 +561,7 @@ function stringFromCoordinates(coordinates: number[], labels: string[]): string 
  * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
  * @class Euclidean3
  */
-class Euclidean3 {
+class Euclidean3 implements GeometricQuantity<Euclidean3> {
     /**
      * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
      */

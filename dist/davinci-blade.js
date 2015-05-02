@@ -438,9 +438,37 @@ define('davinci-blade/core',["require", "exports"], function (require, exports) 
         /**
          * The version of the blade library.
          */
-        VERSION: '0.9.36'
+        VERSION: '1.0.0'
     };
     return blade;
+});
+
+define('davinci-blade/Euclidean1',["require", "exports"], function (require, exports) {
+    var Euclidean1 = (function () {
+        /**
+         * The Euclidean1 class represents a multivector for a 1-dimensional linear space with a Euclidean metric.
+         *
+         * @class Euclidean1
+         * @constructor
+         * @param {number} w The scalar part of the multivector.
+         * @param {number} x The vector component of the multivector in the x-direction.
+         */
+        function Euclidean1(w, x) {
+            this.w = w;
+            this.x = x;
+        }
+        Euclidean1.prototype.add = function (rhs) {
+            return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
+        };
+        Euclidean1.prototype.norm = function () {
+            return Math.sqrt(this.quad());
+        };
+        Euclidean1.prototype.quad = function () {
+            return this.w * this.w + this.x * this.x;
+        };
+        return Euclidean1;
+    })();
+    return Euclidean1;
 });
 
 define('davinci-blade/Euclidean2',["require", "exports"], function (require, exports) {
@@ -3065,12 +3093,15 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
             this.x = x;
             this.y = y;
         }
+        Complex.prototype.add = function (rhs) {
+            return new Complex(this.x + rhs.x, this.y + rhs.y);
+        };
         /**
          * __add__ supports operator +(Complex, any)
          */
         Complex.prototype.__add__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(this.x + other.x, this.y + other.y);
+                return this.add(other);
             }
             else if (typeof other === 'number') {
                 return new Complex(this.x + other, this.y);
@@ -3273,7 +3304,7 @@ define('davinci-blade/e3ga/bivectorE3',["require", "exports", 'davinci-blade/Euc
     return bivectorE3;
 });
 
-define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
+define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -3313,6 +3344,7 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
         'VERSION': core.VERSION,
         Color: Color,
         Complex: Complex,
+        Euclidean1: Euclidean1,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
         scalarE3: scalarE3,

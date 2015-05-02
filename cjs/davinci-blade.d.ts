@@ -1,3 +1,4 @@
+import Euclidean1 = require('davinci-blade/Euclidean1');
 import Euclidean2 = require('davinci-blade/Euclidean2');
 import Euclidean3 = require('davinci-blade/Euclidean3');
 import Rational = require('davinci-blade/Rational');
@@ -15,6 +16,7 @@ declare var blade: {
     'VERSION': string;
     Color: typeof Color;
     Complex: typeof Complex;
+    Euclidean1: typeof Euclidean1;
     Euclidean2: typeof Euclidean2;
     Euclidean3: typeof Euclidean3;
     scalarE3: (w: number) => Euclidean3;

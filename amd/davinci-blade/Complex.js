@@ -15,12 +15,15 @@ define(["require", "exports"], function (require, exports) {
             this.x = x;
             this.y = y;
         }
+        Complex.prototype.add = function (rhs) {
+            return new Complex(this.x + rhs.x, this.y + rhs.y);
+        };
         /**
          * __add__ supports operator +(Complex, any)
          */
         Complex.prototype.__add__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(this.x + other.x, this.y + other.y);
+                return this.add(other);
             }
             else if (typeof other === 'number') {
                 return new Complex(this.x + other, this.y);

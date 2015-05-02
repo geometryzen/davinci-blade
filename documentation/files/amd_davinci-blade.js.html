@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.36</em>
+            <em>API Docs for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/Dimensions.html">Dimensions</a></li>
+                                <li><a href="../classes/Euclidean1.html">Euclidean1</a></li>
                                 <li><a href="../classes/Euclidean2.html">Euclidean2</a></li>
                                 <li><a href="../classes/Euclidean3.html">Euclidean3</a></li>
                                 <li><a href="../classes/Measure.html">Measure</a></li>
@@ -85,7 +86,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;, &#x27;davinci-blade/Euclidean2&#x27;, &#x27;davinci-blade/Euclidean3&#x27;, &#x27;davinci-blade/Rational&#x27;, &#x27;davinci-blade/Dimensions&#x27;, &#x27;davinci-blade/Unit&#x27;, &#x27;davinci-blade/Measure&#x27;, &#x27;davinci-blade/Complex&#x27;, &#x27;davinci-blade/Color&#x27;, &#x27;davinci-blade/e3ga/scalarE3&#x27;, &#x27;davinci-blade/e3ga/vectorE3&#x27;, &#x27;davinci-blade/e3ga/bivectorE3&#x27;], function (require, exports, core, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;, &#x27;davinci-blade/Euclidean1&#x27;, &#x27;davinci-blade/Euclidean2&#x27;, &#x27;davinci-blade/Euclidean3&#x27;, &#x27;davinci-blade/Rational&#x27;, &#x27;davinci-blade/Dimensions&#x27;, &#x27;davinci-blade/Unit&#x27;, &#x27;davinci-blade/Measure&#x27;, &#x27;davinci-blade/Complex&#x27;, &#x27;davinci-blade/Color&#x27;, &#x27;davinci-blade/e3ga/scalarE3&#x27;, &#x27;davinci-blade/e3ga/vectorE3&#x27;, &#x27;davinci-blade/e3ga/bivectorE3&#x27;], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
     var UNIT_SYMBOLS = [&quot;kg&quot;, &quot;m&quot;, &quot;s&quot;, &quot;C&quot;, &quot;K&quot;, &quot;mol&quot;, &quot;cd&quot;];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -125,6 +126,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/core&#x27;
         &#x27;VERSION&#x27;: core.VERSION,
         Color: Color,
         Complex: Complex,
+        Euclidean1: Euclidean1,
         Euclidean2: Euclidean2,
         Euclidean3: Euclidean3,
         scalarE3: scalarE3,
