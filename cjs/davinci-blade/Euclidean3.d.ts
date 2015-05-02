@@ -1,16 +1,42 @@
+/**
+ * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
+ * @class Euclidean3
+ */
 declare class Euclidean3 {
+    /**
+     * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
+     */
     w: number;
+    /**
+     * The `x` property is the x coordinate of the grade one (vector) part of the Euclidean3 multivector.
+     */
     x: number;
+    /**
+     * The `y` property is the y coordinate of the grade one (vector) part of the Euclidean3 multivector.
+     */
     y: number;
+    /**
+     * The `z` property is the z coordinate of the grade one (vector) part of the Euclidean3 multivector.
+     */
     z: number;
+    /**
+     * The `xy` property is the xy coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+     */
     xy: number;
+    /**
+     * The `yz` property is the yz coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+     */
     yz: number;
+    /**
+     * The `zx` property is the zx coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+     */
     zx: number;
+    /**
+     * The `xyz` property is the grade three (pseudoscalar) part of the Euclidean3 multivector.
+     */
     xyz: number;
     /**
-     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
-     *
-     * @class Euclidean3
+     * Constructs a Euclidean3 from its coordinates.
      * @constructor
      * @param {number} w The scalar part of the multivector.
      * @param {number} x The vector component of the multivector in the x-direction.
@@ -60,8 +86,14 @@ declare class Euclidean3 {
     dot(vector: Euclidean3): number;
     cross(vector: Euclidean3): Euclidean3;
     length(): number;
-    norm(): Euclidean3;
-    quad(): Euclidean3;
+    /**
+     * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
+     */
+    norm(): number;
+    /**
+     * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
+     */
+    quad(): number;
     sqrt(): Euclidean3;
     toString(): string;
     toStringIJK(): string;

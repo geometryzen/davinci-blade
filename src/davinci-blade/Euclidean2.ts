@@ -776,33 +776,13 @@ class Euclidean2 {
         }
     }
 
-    norm(): Euclidean2 {
-        var w, x, xy, y;
+    norm(): number {return Math.sqrt(this.quad());}
 
-        w = this.w;
-        x = this.x;
-        y = this.y;
-        xy = this.xy;
-        return new Euclidean2(Math.sqrt(w * w + x * x + y * y + xy * xy), 0, 0, 0);
-    }
+    quad(): number {return this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy;}
 
-    quad(): Euclidean2 {
-        var w, x, xy, y;
+    isNaN(): boolean {return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);}
 
-        w = this.w;
-        x = this.x;
-        y = this.y;
-        xy = this.xy;
-        return new Euclidean2(w * w + x * x + y * y + xy * xy, 0, 0, 0);
-    }
-
-    isNaN(): boolean {
-        return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
-    }
-
-    toString(): string {
-        return stringFromCoordinates([this.w, this.x, this.y, this.xy], ["1", "e1", "e2", "e12"]);
-    }
+    toString(): string {return stringFromCoordinates([this.w, this.x, this.y, this.xy], ["1", "e1", "e2", "e12"]);}
 
     toStringIJK(): string {
         return stringFromCoordinates(this.coordinates(), ["1", "i", "j", "I"]);

@@ -517,7 +517,7 @@ define([
         expect(I.div(I).coordinate(3)).toBe(0);
       });
       it("u / n (L)", function() {
-        expect(u.__div__(n).coordinate(0)).toBe(1/n);
+        expect(Math.round(u.__div__(n).coordinate(0)*1000000000)).toBe(Math.round(1000000000/n));
         expect(u.__div__(n).coordinate(1)).toBe(0);
         expect(u.__div__(n).coordinate(2)).toBe(0);
         expect(u.__div__(n).coordinate(3)).toBe(0);
@@ -530,21 +530,21 @@ define([
       });
       it("i / n (L)", function() {
         expect(i.__div__(n).coordinate(0)).toBe(0);
-        expect(i.__div__(n).coordinate(1)).toBe(1/n);
+        expect(Math.round(i.__div__(n).coordinate(1)*1000000000)).toBe(Math.round(1000000000/n));
         expect(i.__div__(n).coordinate(2)).toBe(0);
         expect(i.__div__(n).coordinate(3)).toBe(0);
       });
       it("j / n (L)", function() {
         expect(j.__div__(n).coordinate(0)).toBe(0);
         expect(j.__div__(n).coordinate(1)).toBe(0);
-        expect(j.__div__(n).coordinate(2)).toBe(1/n);
+        expect(Math.round(j.__div__(n).coordinate(2)*1000000000)).toBe(Math.round(1000000000/n));
         expect(j.__div__(n).coordinate(3)).toBe(0);
       });
       it("I / n (L)", function() {
         expect(I.__div__(n).coordinate(0)).toBe(0);
         expect(I.__div__(n).coordinate(1)).toBe(0);
         expect(I.__div__(n).coordinate(2)).toBe(0);
-        expect(I.__div__(n).coordinate(3)).toBe(1/n);
+        expect(Math.round(I.__div__(n).coordinate(3)*1000000000)).toBe(Math.round(1000000000/n));
       });
     });
 

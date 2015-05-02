@@ -556,19 +556,45 @@ function stringFromCoordinates(coordinates: number[], labels: string[]): string 
     return str;
 }
 
+/**
+ * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
+ * @class Euclidean3
+ */
 class Euclidean3 {
+    /**
+     * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
+     */
     public w: number;
+    /**
+     * The `x` property is the x coordinate of the grade one (vector) part of the Euclidean3 multivector.
+     */
     public x: number;
+    /**
+     * The `y` property is the y coordinate of the grade one (vector) part of the Euclidean3 multivector.
+     */
     public y: number;
+    /**
+     * The `z` property is the z coordinate of the grade one (vector) part of the Euclidean3 multivector.
+     */
     public z: number;
+    /**
+     * The `xy` property is the xy coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+     */
     public xy: number;
+    /**
+     * The `yz` property is the yz coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+     */
     public yz: number;
+    /**
+     * The `zx` property is the zx coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+     */
     public zx: number;
+    /**
+     * The `xyz` property is the grade three (pseudoscalar) part of the Euclidean3 multivector.
+     */
     public xyz: number;
     /**
-     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
-     *
-     * @class Euclidean3
+     * Constructs a Euclidean3 from its coordinates.
      * @constructor
      * @param {number} w The scalar part of the multivector.
      * @param {number} x The vector component of the multivector in the x-direction.
@@ -999,17 +1025,17 @@ class Euclidean3 {
         return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
     }
 
-    norm() {
-        return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
-    }
+    /**
+     * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
+     */
+    norm() {return Math.sqrt(this.quad());}
 
-    quad() {
-        return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
-    }
+    /**
+     * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
+     */
+    quad() {return this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz;}
 
-    sqrt() {
-        return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);
-    }
+    sqrt() {return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);}
 
     toString() {
         return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);

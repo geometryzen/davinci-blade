@@ -156,21 +156,13 @@ class Complex
       }
     }
 
-    norm(): number {
-      return Math.sqrt(this.quad());
-    }
+    norm(): number { return Math.sqrt(this.quad()); }
 
-    quad(): number {
-      return this.x * this.x + this.y * this.y;
-    }
+    quad(): number { return this.x * this.x + this.y * this.y; }
 
-    arg(): number {
-      return Math.atan2(this.y, this.x);
-    }
+    arg(): number { return Math.atan2(this.y, this.x); }
 
-    toString(): string {
-      return "Complex(" + this.x + ", " + this.y + ")";
-    }
+    toString(): string { return "Complex(" + this.x + ", " + this.y + ")"; }
 }
 
 export = Complex;

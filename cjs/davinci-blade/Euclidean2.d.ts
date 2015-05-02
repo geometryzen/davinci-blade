@@ -57,8 +57,8 @@ declare class Euclidean2 {
      */
     __tilde__(): Euclidean2;
     grade(index: number): Euclidean2;
-    norm(): Euclidean2;
-    quad(): Euclidean2;
+    norm(): number;
+    quad(): number;
     isNaN(): boolean;
     toString(): string;
     toStringIJK(): string;

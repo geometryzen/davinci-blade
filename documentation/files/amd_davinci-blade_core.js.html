@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>amd/davinci-blade/e3ga/vectorE3.js - davinci-blade</title>
+    <title>amd/davinci-blade/core.js - davinci-blade</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -81,21 +81,18 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: amd/davinci-blade/e3ga/vectorE3.js</h1>
+<h1 class="file-heading">File: amd/davinci-blade/core.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Euclidean3&#x27;], function (require, exports, Euclidean3) {
-    /**
-     * Constructs and returns a Euclidean 3D vector from its cartesian components.
-     * @param x The x component of the vector.
-     * @param y The y component of the vector.
-     * @param z The z component of the vector.
-     */
-    var vectorE3 = function (x, y, z) {
-        return new Euclidean3(0, x, y, z, 0, 0, 0, 0);
+define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
+    var blade = {
+        /**
+         * The version of the blade library.
+         */
+        VERSION: &#x27;0.9.36&#x27;
     };
-    return vectorE3;
+    return blade;
 });
 
     </pre>

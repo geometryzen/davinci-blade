@@ -1,7 +1,7 @@
 //
 // davinci-blade.d.ts
 //
-// This file was created manually in order to support the davinci-blade library.
+// This file is created manually in order to support the davinci-blade library.
 //
 declare module blade {
     interface Field<T> {
@@ -121,8 +121,8 @@ declare module blade {
         static rshift(a: number[], b: number[]): number[];
         public rshift(rhs: Euclidean2): Euclidean2;
         public grade(index: number): Euclidean2;
-        public norm(): Euclidean2;
-        public quad(): Euclidean2;
+        public norm(): number;
+        public quad(): number;
         public isNaN(): boolean;
         public toString(): string;
         public toStringIJK(): string;
@@ -130,37 +130,105 @@ declare module blade {
     }
 }
 declare module blade {
+    /**
+     * A multivector with Cartesian coordinates in a 3D vector space with a Euclidean metric.
+     */
     class Euclidean3 implements GeometricQuantity<Euclidean3> {
-        public w: number;
-        public x: number;
-        public y: number;
-        public z: number;
-        public xy: number;
-        public yz: number;
-        public zx: number;
-        public xyz: number;
+        /**
+         * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
+         */
+        w: number;
+        /**
+         * The `x` property is the x coordinate of the grade one (vector) part of the Euclidean3 multivector.
+         */
+        x: number;
+        /**
+         * The `y` property is the y coordinate of the grade one (vector) part of the Euclidean3 multivector.
+         */
+        y: number;
+        /**
+         * The `z` property is the z coordinate of the grade one (vector) part of the Euclidean3 multivector.
+         */
+        z: number;
+        /**
+         * The `xy` property is the xy coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+         */
+        xy: number;
+        /**
+         * The `yz` property is the yz coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+         */
+        yz: number;
+        /**
+         * The `zx` property is the zx coordinate of the grade two (bivector) part of the Euclidean3 multivector.
+         */
+        zx: number;
+        /**
+         * The `xyz` property is the grade three (pseudoscalar) part of the Euclidean3 multivector.
+         */
+        xyz: number;
+        /**
+         * Constructs a Euclidean3 from its coordinates.
+         * @constructor
+         * @param {number} w The scalar part of the multivector.
+         * @param {number} x The vector component of the multivector in the x-direction.
+         * @param {number} y The vector component of the multivector in the y-direction.
+         * @param {number} z The vector component of the multivector in the z-direction.
+         * @param {number} xy The bivector component of the multivector in the xy-plane.
+         * @param {number} yz The bivector component of the multivector in the yz-plane.
+         * @param {number} zx The bivector component of the multivector in the zx-plane.
+         * @param {number} xyz The pseudoscalar part of the multivector.
+         */
         constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number);
         static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number): Euclidean3;
-        public coordinates(): number[];
-        public coordinate(index: number): number;
-        public add(rhs: Euclidean3): Euclidean3;
-        public sub(rhs: Euclidean3): Euclidean3;
-        public mul(rhs: any): Euclidean3;
-        public div(rhs: any): Euclidean3;
-        public splat(rhs: Euclidean3): Euclidean3;
-        public wedge(rhs: Euclidean3): Euclidean3;
-        public lshift(rhs: Euclidean3): Euclidean3;
-        public rshift(rhs: Euclidean3): Euclidean3;
-        public grade(index: number): Euclidean3;
-        public dot(vector: Euclidean3): number;
-        public cross(vector: Euclidean3): Euclidean3;
-        public length(): number;
-        public norm(): Euclidean3;
-        public quad(): Euclidean3;
-        public sqrt(): Euclidean3;
-        public toString(): string;
-        public toStringIJK(): string;
-        public toStringLATEX(): string;
+        coordinates(): number[];
+        coordinate(index: number): number;
+        add(rhs: Euclidean3): Euclidean3;
+        __add__(other: any): Euclidean3;
+        __radd__(other: any): Euclidean3;
+        sub(rhs: Euclidean3): Euclidean3;
+        __sub__(other: any): Euclidean3;
+        __rsub__(other: any): Euclidean3;
+        mul(rhs: any): Euclidean3;
+        __mul__(other: any): any;
+        __rmul__(other: any): any;
+        scalarMultiply(rhs: number): Euclidean3;
+        div(rhs: any): Euclidean3;
+        __div__(other: any): Euclidean3;
+        __rdiv__(other: any): Euclidean3;
+        splat(rhs: Euclidean3): Euclidean3;
+        wedge(rhs: Euclidean3): Euclidean3;
+        __vbar__(other: any): Euclidean3;
+        __rvbar__(other: any): Euclidean3;
+        __wedge__(other: any): Euclidean3;
+        __rwedge__(other: any): Euclidean3;
+        lshift(rhs: Euclidean3): Euclidean3;
+        __lshift__(other: any): Euclidean3;
+        __rlshift__(other: any): Euclidean3;
+        rshift(rhs: Euclidean3): Euclidean3;
+        __rshift__(other: any): Euclidean3;
+        __rrshift__(other: any): Euclidean3;
+        __pos__(): Euclidean3;
+        __neg__(): Euclidean3;
+        /**
+         * ~ (tilde) produces reversion.
+         */
+        __tilde__(): Euclidean3;
+        grade(index: number): Euclidean3;
+        dot(vector: Euclidean3): number;
+        cross(vector: Euclidean3): Euclidean3;
+        length(): number;
+        /**
+         * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
+         */
+        norm(): number;
+        /**
+         * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
+         */
+        quad(): number;
+        sqrt(): Euclidean3;
+        toString(): string;
+        toStringIJK(): string;
+        toStringLATEX(): string;
     }
 }
 declare module blade {

@@ -747,20 +747,10 @@ var Euclidean2 = (function () {
         }
     };
     Euclidean2.prototype.norm = function () {
-        var w, x, xy, y;
-        w = this.w;
-        x = this.x;
-        y = this.y;
-        xy = this.xy;
-        return new Euclidean2(Math.sqrt(w * w + x * x + y * y + xy * xy), 0, 0, 0);
+        return Math.sqrt(this.quad());
     };
     Euclidean2.prototype.quad = function () {
-        var w, x, xy, y;
-        w = this.w;
-        x = this.x;
-        y = this.y;
-        xy = this.xy;
-        return new Euclidean2(w * w + x * x + y * y + xy * xy, 0, 0, 0);
+        return this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy;
     };
     Euclidean2.prototype.isNaN = function () {
         return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);

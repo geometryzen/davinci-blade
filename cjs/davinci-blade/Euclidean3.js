@@ -605,11 +605,13 @@ function stringFromCoordinates(coordinates, labels) {
     }
     return str;
 }
+/**
+ * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
+ * @class Euclidean3
+ */
 var Euclidean3 = (function () {
     /**
-     * The Euclidean3 class represents a multivector for a 3-dimensional linear space with a Euclidean metric.
-     *
-     * @class Euclidean3
+     * Constructs a Euclidean3 from its coordinates.
      * @constructor
      * @param {number} w The scalar part of the multivector.
      * @param {number} x The vector component of the multivector in the x-direction.
@@ -979,11 +981,17 @@ var Euclidean3 = (function () {
     Euclidean3.prototype.length = function () {
         return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
     };
+    /**
+     * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
+     */
     Euclidean3.prototype.norm = function () {
-        return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
+        return Math.sqrt(this.quad());
     };
+    /**
+     * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
+     */
     Euclidean3.prototype.quad = function () {
-        return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
+        return this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz;
     };
     Euclidean3.prototype.sqrt = function () {
         return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);
