@@ -438,7 +438,7 @@ define('davinci-blade/core',["require", "exports"], function (require, exports) 
         /**
          * The version of the blade library.
          */
-        VERSION: '1.1.0'
+        VERSION: '1.1.1'
     };
     return blade;
 });
