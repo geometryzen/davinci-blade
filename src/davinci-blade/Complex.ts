@@ -168,6 +168,16 @@ class Complex implements GeometricQuantity<Complex>
 
     arg(): number { return Math.atan2(this.y, this.x); }
 
+    /**
+     * Computes the exponential of this complex number.
+     */
+    exp(): Complex {
+      var expX = Math.exp(this.x);
+      var x = expX * Math.cos(this.y);
+      var y = expX * Math.sin(this.y);
+      return new Complex(x, y);
+    }
+
     toString(): string { return "Complex(" + this.x + ", " + this.y + ")"; }
 }
 

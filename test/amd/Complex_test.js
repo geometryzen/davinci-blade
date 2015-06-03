@@ -24,6 +24,14 @@ define(['davinci-blade/Complex'], function(Complex) {
       expect(z.arg()).toBe(Math.atan2(y, x));
     });
 
+    it("exp", function() {
+      var x = Math.random();
+      var y = Math.random();
+      var z = new Complex(x, y);
+      expect(z.exp().x).toBe(Math.exp(x)*Math.cos(y));
+      expect(z.exp().y).toBe(Math.exp(x)*Math.sin(y));
+    });
+
     it("norm", function() {
       var x = Math.random();
       var y = Math.random();

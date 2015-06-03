@@ -32,6 +32,10 @@ declare class Complex implements GeometricQuantity<Complex> {
     norm(): Complex;
     quad(): Complex;
     arg(): number;
+    /**
+     * Computes the exponential of this complex number.
+     */
+    exp(): Complex;
     toString(): string;
 }
 export = Complex;

@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "JavaScript Geometric Physics library.",
-        "version": "1.0.1",
+        "version": "1.1.0",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -397,6 +397,12 @@
             "class": "Dimensions"
         },
         {
+            "file": "amd/davinci-blade/Complex.js",
+            "line": 124,
+            "description": "Computes the exponential of this complex number.",
+            "class": "Dimensions"
+        },
+        {
             "file": "amd/davinci-blade/Dimensions.js",
             "line": 118,
             "description": "The <em>mass</em> component of this dimensions instance.",
@@ -608,6 +614,10 @@
         {
             "message": "Missing item type\n__radd__ supports operator +(any, Complex)",
             "line": " amd/davinci-blade/Complex.js:35"
+        },
+        {
+            "message": "Missing item type\nComputes the exponential of this complex number.",
+            "line": " amd/davinci-blade/Complex.js:124"
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
