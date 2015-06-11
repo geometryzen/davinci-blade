@@ -1,4 +1,45 @@
+var Dimensions = require('davinci-blade/Dimensions');
+var Rational = require('davinci-blade/Rational');
+function UnitError(message) {
+    this.name = 'UnitError';
+    this.message = (message || "");
+}
+UnitError.prototype = new Error();
+function assertArgNumber(name, x) {
+    if (typeof x === 'number') {
+        return x;
+    }
+    else {
+        throw new UnitError("Argument '" + name + "' must be a number");
+    }
+}
+function assertArgDimensions(name, arg) {
+    if (arg instanceof Dimensions) {
+        return arg;
+    }
+    else {
+        throw new UnitError("Argument '" + arg + "' must be a Dimensions");
+    }
+}
+function assertArgRational(name, arg) {
+    if (arg instanceof Rational) {
+        return arg;
+    }
+    else {
+        throw new UnitError("Argument '" + arg + "' must be a Rational");
+    }
+}
+function assertArgUnit(name, arg) {
+    if (arg instanceof Unit) {
+        return arg;
+    }
+    else {
+        throw new UnitError("Argument '" + arg + "' must be a Unit");
+    }
+}
 var dumbString = function (scale, dimensions, labels) {
+    assertArgNumber('scale', scale);
+    assertArgDimensions('dimensions', dimensions);
     var operatorStr;
     var scaleString;
     var unitsString;
@@ -143,9 +184,8 @@ var Unit = (function () {
         this.labels = labels;
     }
     Unit.prototype.compatible = function (rhs) {
-        var dimensions;
         if (rhs instanceof Unit) {
-            dimensions = this.dimensions.compatible(rhs.dimensions);
+            this.dimensions.compatible(rhs.dimensions);
             return this;
         }
         else {
@@ -153,12 +193,8 @@ var Unit = (function () {
         }
     };
     Unit.prototype.add = function (rhs) {
-        if (rhs instanceof Unit) {
-            return add(this, rhs);
-        }
-        else {
-            throw new Error("Illegal Argument for Unit.add: " + rhs);
-        }
+        assertArgUnit('rhs', rhs);
+        return add(this, rhs);
     };
     Unit.prototype.__add__ = function (other) {
         if (other instanceof Unit) {
@@ -177,12 +213,8 @@ var Unit = (function () {
         }
     };
     Unit.prototype.sub = function (rhs) {
-        if (rhs instanceof Unit) {
-            return sub(this, rhs);
-        }
-        else {
-            throw new Error("Illegal Argument for Unit.sub: " + rhs);
-        }
+        assertArgUnit('rhs', rhs);
+        return sub(this, rhs);
     };
     Unit.prototype.__sub__ = function (other) {
         if (other instanceof Unit) {
@@ -201,15 +233,8 @@ var Unit = (function () {
         }
     };
     Unit.prototype.mul = function (rhs) {
-        if (typeof rhs === 'number') {
-            return scalarMultiply(rhs, this);
-        }
-        else if (rhs instanceof Unit) {
-            return mul(this, rhs);
-        }
-        else {
-            throw new Error("Illegal Argument for mul: " + rhs);
-        }
+        assertArgUnit('rhs', rhs);
+        return mul(this, rhs);
     };
     Unit.prototype.__mul__ = function (other) {
         if (other instanceof Unit) {
@@ -234,15 +259,8 @@ var Unit = (function () {
         }
     };
     Unit.prototype.div = function (rhs) {
-        if (typeof rhs === 'number') {
-            return new Unit(this.scale / rhs, this.dimensions, this.labels);
-        }
-        else if (rhs instanceof Unit) {
-            return div(this, rhs);
-        }
-        else {
-            throw new Error("Illegal Argument for div: " + rhs);
-        }
+        assertArgUnit('rhs', rhs);
+        return div(this, rhs);
     };
     Unit.prototype.__div__ = function (other) {
         if (other instanceof Unit) {
@@ -266,13 +284,9 @@ var Unit = (function () {
             return;
         }
     };
-    Unit.prototype.pow = function (rhs) {
-        if (typeof rhs === 'number') {
-            return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
-        }
-        else {
-            throw new Error("Illegal Argument for div: " + rhs);
-        }
+    Unit.prototype.pow = function (q) {
+        assertArgRational('q', q);
+        return new Unit(Math.pow(this.scale, q.numer / q.denom), this.dimensions.pow(q), this.labels);
     };
     Unit.prototype.inverse = function () {
         return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
@@ -285,6 +299,75 @@ var Unit = (function () {
     };
     Unit.prototype.toString = function () {
         return unitString(this.scale, this.dimensions, this.labels);
+    };
+    Unit.isUnity = function (uom) {
+        if (typeof uom === 'undefined') {
+            return true;
+        }
+        else if (uom instanceof Unit) {
+            return uom.dimensions.dimensionless();
+        }
+        else {
+            throw new Error("isUnity argument must be a Unit or undefined.");
+        }
+    };
+    Unit.compatible = function (lhs, rhs) {
+        if (lhs instanceof Unit) {
+            if (rhs instanceof Unit) {
+                return lhs.compatible(rhs);
+            }
+            else {
+                return undefined;
+            }
+        }
+        else {
+            return undefined;
+        }
+    };
+    Unit.mul = function (lhs, rhs) {
+        if (lhs instanceof Unit) {
+            if (rhs instanceof Unit) {
+                return lhs.mul(rhs);
+            }
+            else if (Unit.isUnity(rhs)) {
+                return lhs;
+            }
+            else {
+                return undefined;
+            }
+        }
+        else if (Unit.isUnity(lhs)) {
+            return rhs;
+        }
+        else {
+            return undefined;
+        }
+    };
+    Unit.div = function (lhs, rhs) {
+        if (lhs instanceof Unit) {
+            if (rhs instanceof Unit) {
+                return lhs.div(rhs);
+            }
+            else {
+                return undefined;
+            }
+        }
+        else {
+            return undefined;
+        }
+    };
+    Unit.sqrt = function (uom) {
+        if (typeof uom === 'undefined') {
+            if (uom instanceof Unit) {
+                return new Unit(Math.sqrt(uom.scale), uom.dimensions.sqrt(), uom.labels);
+            }
+            else {
+                throw new Error("uom must be a Unit.");
+            }
+        }
+        else {
+            return undefined;
+        }
     };
     return Unit;
 })();

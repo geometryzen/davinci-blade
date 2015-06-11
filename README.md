@@ -47,6 +47,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.0.1: 2015-05-02 norm(), quad() return the same type as the target.
 * 1.1.0: 2015-06-02 Complex.exp().
 * 1.1.1: 2015-06-02 Complex.exp() documentation.
+* 1.2.0: 2015-06-11 Measure, Quantity, Unit combined.
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

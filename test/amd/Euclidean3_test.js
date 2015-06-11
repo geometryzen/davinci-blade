@@ -3,7 +3,6 @@ define([
     'davinci-blade/Dimensions',
     'davinci-blade/Unit',
     'davinci-blade/Euclidean3',
-    'davinci-blade/Measure',
     'davinci-blade'
 ], function(
     Rational,
@@ -648,14 +647,6 @@ define([
           expect(e.yz).toBe(b.yz);
           expect(e.zx).toBe(b.zx);
           expect(e.xyz).toBe(b.xyz);
-        });
-        it("Euclidean3 * Unit", function() {
-          var m = x.__mul__(blade.units.meter);
-          expect(m instanceof Measure).toBe(true);
-        });
-        it("Unit * Euclidean3", function() {
-          var m = x.__rmul__(blade.units.meter);
-          expect(m instanceof Measure).toBe(true);
         });
       });
       it("/", function() {

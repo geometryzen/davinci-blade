@@ -1,5 +1,38 @@
 import Rational = require('davinci-blade/Rational');
 
+function DimensionError(message: string) {
+  this.name = 'DimensionError';
+  this.message = (message || "")
+}
+DimensionError.prototype = new Error();
+
+function assertArgNumber(name: string, x: number): number {
+  if (typeof x === 'number') {
+    return x;
+  }
+  else {
+    throw new DimensionError("Argument '" + name + "' must be a number");
+  }
+}
+
+function assertArgDimensions(name: string, arg: Dimensions): Dimensions {
+  if (arg instanceof Dimensions) {
+    return arg;
+  }
+  else {
+    throw new DimensionError("Argument '" + arg + "' must be a Dimensions");
+  }
+}
+
+function assertArgRational(name: string, arg: Rational): Rational {
+  if (arg instanceof Rational) {
+    return arg;
+  }
+  else {
+    throw new DimensionError("Argument '" + arg + "' must be a Rational");
+  }
+}
+
 class Dimensions {
     private _mass: Rational;
     /**
@@ -108,14 +141,12 @@ class Dimensions {
     }
 
     compatible(rhs: Dimensions): Dimensions {
-        if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
-            return this;
-        } else {
-            throw {
-                name: "DimensionError",
-                message: "Dimensions must be equal (" + this + ", " + rhs + ")"
-            };
-        }
+      if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
+        return this;
+      }
+      else {
+        throw new DimensionError("Dimensions must be equal (" + this + ", " + rhs + ")");
+      }
     }
 
     mul(rhs: Dimensions): Dimensions {
@@ -123,15 +154,19 @@ class Dimensions {
     }
 
     div(rhs: Dimensions): Dimensions {
-        return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
+      return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
     }
 
-    pow(exponent): Dimensions {
-        return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+    pow(exponent: Rational): Dimensions {
+      return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+    }
+
+    sqrt(): Dimensions {
+      return new Dimensions(this._mass.div(Rational.TWO), this.L.div(Rational.TWO), this.T.div(Rational.TWO), this.Q.div(Rational.TWO), this.temperature.div(Rational.TWO), this.amount.div(Rational.TWO), this.intensity.div(Rational.TWO));
     }
 
     dimensionless(): boolean {
-        return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+      return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
     }
 
     /**
@@ -141,15 +176,14 @@ class Dimensions {
     * @return {boolean} <code>true</code> if all the components are zero, otherwise <code>false</code>.
     */
     isZero(): boolean {
-        return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+      return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
     }
 
     negative(): Dimensions {
-        return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
+      return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
     }
 
     toString(): string {
-
         var stringify = function(rational: Rational, label: string): string {
             if (rational.numer === 0) {
                 return null;

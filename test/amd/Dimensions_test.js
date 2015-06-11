@@ -128,7 +128,7 @@ define([
         it("pow", function() {
           var base, x;
           base = new Dimensions(1, 2, 3, 4, 5, 6, 7);
-          x = base.pow(2);
+          x = base.pow(Rational.TWO);
           expect(x.M.numer).toBe(2);
           expect(x.M.denom).toBe(1);
           expect(x.L.numer).toBe(4);

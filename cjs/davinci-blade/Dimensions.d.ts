@@ -31,7 +31,8 @@ declare class Dimensions {
     compatible(rhs: Dimensions): Dimensions;
     mul(rhs: Dimensions): Dimensions;
     div(rhs: Dimensions): Dimensions;
-    pow(exponent: any): Dimensions;
+    pow(exponent: Rational): Dimensions;
+    sqrt(): Dimensions;
     dimensionless(): boolean;
     /**
     * Determines whether all the components of the Dimensions instance are zero.

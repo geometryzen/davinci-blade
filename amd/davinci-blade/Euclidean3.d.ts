@@ -1,4 +1,5 @@
 import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Unit = require('davinci-blade/Unit');
 /**
  * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
  * @class Euclidean3
@@ -37,6 +38,10 @@ declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
      */
     xyz: number;
     /**
+     * The optional unit of measure.
+     */
+    uom: Unit;
+    /**
      * Constructs a Euclidean3 from its coordinates.
      * @constructor
      * @param {number} w The scalar part of the multivector.
@@ -47,9 +52,10 @@ declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
      * @param {number} yz The bivector component of the multivector in the yz-plane.
      * @param {number} zx The bivector component of the multivector in the zx-plane.
      * @param {number} xyz The pseudoscalar part of the multivector.
+     * @param uom The optional unit of measure.
      */
-    constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number);
-    static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number): Euclidean3;
+    constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom: Unit);
+    static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom: Unit): Euclidean3;
     coordinates(): number[];
     coordinate(index: number): number;
     add(rhs: Euclidean3): Euclidean3;
@@ -96,6 +102,9 @@ declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
      */
     quad(): Euclidean3;
     sqrt(): Euclidean3;
+    toStringCustom(coordToString: (x: number) => string, labels: string[]): string;
+    toExponential(): string;
+    toFixed(digits?: number): string;
     toString(): string;
     toStringIJK(): string;
     toStringLATEX(): string;

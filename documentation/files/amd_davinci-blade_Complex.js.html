@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.1.1</em>
+            <em>API Docs for: 1.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -42,7 +42,6 @@
                                 <li><a href="../classes/Euclidean1.html">Euclidean1</a></li>
                                 <li><a href="../classes/Euclidean2.html">Euclidean2</a></li>
                                 <li><a href="../classes/Euclidean3.html">Euclidean3</a></li>
-                                <li><a href="../classes/Measure.html">Measure</a></li>
                                 <li><a href="../classes/Rational.html">Rational</a></li>
                                 <li><a href="../classes/Unit.html">Unit</a></li>
                             </ul>
@@ -86,12 +85,43 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;], function (require, exports, Unit) {
+    function ComplexError(message) {
+        this.name = &#x27;ComplexError&#x27;;
+        this.message = (message || &quot;&quot;);
+    }
+    ComplexError.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === &#x27;number&#x27;) {
+            return x;
+        }
+        else {
+            throw new ComplexError(&quot;Argument &#x27;&quot; + name + &quot;&#x27; must be a number&quot;);
+        }
+    }
+    function assertArgComplex(name, arg) {
+        if (arg instanceof Complex) {
+            return arg;
+        }
+        else {
+            throw new ComplexError(&quot;Argument &#x27;&quot; + arg + &quot;&#x27; must be a Complex&quot;);
+        }
+    }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === &#x27;undefined&#x27; || uom instanceof Unit) {
+            return uom;
+        }
+        else {
+            throw new ComplexError(&quot;Argument &#x27;&quot; + uom + &quot;&#x27; must be a Unit or undefined&quot;);
+        }
+    }
     function divide(a, b) {
+        assertArgComplex(&#x27;a&#x27;, a);
+        assertArgComplex(&#x27;b&#x27;, b);
         var q = b.x * b.x + b.y * b.y;
         var x = (a.x * b.x + a.y * b.y) / q;
         var y = (a.y * b.x - a.x * b.y) / q;
-        return new Complex(x, y);
+        return new Complex(x, y, Unit.div(a.uom, b.uom));
     }
     var Complex = (function () {
         /**
@@ -99,12 +129,14 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
          * @param x The real part of the complex number.
          * @param y The imaginary part of the complex number.
          */
-        function Complex(x, y) {
-            this.x = x;
-            this.y = y;
+        function Complex(x, y, uom) {
+            this.x = assertArgNumber(&#x27;x&#x27;, x);
+            this.y = assertArgNumber(&#x27;y&#x27;, y);
+            this.uom = assertArgUnitOrUndefined(&#x27;uom&#x27;, uom);
         }
         Complex.prototype.add = function (rhs) {
-            return new Complex(this.x + rhs.x, this.y + rhs.y);
+            assertArgComplex(&#x27;rhs&#x27;, rhs);
+            return new Complex(this.x + rhs.x, this.y + rhs.y, Unit.compatible(this.uom, rhs.uom));
         };
         /**
          * __add__ supports operator +(Complex, any)
@@ -114,10 +146,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                 return this.add(other);
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(this.x + other, this.y);
-            }
-            else {
-                return;
+                return new Complex(this.x + other, this.y, Unit.compatible(this.uom, undefined));
             }
         };
         /**
@@ -125,57 +154,52 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
          */
         Complex.prototype.__radd__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(other.x + this.x, other.y + this.y);
+                var lhs = other;
+                return new Complex(other.x + this.x, other.y + this.y, Unit.compatible(lhs.uom, this.uom));
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(other + this.x, this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(x + this.x, this.y, Unit.compatible(undefined, this.uom));
             }
         };
         Complex.prototype.__sub__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(this.x - other.x, this.y - other.y);
+                var rhs = other;
+                return new Complex(this.x - rhs.x, this.y - rhs.y, Unit.compatible(this.uom, rhs.uom));
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(this.x - other, this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(this.x - x, this.y, Unit.compatible(this.uom, undefined));
             }
         };
         Complex.prototype.__rsub__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(other.x - this.x, other.y - this.y);
+                var lhs = other;
+                return new Complex(lhs.x - this.x, lhs.y - this.y, Unit.compatible(lhs.uom, this.uom));
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(other - this.x, -this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(x - this.x, -this.y, Unit.compatible(undefined, this.uom));
             }
         };
         Complex.prototype.__mul__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(this.x * other.x - this.y * other.y, this.x * other.y + this.y * other.x);
+                var rhs = other;
+                return new Complex(this.x * rhs.x - this.y * rhs.y, this.x * rhs.y + this.y * rhs.x, Unit.mul(this.uom, rhs.uom));
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(this.x * other, this.y * other);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(this.x * x, this.y * x, this.uom);
             }
         };
         Complex.prototype.__rmul__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(other.x * this.x - other.y * this.y, other.x * this.y + other.y * this.x);
+                var lhs = other;
+                return new Complex(lhs.x * this.x - lhs.y * this.y, lhs.x * this.y + lhs.y * this.x, Unit.mul(lhs.uom, this.uom));
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(other * this.x, other * this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(x * this.x, x * this.y, this.uom);
             }
         };
         Complex.prototype.__div__ = function (other) {
@@ -183,10 +207,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                 return divide(this, other);
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return new Complex(this.x / other, this.y / other);
-            }
-            else {
-                return;
+                return new Complex(this.x / other, this.y / other, this.uom);
             }
         };
         Complex.prototype.__rdiv__ = function (other) {
@@ -194,17 +215,14 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                 return divide(other, this);
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return divide(new Complex(other, 0), this);
-            }
-            else {
-                return;
+                return divide(new Complex(other, 0, undefined), this);
             }
         };
         Complex.prototype.norm = function () {
-            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0);
+            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
         };
         Complex.prototype.quad = function () {
-            return new Complex(this.x * this.x + this.y * this.y, 0);
+            return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
         };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);
@@ -216,7 +234,8 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             var expX = Math.exp(this.x);
             var x = expX * Math.cos(this.y);
             var y = expX * Math.sin(this.y);
-            return new Complex(x, y);
+            // TODO: Is this correct? If so, why is it so?
+            return new Complex(x, y, this.uom);
         };
         Complex.prototype.toString = function () {
             return &quot;Complex(&quot; + this.x + &quot;, &quot; + this.y + &quot;)&quot;;

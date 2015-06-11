@@ -52,15 +52,6 @@ define(['davinci-blade/Rational'], function(Rational)
               expect(y.numer).toBe(2);
               return expect(y.denom).toBe(1);
             });
-            it("add number", function() {
-              var sum, x;
-              x = new Rational(1, 3);
-              sum = x.add(2);
-              expect(sum.numer).toBe(7);
-              expect(sum.denom).toBe(3);
-              expect(x.numer).toBe(1);
-              return expect(x.denom).toBe(3);
-            });
             it("sub Rational", function() {
               var sum, x, y;
               x = new Rational(1, 3);
@@ -72,15 +63,6 @@ define(['davinci-blade/Rational'], function(Rational)
               expect(x.denom).toBe(3);
               expect(y.numer).toBe(2);
               return expect(y.denom).toBe(1);
-            });
-            it("sub number", function() {
-              var sum, x;
-              x = new Rational(1, 3);
-              sum = x.sub(2);
-              expect(sum.numer).toBe(-5);
-              expect(sum.denom).toBe(3);
-              expect(x.numer).toBe(1);
-              return expect(x.denom).toBe(3);
             });
             it("mul", function() {
               var sum, x, y;

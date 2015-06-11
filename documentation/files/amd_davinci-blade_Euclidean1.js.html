@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.1.1</em>
+            <em>API Docs for: 1.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -42,7 +42,6 @@
                                 <li><a href="../classes/Euclidean1.html">Euclidean1</a></li>
                                 <li><a href="../classes/Euclidean2.html">Euclidean2</a></li>
                                 <li><a href="../classes/Euclidean3.html">Euclidean3</a></li>
-                                <li><a href="../classes/Measure.html">Measure</a></li>
                                 <li><a href="../classes/Rational.html">Rational</a></li>
                                 <li><a href="../classes/Unit.html">Unit</a></li>
                             </ul>
@@ -86,7 +85,36 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;], function (require, exports, Unit) {
+    function Euclidean1Error(message) {
+        this.name = &#x27;Euclidean1Error&#x27;;
+        this.message = (message || &quot;&quot;);
+    }
+    Euclidean1Error.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === &#x27;number&#x27;) {
+            return x;
+        }
+        else {
+            throw new Euclidean1Error(&quot;Argument &#x27;&quot; + name + &quot;&#x27; must be a number&quot;);
+        }
+    }
+    function assertArgEuclidean1(name, arg) {
+        if (arg instanceof Euclidean1) {
+            return arg;
+        }
+        else {
+            throw new Euclidean1Error(&quot;Argument &#x27;&quot; + arg + &quot;&#x27; must be a Euclidean1&quot;);
+        }
+    }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === &#x27;undefined&#x27; || uom instanceof Unit) {
+            return uom;
+        }
+        else {
+            throw new Euclidean1Error(&quot;Argument &#x27;&quot; + uom + &quot;&#x27; must be a Unit or undefined&quot;);
+        }
+    }
     var Euclidean1 = (function () {
         /**
          * The Euclidean1 class represents a multivector for a 1-dimensional linear space with a Euclidean metric.
@@ -95,19 +123,22 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
          * @constructor
          * @param {number} w The scalar part of the multivector.
          * @param {number} x The vector component of the multivector in the x-direction.
+         * @param uom The optional unit of measure.
          */
-        function Euclidean1(w, x) {
-            this.w = w;
-            this.x = x;
+        function Euclidean1(w, x, uom) {
+            this.w = assertArgNumber(&#x27;w&#x27;, w);
+            this.x = assertArgNumber(&#x27;x&#x27;, x);
+            this.uom = assertArgUnitOrUndefined(&#x27;uom&#x27;, uom);
         }
         Euclidean1.prototype.add = function (rhs) {
-            return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
+            assertArgEuclidean1(&#x27;rhs&#x27;, rhs);
+            return new Euclidean1(this.w + rhs.w, this.x + rhs.x, Unit.compatible(this.uom, rhs.uom));
         };
         Euclidean1.prototype.norm = function () {
-            return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0);
+            return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0, this.uom);
         };
         Euclidean1.prototype.quad = function () {
-            return new Euclidean1(this.w * this.w + this.x * this.x, 0);
+            return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
         };
         return Euclidean1;
     })();

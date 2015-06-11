@@ -1,33 +1,52 @@
-var Measure = require('davinci-blade/Measure');
 var Unit = require('davinci-blade/Unit');
-var compute = function (f, a, b, coord, pack) {
-    var a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, x0, x1, x2, x3, x4, x5, x6, x7;
-    a0 = coord(a, 0);
-    a1 = coord(a, 1);
-    a2 = coord(a, 2);
-    a3 = coord(a, 3);
-    a4 = coord(a, 4);
-    a5 = coord(a, 5);
-    a6 = coord(a, 6);
-    a7 = coord(a, 7);
-    b0 = coord(b, 0);
-    b1 = coord(b, 1);
-    b2 = coord(b, 2);
-    b3 = coord(b, 3);
-    b4 = coord(b, 4);
-    b5 = coord(b, 5);
-    b6 = coord(b, 6);
-    b7 = coord(b, 7);
-    x0 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 0);
-    x1 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 1);
-    x2 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 2);
-    x3 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 3);
-    x4 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 4);
-    x5 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 5);
-    x6 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 6);
-    x7 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 7);
-    return pack(x0, x1, x2, x3, x4, x5, x6, x7);
-};
+function Euclidean3Error(message) {
+    this.name = 'Euclidean3Error';
+    this.message = (message || "");
+}
+Euclidean3Error.prototype = new Error();
+function assertArgNumber(name, x) {
+    if (typeof x === 'number') {
+        return x;
+    }
+    else {
+        throw new Euclidean3Error("Argument '" + name + "' must be a number");
+    }
+}
+function assertArgUnitOrUndefined(name, uom) {
+    if (typeof uom === 'undefined' || uom instanceof Unit) {
+        return uom;
+    }
+    else {
+        throw new Euclidean3Error("Argument '" + uom + "' must be a Unit or undefined");
+    }
+}
+function compute(f, a, b, coord, pack, uom) {
+    var a0 = coord(a, 0);
+    var a1 = coord(a, 1);
+    var a2 = coord(a, 2);
+    var a3 = coord(a, 3);
+    var a4 = coord(a, 4);
+    var a5 = coord(a, 5);
+    var a6 = coord(a, 6);
+    var a7 = coord(a, 7);
+    var b0 = coord(b, 0);
+    var b1 = coord(b, 1);
+    var b2 = coord(b, 2);
+    var b3 = coord(b, 3);
+    var b4 = coord(b, 4);
+    var b5 = coord(b, 5);
+    var b6 = coord(b, 6);
+    var b7 = coord(b, 7);
+    var x0 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 0);
+    var x1 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 1);
+    var x2 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 2);
+    var x3 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 3);
+    var x4 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 4);
+    var x5 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 5);
+    var x6 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 6);
+    var x7 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 7);
+    return pack(x0, x1, x2, x3, x4, x5, x6, x7, uom);
+}
 function addE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
     a0 = +a0;
     a1 = +a1;
@@ -89,7 +108,7 @@ function addE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
@@ -155,7 +174,7 @@ function subE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
@@ -224,7 +243,7 @@ function mulE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
@@ -290,7 +309,7 @@ function scpE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
@@ -356,7 +375,7 @@ function extE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
@@ -422,7 +441,7 @@ function lcoE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
@@ -488,12 +507,12 @@ function rcoE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, i
             }
             break;
         default: {
-            throw new Error("index must be in the range [0..7]");
+            throw new Euclidean3Error("index must be in the range [0..7]");
         }
     }
     return +x;
 }
-var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, dst) {
+var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, uom, dst) {
     var c000, c001, c010, c011, c100, c101, c110, c111, i000, i001, i010, i011, i100, i101, i110, i111, k000, m000, m001, m010, m011, m100, m101, m110, m111, r000, r001, r010, r011, r100, r101, r110, r111, s000, s001, s010, s011, s100, s101, s110, s111, w, x, x000, x001, x010, x011, x100, x101, x110, x111, xy, xyz, y, yz, z, zx;
     r000 = +b000;
     r001 = +b001;
@@ -560,13 +579,14 @@ var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b00
         dst.xy = xy;
         dst.yz = yz;
         dst.zx = zx;
-        return dst.xyz = xyz;
+        dst.xyz = xyz;
+        dst.uom = uom;
     }
     else {
-        return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
+        return new Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom);
     }
 };
-function stringFromCoordinates(coordinates, labels) {
+function stringFromCoordinates(coordinates, numberToString, labels) {
     var i, _i, _ref;
     var str;
     var sb = [];
@@ -586,7 +606,7 @@ function stringFromCoordinates(coordinates, labels) {
                 sb.push(label);
             }
             else {
-                sb.push(n.toString());
+                sb.push(numberToString(n));
                 if (label !== "1") {
                     sb.push("*");
                     sb.push(label);
@@ -621,24 +641,36 @@ var Euclidean3 = (function () {
      * @param {number} yz The bivector component of the multivector in the yz-plane.
      * @param {number} zx The bivector component of the multivector in the zx-plane.
      * @param {number} xyz The pseudoscalar part of the multivector.
+     * @param uom The optional unit of measure.
      */
-    function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
-        this.w = w || 0;
-        this.x = x || 0;
-        this.y = y || 0;
-        this.z = z || 0;
-        this.xy = xy || 0;
-        this.yz = yz || 0;
-        this.zx = zx || 0;
-        this.xyz = xyz || 0;
+    function Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom) {
+        this.w = assertArgNumber('w', w);
+        this.x = assertArgNumber('x', x);
+        this.y = assertArgNumber('y', y);
+        this.z = assertArgNumber('z', z);
+        this.xy = assertArgNumber('xy', xy);
+        this.yz = assertArgNumber('yz', yz);
+        this.zx = assertArgNumber('zx', zx);
+        this.xyz = assertArgNumber('xyz', xyz);
+        this.uom = assertArgUnitOrUndefined('uom', uom);
     }
-    Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz) {
-        return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
+    Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+        assertArgNumber('w', w);
+        assertArgNumber('x', x);
+        assertArgNumber('y', y);
+        assertArgNumber('z', z);
+        assertArgNumber('xy', xy);
+        assertArgNumber('yz', yz);
+        assertArgNumber('zx', zx);
+        assertArgNumber('xyz', xyz);
+        assertArgUnitOrUndefined('uom', uom);
+        return new Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom);
     };
     Euclidean3.prototype.coordinates = function () {
         return [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz];
     };
     Euclidean3.prototype.coordinate = function (index) {
+        assertArgNumber('index', index);
         switch (index) {
             case 0:
                 return this.w;
@@ -657,28 +689,24 @@ var Euclidean3 = (function () {
             case 7:
                 return this.xyz;
             default:
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
         }
     };
     Euclidean3.prototype.add = function (rhs) {
-        var coord, pack;
-        coord = function (x, n) {
+        var coord = function (x, n) {
             return x[n];
         };
-        pack = function (w, x, y, z, xy, yz, zx, xyz) {
-            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
         };
-        return compute(addE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        return compute(addE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.compatible(this.uom, rhs.uom));
     };
     Euclidean3.prototype.__add__ = function (other) {
         if (other instanceof Euclidean3) {
             return this.add(other);
         }
         else if (typeof other === 'number') {
-            return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__radd__ = function (other) {
@@ -686,31 +714,24 @@ var Euclidean3 = (function () {
             return other.add(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).add(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).add(this);
         }
     };
     Euclidean3.prototype.sub = function (rhs) {
-        var coord, pack;
-        coord = function (x, n) {
+        var coord = function (x, n) {
             return x[n];
         };
-        pack = function (w, x, y, z, xy, yz, zx, xyz) {
-            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
         };
-        return compute(subE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        return compute(subE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.compatible(this.uom, rhs.uom));
     };
     Euclidean3.prototype.__sub__ = function (other) {
         if (other instanceof Euclidean3) {
             return this.sub(other);
         }
         else if (typeof other === 'number') {
-            return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rsub__ = function (other) {
@@ -718,25 +739,21 @@ var Euclidean3 = (function () {
             return other.sub(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).sub(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).sub(this);
         }
     };
     Euclidean3.prototype.mul = function (rhs) {
-        var coord, pack;
         if (typeof rhs === 'number') {
             return this.scalarMultiply(rhs);
         }
         else {
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
         }
     };
     Euclidean3.prototype.__mul__ = function (other) {
@@ -744,17 +761,7 @@ var Euclidean3 = (function () {
             return this.mul(other);
         }
         else if (typeof other === 'number') {
-            return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else if (other instanceof Measure) {
-            var m = other;
-            return new Measure(this.mul(m.quantity), m.uom);
-        }
-        else if (other instanceof Unit) {
-            return new Measure(this, other);
-        }
-        else {
-            return;
+            return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rmul__ = function (other) {
@@ -762,28 +769,18 @@ var Euclidean3 = (function () {
             return other.mul(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
-        }
-        else if (other instanceof Measure) {
-            var m = other;
-            return new Measure(m.quantity.mul(this), m.uom);
-        }
-        else if (other instanceof Unit) {
-            return new Measure(this, other);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).mul(this);
         }
     };
     Euclidean3.prototype.scalarMultiply = function (rhs) {
-        return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
+        return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs, this.uom);
     };
     Euclidean3.prototype.div = function (rhs) {
         if (typeof rhs === 'number') {
-            return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs);
+            return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs, this.uom);
         }
         else {
-            return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, void 0);
+            return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom, rhs.uom), void 0);
         }
     };
     Euclidean3.prototype.__div__ = function (other) {
@@ -791,10 +788,7 @@ var Euclidean3 = (function () {
             return this.div(other);
         }
         else if (typeof other === 'number') {
-            return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rdiv__ = function (other) {
@@ -802,41 +796,33 @@ var Euclidean3 = (function () {
             return other.div(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).div(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).div(this);
         }
     };
     Euclidean3.prototype.splat = function (rhs) {
-        var coord, pack;
-        coord = function (x, n) {
+        var coord = function (x, n) {
             return x[n];
         };
-        pack = function (w, x, y, z, xy, yz, zx, xyz) {
-            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
         };
-        return compute(scpE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        return compute(scpE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
     };
     Euclidean3.prototype.wedge = function (rhs) {
-        var coord, pack;
-        coord = function (x, n) {
+        var coord = function (x, n) {
             return x[n];
         };
-        pack = function (w, x, y, z, xy, yz, zx, xyz) {
-            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
         };
-        return compute(extE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        return compute(extE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
     };
     Euclidean3.prototype.__vbar__ = function (other) {
         if (other instanceof Euclidean3) {
             return this.splat(other);
         }
         else if (typeof other === 'number') {
-            return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rvbar__ = function (other) {
@@ -844,10 +830,7 @@ var Euclidean3 = (function () {
             return other.splat(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).splat(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).splat(this);
         }
     };
     Euclidean3.prototype.__wedge__ = function (other) {
@@ -855,10 +838,7 @@ var Euclidean3 = (function () {
             return this.wedge(other);
         }
         else if (typeof other === 'number') {
-            return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rwedge__ = function (other) {
@@ -866,31 +846,24 @@ var Euclidean3 = (function () {
             return other.wedge(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).wedge(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).wedge(this);
         }
     };
     Euclidean3.prototype.lshift = function (rhs) {
-        var coord, pack;
-        coord = function (x, n) {
+        var coord = function (x, n) {
             return x[n];
         };
-        pack = function (w, x, y, z, xy, yz, zx, xyz) {
-            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
         };
-        return compute(lcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        return compute(lcoE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
     };
     Euclidean3.prototype.__lshift__ = function (other) {
         if (other instanceof Euclidean3) {
             return this.lshift(other);
         }
         else if (typeof other === 'number') {
-            return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rlshift__ = function (other) {
@@ -898,31 +871,24 @@ var Euclidean3 = (function () {
             return other.lshift(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).lshift(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).lshift(this);
         }
     };
     Euclidean3.prototype.rshift = function (rhs) {
-        var coord, pack;
-        coord = function (x, n) {
+        var coord = function (x, n) {
             return x[n];
         };
-        pack = function (w, x, y, z, xy, yz, zx, xyz) {
-            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
         };
-        return compute(rcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+        return compute(rcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack, Unit.mul(this.uom, rhs.uom));
     };
     Euclidean3.prototype.__rshift__ = function (other) {
         if (other instanceof Euclidean3) {
             return this.rshift(other);
         }
         else if (typeof other === 'number') {
-            return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-        }
-        else {
-            return;
+            return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
         }
     };
     Euclidean3.prototype.__rrshift__ = function (other) {
@@ -930,38 +896,37 @@ var Euclidean3 = (function () {
             return other.rshift(this);
         }
         else if (typeof other === 'number') {
-            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).rshift(this);
-        }
-        else {
-            return;
+            return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
         }
     };
     Euclidean3.prototype.__pos__ = function () {
         return this;
     };
     Euclidean3.prototype.__neg__ = function () {
-        return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+        return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz, this.uom);
     };
     /**
      * ~ (tilde) produces reversion.
      */
     Euclidean3.prototype.__tilde__ = function () {
-        return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+        return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz, this.uom);
     };
     Euclidean3.prototype.grade = function (index) {
+        assertArgNumber('index', index);
         switch (index) {
             case 0:
-                return Euclidean3.fromCartesian(this.w, 0, 0, 0, 0, 0, 0, 0);
+                return Euclidean3.fromCartesian(this.w, 0, 0, 0, 0, 0, 0, 0, this.uom);
             case 1:
-                return Euclidean3.fromCartesian(0, this.x, this.y, this.z, 0, 0, 0, 0);
+                return Euclidean3.fromCartesian(0, this.x, this.y, this.z, 0, 0, 0, 0, this.uom);
             case 2:
-                return Euclidean3.fromCartesian(0, 0, 0, 0, this.xy, this.yz, this.zx, 0);
+                return Euclidean3.fromCartesian(0, 0, 0, 0, this.xy, this.yz, this.zx, 0, this.uom);
             case 3:
-                return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, this.xyz);
+                return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, this.xyz, this.uom);
             default:
-                return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, 0);
+                return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, 0, this.uom);
         }
     };
+    // FIXME: This should return a Euclidean3
     Euclidean3.prototype.dot = function (vector) {
         return this.x * vector.x + this.y * vector.y + this.z * vector.z;
     };
@@ -976,7 +941,7 @@ var Euclidean3 = (function () {
         x = y1 * z2 - z1 * y2;
         y = z1 * x2 - x1 * z2;
         z = x1 * y2 - y1 * x2;
-        return new Euclidean3(0, x, y, z, 0, 0, 0, 0);
+        return new Euclidean3(0, x, y, z, 0, 0, 0, 0, Unit.mul(this.uom, vector.uom));
     };
     Euclidean3.prototype.length = function () {
         return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
@@ -985,25 +950,62 @@ var Euclidean3 = (function () {
      * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
      */
     Euclidean3.prototype.norm = function () {
-        return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
+        return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0, this.uom);
     };
     /**
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
     Euclidean3.prototype.quad = function () {
-        return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
+        return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
     };
     Euclidean3.prototype.sqrt = function () {
-        return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);
+        return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));
+    };
+    Euclidean3.prototype.toStringCustom = function (coordToString, labels) {
+        var quantityString = stringFromCoordinates(this.coordinates(), coordToString, labels);
+        if (this.uom) {
+            var unitString = this.uom.toString().trim();
+            if (unitString) {
+                return quantityString + ' ' + unitString;
+            }
+            else {
+                return quantityString;
+            }
+        }
+        else {
+            return quantityString;
+        }
+    };
+    Euclidean3.prototype.toExponential = function () {
+        var coordToString = function (coord) {
+            return coord.toExponential();
+        };
+        return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
+    };
+    Euclidean3.prototype.toFixed = function (digits) {
+        assertArgNumber('digits', digits);
+        var coordToString = function (coord) {
+            return coord.toFixed(digits);
+        };
+        return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
     };
     Euclidean3.prototype.toString = function () {
-        return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
+        var coordToString = function (coord) {
+            return coord.toString();
+        };
+        return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
     };
     Euclidean3.prototype.toStringIJK = function () {
-        return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "i", "j", "k", "ij", "jk", "ki", "I"]);
+        var coordToString = function (coord) {
+            return coord.toString();
+        };
+        return this.toStringCustom(coordToString, ["1", "i", "j", "k", "ij", "jk", "ki", "I"]);
     };
     Euclidean3.prototype.toStringLATEX = function () {
-        return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e_{1}", "e_{2}", "e_{3}", "e_{12}", "e_{23}", "e_{31}", "e_{123}"]);
+        var coordToString = function (coord) {
+            return coord.toString();
+        };
+        return this.toStringCustom(coordToString, ["1", "e_{1}", "e_{2}", "e_{3}", "e_{12}", "e_{23}", "e_{31}", "e_{123}"]);
     };
     return Euclidean3;
 })();

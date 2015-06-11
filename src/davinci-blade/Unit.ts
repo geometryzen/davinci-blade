@@ -1,7 +1,51 @@
 import Dimensions = require('davinci-blade/Dimensions');
 import Rational = require('davinci-blade/Rational');
 
+function UnitError(message: string) {
+  this.name = 'UnitError';
+  this.message = (message || "")
+}
+UnitError.prototype = new Error();
+
+function assertArgNumber(name: string, x: number): number {
+  if (typeof x === 'number') {
+    return x;
+  }
+  else {
+    throw new UnitError("Argument '" + name + "' must be a number");
+  }
+}
+
+function assertArgDimensions(name: string, arg: Dimensions): Dimensions {
+  if (arg instanceof Dimensions) {
+    return arg;
+  }
+  else {
+    throw new UnitError("Argument '" + arg + "' must be a Dimensions");
+  }
+}
+
+function assertArgRational(name: string, arg: Rational): Rational {
+  if (arg instanceof Rational) {
+    return arg;
+  }
+  else {
+    throw new UnitError("Argument '" + arg + "' must be a Rational");
+  }
+}
+
+function assertArgUnit(name: string, arg: Unit): Unit {
+  if (arg instanceof Unit) {
+    return arg;
+  }
+  else {
+    throw new UnitError("Argument '" + arg + "' must be a Unit");
+  }
+}
+
 var dumbString = function(scale: number, dimensions: Dimensions, labels: string[]) {
+  assertArgNumber('scale', scale);
+  assertArgDimensions('dimensions', dimensions);
     var operatorStr: string;
     var scaleString: string;
     var unitsString: string;
@@ -166,27 +210,20 @@ class Unit {
         this.labels = labels;
     }
 
-    compatible(rhs: Unit) {
-        var dimensions;
-
-        if (rhs instanceof Unit) {
-            dimensions = this.dimensions.compatible(rhs.dimensions);
-            return this;
-        } else {
-            throw new Error("Illegal Argument for Unit.compatible: " + rhs);
-        }
+    compatible(rhs: Unit): Unit {
+      if (rhs instanceof Unit) {
+        this.dimensions.compatible(rhs.dimensions);
+        return this;
+      }
+      else {
+        throw new Error("Illegal Argument for Unit.compatible: " + rhs);
+      }
     }
 
     add(rhs: Unit): Unit
     {
-        if (rhs instanceof Unit)
-        {
-            return add(this, rhs);
-        }
-        else
-        {
-            throw new Error("Illegal Argument for Unit.add: " + rhs);
-        }
+      assertArgUnit('rhs', rhs);
+      return add(this, rhs);
     }
 
     __add__(other)
@@ -215,14 +252,8 @@ class Unit {
 
     sub(rhs: Unit): Unit
     {
-      if (rhs instanceof Unit)
-      {
-        return sub(this, rhs);
-      }
-      else
-      {
-          throw new Error("Illegal Argument for Unit.sub: " + rhs);
-      }
+      assertArgUnit('rhs', rhs);
+      return sub(this, rhs);
     }
 
     __sub__(other)
@@ -251,18 +282,8 @@ class Unit {
 
     mul(rhs: any): Unit
     {
-      if (typeof rhs === 'number')
-      {
-        return scalarMultiply(rhs, this);
-      }
-      else if (rhs instanceof Unit)
-      {
-        return mul(this, rhs);
-      }
-      else
-      {
-        throw new Error("Illegal Argument for mul: " + rhs);
-      }
+      assertArgUnit('rhs', rhs);
+      return mul(this, rhs);
     }
 
     __mul__(other)
@@ -297,20 +318,10 @@ class Unit {
       }
     }
 
-    div(rhs: any): Unit
+    div(rhs: Unit): Unit
     {
-      if (typeof rhs === 'number')
-      {
-        return new Unit(this.scale / rhs, this.dimensions, this.labels);
-      }
-      else if (rhs instanceof Unit)
-      {
-        return div(this, rhs);
-      }
-      else
-      {
-        throw new Error("Illegal Argument for div: " + rhs);
-      }
+      assertArgUnit('rhs', rhs);
+      return div(this, rhs);
     }
 
     __div__(other)
@@ -345,16 +356,10 @@ class Unit {
       }
     }
 
-    pow(rhs: number): Unit
+    pow(q: Rational): Unit
     {
-      if (typeof rhs === 'number')
-      {
-          return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
-      }
-      else
-      {
-          throw new Error("Illegal Argument for div: " + rhs);
-      }
+      assertArgRational('q', q);
+      return new Unit(Math.pow(this.scale, q.numer/q.denom), this.dimensions.pow(q), this.labels);
     }
 
     inverse(): Unit
@@ -373,6 +378,80 @@ class Unit {
     toString(): string
     {
         return unitString(this.scale, this.dimensions, this.labels);
+    }
+
+    static isUnity(uom: Unit): boolean {
+      if (typeof uom === 'undefined') {
+        return true;
+      }
+      else if (uom instanceof Unit) {
+        return uom.dimensions.dimensionless();
+      }
+      else {
+        throw new Error("isUnity argument must be a Unit or undefined.");
+      }
+    }
+
+    static compatible(lhs: Unit, rhs: Unit): Unit {
+      if (lhs instanceof Unit) {
+        if (rhs instanceof Unit) {
+          return lhs.compatible(rhs);
+        }
+        else {
+          return undefined;
+        }
+      }
+      else {
+        return undefined;
+      }
+    }
+
+    static mul(lhs: Unit, rhs: Unit): Unit {
+      if (lhs instanceof Unit) {
+        if (rhs instanceof Unit) {
+          return lhs.mul(rhs);
+        }
+        else if (Unit.isUnity(rhs)) {
+          return lhs;
+        }
+        else {
+          return undefined;
+        }
+      }
+      else if (Unit.isUnity(lhs)) {
+        return rhs;
+      }
+      else {
+        return undefined;
+      }
+    }
+
+    static div(lhs: Unit, rhs: Unit): Unit {
+      if (lhs instanceof Unit) {
+        if (rhs instanceof Unit) {
+          return lhs.div(rhs);
+        }
+        else {
+          return undefined;
+        }
+      }
+      else {
+        return undefined;
+      }
+    }
+
+    static sqrt(uom: Unit): Unit {
+      if (typeof uom === 'undefined') {
+        if (uom instanceof Unit) {
+          return new Unit(Math.sqrt(uom.scale), uom.dimensions.sqrt(), uom.labels);
+        }
+        else {
+          throw new Error("uom must be a Unit.");
+        }
+      }
+      else {
+        return undefined;
+      }
     }
 }
 export = Unit;

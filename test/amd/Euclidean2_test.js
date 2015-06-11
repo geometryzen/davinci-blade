@@ -548,60 +548,6 @@ define([
       });
     });
 
-    it('div number', function() {
-      var u = new Euclidean2(2, 0, 0, 0)
-      var i = new Euclidean2(0, 2, 0, 0)
-      var j = new Euclidean2(0, 0, 2, 0)
-      var I = new Euclidean2(0, 0, 0, 2)
-
-      expect(u.div(2).coordinate(0)).toBe(1);
-      expect(u.div(2).coordinate(1)).toBe(0);
-      expect(u.div(2).coordinate(2)).toBe(0);
-      expect(u.div(2).coordinate(3)).toBe(0);
-
-      expect(i.div(2).coordinate(0)).toBe(0);
-      expect(i.div(2).coordinate(1)).toBe(1);
-      expect(i.div(2).coordinate(2)).toBe(0);
-      expect(i.div(2).coordinate(3)).toBe(0);
-
-      expect(j.div(2).coordinate(0)).toBe(0);
-      expect(j.div(2).coordinate(1)).toBe(0);
-      expect(j.div(2).coordinate(2)).toBe(1);
-      expect(j.div(2).coordinate(3)).toBe(0);
-
-      expect(I.div(2).coordinate(0)).toBe(0);
-      expect(I.div(2).coordinate(1)).toBe(0);
-      expect(I.div(2).coordinate(2)).toBe(0);
-      expect(I.div(2).coordinate(3)).toBe(1);
-    });
-
-    it('div 0', function() {
-      var u = new Euclidean2(2, 0, 0, 0)
-      var i = new Euclidean2(0, 2, 0, 0)
-      var j = new Euclidean2(0, 0, 2, 0)
-      var I = new Euclidean2(0, 0, 0, 2)
-
-      expect(u.div(0).coordinate(0)).toBe(Infinity);
-      expect(u.div(0).coordinate(1)).toBeNaN();
-      expect(u.div(0).coordinate(2)).toBeNaN();
-      expect(u.div(0).coordinate(3)).toBeNaN();
-
-      expect(i.div(0).coordinate(0)).toBe(0);
-      expect(i.div(0).coordinate(1)).toBe(Infinity);
-      expect(i.div(0).coordinate(2)).toBeNaN();
-      expect(i.div(0).coordinate(3)).toBeNaN();
-
-      expect(j.div(0).coordinate(0)).toBe(0);
-      expect(j.div(0).coordinate(1)).toBeNaN();
-      expect(j.div(0).coordinate(2)).toBe(Infinity);
-      expect(j.div(0).coordinate(3)).toBeNaN();
-
-      expect(I.div(0).coordinate(0)).toBe(0);
-      expect(I.div(0).coordinate(1)).toBeNaN();
-      expect(I.div(0).coordinate(2)).toBeNaN();
-      expect(I.div(0).coordinate(3)).toBe(Infinity);
-    });
-
     it('Should implement wedge function', function() {
       var u = new Euclidean2(1, 0, 0, 0)
       var i = new Euclidean2(0, 1, 0, 0)

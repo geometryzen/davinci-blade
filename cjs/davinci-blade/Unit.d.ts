@@ -1,4 +1,5 @@
 import Dimensions = require('davinci-blade/Dimensions');
+import Rational = require('davinci-blade/Rational');
 declare class Unit {
     scale: number;
     dimensions: Dimensions;
@@ -23,13 +24,18 @@ declare class Unit {
     mul(rhs: any): Unit;
     __mul__(other: any): Unit;
     __rmul__(other: any): Unit;
-    div(rhs: any): Unit;
+    div(rhs: Unit): Unit;
     __div__(other: any): Unit;
     __rdiv__(other: any): Unit;
-    pow(rhs: number): Unit;
+    pow(q: Rational): Unit;
     inverse(): Unit;
     norm(): Unit;
     quad(): Unit;
     toString(): string;
+    static isUnity(uom: Unit): boolean;
+    static compatible(lhs: Unit, rhs: Unit): Unit;
+    static mul(lhs: Unit, rhs: Unit): Unit;
+    static div(lhs: Unit, rhs: Unit): Unit;
+    static sqrt(uom: Unit): Unit;
 }
 export = Unit;

@@ -1,8 +1,40 @@
+var Unit = require('davinci-blade/Unit');
+function ComplexError(message) {
+    this.name = 'ComplexError';
+    this.message = (message || "");
+}
+ComplexError.prototype = new Error();
+function assertArgNumber(name, x) {
+    if (typeof x === 'number') {
+        return x;
+    }
+    else {
+        throw new ComplexError("Argument '" + name + "' must be a number");
+    }
+}
+function assertArgComplex(name, arg) {
+    if (arg instanceof Complex) {
+        return arg;
+    }
+    else {
+        throw new ComplexError("Argument '" + arg + "' must be a Complex");
+    }
+}
+function assertArgUnitOrUndefined(name, uom) {
+    if (typeof uom === 'undefined' || uom instanceof Unit) {
+        return uom;
+    }
+    else {
+        throw new ComplexError("Argument '" + uom + "' must be a Unit or undefined");
+    }
+}
 function divide(a, b) {
+    assertArgComplex('a', a);
+    assertArgComplex('b', b);
     var q = b.x * b.x + b.y * b.y;
     var x = (a.x * b.x + a.y * b.y) / q;
     var y = (a.y * b.x - a.x * b.y) / q;
-    return new Complex(x, y);
+    return new Complex(x, y, Unit.div(a.uom, b.uom));
 }
 var Complex = (function () {
     /**
@@ -10,12 +42,14 @@ var Complex = (function () {
      * @param x The real part of the complex number.
      * @param y The imaginary part of the complex number.
      */
-    function Complex(x, y) {
-        this.x = x;
-        this.y = y;
+    function Complex(x, y, uom) {
+        this.x = assertArgNumber('x', x);
+        this.y = assertArgNumber('y', y);
+        this.uom = assertArgUnitOrUndefined('uom', uom);
     }
     Complex.prototype.add = function (rhs) {
-        return new Complex(this.x + rhs.x, this.y + rhs.y);
+        assertArgComplex('rhs', rhs);
+        return new Complex(this.x + rhs.x, this.y + rhs.y, Unit.compatible(this.uom, rhs.uom));
     };
     /**
      * __add__ supports operator +(Complex, any)
@@ -25,10 +59,7 @@ var Complex = (function () {
             return this.add(other);
         }
         else if (typeof other === 'number') {
-            return new Complex(this.x + other, this.y);
-        }
-        else {
-            return;
+            return new Complex(this.x + other, this.y, Unit.compatible(this.uom, undefined));
         }
     };
     /**
@@ -36,57 +67,52 @@ var Complex = (function () {
      */
     Complex.prototype.__radd__ = function (other) {
         if (other instanceof Complex) {
-            return new Complex(other.x + this.x, other.y + this.y);
+            var lhs = other;
+            return new Complex(other.x + this.x, other.y + this.y, Unit.compatible(lhs.uom, this.uom));
         }
         else if (typeof other === 'number') {
-            return new Complex(other + this.x, this.y);
-        }
-        else {
-            return;
+            var x = other;
+            return new Complex(x + this.x, this.y, Unit.compatible(undefined, this.uom));
         }
     };
     Complex.prototype.__sub__ = function (other) {
         if (other instanceof Complex) {
-            return new Complex(this.x - other.x, this.y - other.y);
+            var rhs = other;
+            return new Complex(this.x - rhs.x, this.y - rhs.y, Unit.compatible(this.uom, rhs.uom));
         }
         else if (typeof other === 'number') {
-            return new Complex(this.x - other, this.y);
-        }
-        else {
-            return;
+            var x = other;
+            return new Complex(this.x - x, this.y, Unit.compatible(this.uom, undefined));
         }
     };
     Complex.prototype.__rsub__ = function (other) {
         if (other instanceof Complex) {
-            return new Complex(other.x - this.x, other.y - this.y);
+            var lhs = other;
+            return new Complex(lhs.x - this.x, lhs.y - this.y, Unit.compatible(lhs.uom, this.uom));
         }
         else if (typeof other === 'number') {
-            return new Complex(other - this.x, -this.y);
-        }
-        else {
-            return;
+            var x = other;
+            return new Complex(x - this.x, -this.y, Unit.compatible(undefined, this.uom));
         }
     };
     Complex.prototype.__mul__ = function (other) {
         if (other instanceof Complex) {
-            return new Complex(this.x * other.x - this.y * other.y, this.x * other.y + this.y * other.x);
+            var rhs = other;
+            return new Complex(this.x * rhs.x - this.y * rhs.y, this.x * rhs.y + this.y * rhs.x, Unit.mul(this.uom, rhs.uom));
         }
         else if (typeof other === 'number') {
-            return new Complex(this.x * other, this.y * other);
-        }
-        else {
-            return;
+            var x = other;
+            return new Complex(this.x * x, this.y * x, this.uom);
         }
     };
     Complex.prototype.__rmul__ = function (other) {
         if (other instanceof Complex) {
-            return new Complex(other.x * this.x - other.y * this.y, other.x * this.y + other.y * this.x);
+            var lhs = other;
+            return new Complex(lhs.x * this.x - lhs.y * this.y, lhs.x * this.y + lhs.y * this.x, Unit.mul(lhs.uom, this.uom));
         }
         else if (typeof other === 'number') {
-            return new Complex(other * this.x, other * this.y);
-        }
-        else {
-            return;
+            var x = other;
+            return new Complex(x * this.x, x * this.y, this.uom);
         }
     };
     Complex.prototype.__div__ = function (other) {
@@ -94,10 +120,7 @@ var Complex = (function () {
             return divide(this, other);
         }
         else if (typeof other === 'number') {
-            return new Complex(this.x / other, this.y / other);
-        }
-        else {
-            return;
+            return new Complex(this.x / other, this.y / other, this.uom);
         }
     };
     Complex.prototype.__rdiv__ = function (other) {
@@ -105,17 +128,14 @@ var Complex = (function () {
             return divide(other, this);
         }
         else if (typeof other === 'number') {
-            return divide(new Complex(other, 0), this);
-        }
-        else {
-            return;
+            return divide(new Complex(other, 0, undefined), this);
         }
     };
     Complex.prototype.norm = function () {
-        return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0);
+        return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
     };
     Complex.prototype.quad = function () {
-        return new Complex(this.x * this.x + this.y * this.y, 0);
+        return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
     };
     Complex.prototype.arg = function () {
         return Math.atan2(this.y, this.x);
@@ -127,7 +147,8 @@ var Complex = (function () {
         var expX = Math.exp(this.x);
         var x = expX * Math.cos(this.y);
         var y = expX * Math.sin(this.y);
-        return new Complex(x, y);
+        // TODO: Is this correct? If so, why is it so?
+        return new Complex(x, y, this.uom);
     };
     Complex.prototype.toString = function () {
         return "Complex(" + this.x + ", " + this.y + ")";

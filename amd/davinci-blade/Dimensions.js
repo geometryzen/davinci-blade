@@ -1,4 +1,33 @@
 define(["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
+    function DimensionError(message) {
+        this.name = 'DimensionError';
+        this.message = (message || "");
+    }
+    DimensionError.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
+        }
+        else {
+            throw new DimensionError("Argument '" + name + "' must be a number");
+        }
+    }
+    function assertArgDimensions(name, arg) {
+        if (arg instanceof Dimensions) {
+            return arg;
+        }
+        else {
+            throw new DimensionError("Argument '" + arg + "' must be a Dimensions");
+        }
+    }
+    function assertArgRational(name, arg) {
+        if (arg instanceof Rational) {
+            return arg;
+        }
+        else {
+            throw new DimensionError("Argument '" + arg + "' must be a Rational");
+        }
+    }
     var Dimensions = (function () {
         /**
          * The Dimensions class captures the physical dimensions associated with a unit of measure.
@@ -132,10 +161,7 @@ define(["require", "exports", 'davinci-blade/Rational'], function (require, expo
                 return this;
             }
             else {
-                throw {
-                    name: "DimensionError",
-                    message: "Dimensions must be equal (" + this + ", " + rhs + ")"
-                };
+                throw new DimensionError("Dimensions must be equal (" + this + ", " + rhs + ")");
             }
         };
         Dimensions.prototype.mul = function (rhs) {
@@ -146,6 +172,9 @@ define(["require", "exports", 'davinci-blade/Rational'], function (require, expo
         };
         Dimensions.prototype.pow = function (exponent) {
             return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+        };
+        Dimensions.prototype.sqrt = function () {
+            return new Dimensions(this._mass.div(Rational.TWO), this.L.div(Rational.TWO), this.T.div(Rational.TWO), this.Q.div(Rational.TWO), this.temperature.div(Rational.TWO), this.amount.div(Rational.TWO), this.intensity.div(Rational.TWO));
         };
         Dimensions.prototype.dimensionless = function () {
             return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();

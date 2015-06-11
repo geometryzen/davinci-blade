@@ -1,12 +1,8 @@
 import Euclidean3 = require('davinci-blade/Euclidean3');
+import Unit = require('davinci-blade/Unit');
 
-/**
- * Constructs and returns a Euclidean 3D vector from its cartesian components.
- * @param x The x component of the vector.
- * @param y The y component of the vector.
- * @param z The z component of the vector.
- */ 
-var vectorE3 = function(x: number, y: number, z: number): Euclidean3 {
-    return new Euclidean3(0, x, y, z, 0, 0, 0, 0);
+var vectorE3 = function(x: number, y: number, z: number, uom: Unit): Euclidean3 {
+  return new Euclidean3(0, x, y, z, 0, 0, 0, 0, uom);
 };
+
 export = vectorE3;

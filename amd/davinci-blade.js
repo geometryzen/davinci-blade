@@ -1,4 +1,4 @@
-define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
+define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Complex, Color, scalarE3, vectorE3, bivectorE3) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -47,45 +47,33 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 
         Rational: Rational,
         Dimensions: Dimensions,
         Unit: Unit,
-        Measure: Measure,
-        /**
-         * A dimensionless unit.
-         *
-         * @property UNIT_DIMLESS
-         * @type Unit
-         * @static
-         * @final
-         */
-        UNIT_DIMLESS: UNIT_DIMLESS,
-        UNIT_KILOGRAM: UNIT_KILOGRAM,
-        UNIT_METER: UNIT_METER,
-        UNIT_SECOND: UNIT_SECOND,
-        UNIT_AMPERE: UNIT_AMPERE,
-        UNIT_KELVIN: UNIT_KELVIN,
-        UNIT_MOLE: UNIT_MOLE,
-        UNIT_CANDELA: UNIT_CANDELA,
-        UNIT_COULOMB: UNIT_COULOMB,
-        UNIT_INCH: UNIT_INCH,
-        UNIT_FOOT: UNIT_FOOT,
-        UNIT_YARD: UNIT_YARD,
-        UNIT_MILE: UNIT_MILE,
-        UNIT_POUND: UNIT_POUND,
-        UNIT_NEWTON: UNIT_NEWTON,
-        UNIT_JOULE: UNIT_JOULE,
-        UNIT_WATT: UNIT_WATT,
-        UNIT_VOLT: UNIT_VOLT,
-        UNIT_WEBER: UNIT_WEBER,
-        UNIT_TESLA: UNIT_TESLA,
-        UNIT_OHM: UNIT_OHM,
-        UNIT_SIEMEN: UNIT_SIEMEN,
-        UNIT_FARAD: UNIT_FARAD,
-        UNIT_HENRY: UNIT_HENRY,
-        UNIT_HERTZ: UNIT_HERTZ,
-        UNIT_PASCAL: UNIT_PASCAL,
         units: {
-            meter: UNIT_METER,
+            ampere: UNIT_AMPERE,
+            candela: UNIT_CANDELA,
+            coulomb: UNIT_COULOMB,
+            farad: UNIT_FARAD,
+            foot: UNIT_FOOT,
+            henry: UNIT_HENRY,
+            hertz: UNIT_HERTZ,
+            inch: UNIT_INCH,
+            joule: UNIT_JOULE,
+            kelvin: UNIT_KELVIN,
             kilogram: UNIT_KILOGRAM,
-            second: UNIT_SECOND
+            meter: UNIT_METER,
+            mile: UNIT_MILE,
+            mole: UNIT_MOLE,
+            newton: UNIT_NEWTON,
+            ohm: UNIT_OHM,
+            pascal: UNIT_PASCAL,
+            pound: UNIT_POUND,
+            second: UNIT_SECOND,
+            siemen: UNIT_SIEMEN,
+            tesla: UNIT_TESLA,
+            unity: UNIT_DIMLESS,
+            volt: UNIT_VOLT,
+            watt: UNIT_WATT,
+            weber: UNIT_WEBER,
+            yard: UNIT_YARD
         }
     };
     return blade;

@@ -1,4 +1,5 @@
 import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Unit = require('davinci-blade/Unit');
 declare class Complex implements GeometricQuantity<Complex> {
     /**
      * The real part of the complex number.
@@ -9,11 +10,15 @@ declare class Complex implements GeometricQuantity<Complex> {
      */
     y: number;
     /**
+     * The optional unit of measure.
+     */
+    uom: Unit;
+    /**
      * Constructs a complex number z = (x, y).
      * @param x The real part of the complex number.
      * @param y The imaginary part of the complex number.
      */
-    constructor(x: number, y: number);
+    constructor(x: number, y: number, uom: Unit);
     add(rhs: Complex): Complex;
     /**
      * __add__ supports operator +(Complex, any)

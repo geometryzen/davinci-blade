@@ -1,3 +1,34 @@
+// TODO: Add special methods and unit of measure.
+var Unit = require('davinci-blade/Unit');
+function RationalError(message) {
+    this.name = 'RationalError';
+    this.message = (message || "");
+}
+RationalError.prototype = new Error();
+function assertArgNumber(name, x) {
+    if (typeof x === 'number') {
+        return x;
+    }
+    else {
+        throw new RationalError("Argument '" + name + "' must be a number");
+    }
+}
+function assertArgRational(name, arg) {
+    if (arg instanceof Rational) {
+        return arg;
+    }
+    else {
+        throw new RationalError("Argument '" + arg + "' must be a Rational");
+    }
+}
+function assertArgUnitOrUndefined(name, uom) {
+    if (typeof uom === 'undefined' || uom instanceof Unit) {
+        return uom;
+    }
+    else {
+        throw new RationalError("Argument '" + uom + "' must be a Unit or undefined");
+    }
+}
 var Rational = (function () {
     /**
      * The Rational class represents a rational number.
@@ -9,8 +40,12 @@ var Rational = (function () {
      * @param {number} d The denominator.
      */
     function Rational(n, d) {
+        assertArgNumber('n', n);
+        assertArgNumber('d', d);
         var g;
         var gcd = function (a, b) {
+            assertArgNumber('a', a);
+            assertArgNumber('b', b);
             var temp;
             if (a < 0) {
                 a = -a;
@@ -51,12 +86,6 @@ var Rational = (function () {
         this._denom = d / g;
     }
     Object.defineProperty(Rational.prototype, "numer", {
-        /**
-        * The numerator part of the rational number.
-        *
-        * @property numer
-        * @type {number}
-        */
         get: function () {
             return this._numer;
         },
@@ -64,55 +93,23 @@ var Rational = (function () {
         configurable: true
     });
     Object.defineProperty(Rational.prototype, "denom", {
-        /**
-        * The denominator part of the rational number.
-        *
-        * @property denom
-        * @type {number}
-        */
         get: function () {
             return this._denom;
         },
         enumerable: true,
         configurable: true
     });
-    /**
-    * Returns the sum of this rational number and the argument.
-    *
-    * @method add
-    * @param {Number|Rational} rhs The number used on the right hand side of the addition operator.
-    * @return {Rational} The sum of this rational number and the specified argument.
-    */
     Rational.prototype.add = function (rhs) {
-        if (typeof rhs === 'number') {
-            return new Rational(this._numer + this._denom * rhs, this._denom);
-        }
-        else {
-            return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
-        }
+        assertArgRational('rhs', rhs);
+        return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
     };
-    /**
-    * Returns the difference of this rational number and the argument.
-    *
-    * @method sub
-    * @param {Number|Rational} rhs The number used on the right hand side of the subtraction operator.
-    * @return {Rational} The difference of this rational number and the specified argument.
-    */
     Rational.prototype.sub = function (rhs) {
-        if (typeof rhs === 'number') {
-            return new Rational(this._numer - this._denom * rhs, this._denom);
-        }
-        else {
-            return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
-        }
+        assertArgRational('rhs', rhs);
+        return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
     };
     Rational.prototype.mul = function (rhs) {
-        if (typeof rhs === 'number') {
-            return new Rational(this._numer * rhs, this._denom);
-        }
-        else {
-            return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
-        }
+        assertArgRational('rhs', rhs);
+        return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
     };
     // TODO: div testing
     Rational.prototype.div = function (rhs) {
@@ -123,14 +120,12 @@ var Rational = (function () {
             return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
         }
     };
-    // TODO: isZero testing
     Rational.prototype.isZero = function () {
         return this._numer === 0;
     };
     Rational.prototype.negative = function () {
         return new Rational(-this._numer, this._denom);
     };
-    // TODO: equals testing
     Rational.prototype.equals = function (other) {
         if (other instanceof Rational) {
             return this._numer * other._denom === this._denom * other._numer;
@@ -142,9 +137,8 @@ var Rational = (function () {
     Rational.prototype.toString = function () {
         return "" + this._numer + "/" + this._denom;
     };
-    // TODO: Implement some sort of interning to reduce object creation.
-    // Make sure that Rational is immutable!
     Rational.ONE = new Rational(1, 1);
+    Rational.TWO = new Rational(2, 1);
     Rational.MINUS_ONE = new Rational(-1, 1);
     Rational.ZERO = new Rational(0, 1);
     return Rational;

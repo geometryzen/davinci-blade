@@ -7,7 +7,6 @@ require([
     'davinci-blade/Unit',
     'davinci-blade/Euclidean2',
     'davinci-blade/Euclidean3',
-    'davinci-blade/Measure',
     'davinci-blade/Rational',
     'davinci-blade/Unit'
 ], function(){ require([
@@ -16,7 +15,6 @@ require([
     'test/amd/Dimensions_test.js',
     'test/amd/Euclidean2_test.js',
     'test/amd/Euclidean3_test.js',
-    'test/amd/Measure_test.js',
     'test/amd/Rational_test.js',
     'test/amd/Unit_test.js'
 ], function() {

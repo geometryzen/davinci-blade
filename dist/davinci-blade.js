@@ -438,12 +438,780 @@ define('davinci-blade/core',["require", "exports"], function (require, exports) 
         /**
          * The version of the blade library.
          */
-        VERSION: '1.1.1'
+        VERSION: '1.2.0'
     };
     return blade;
 });
 
-define('davinci-blade/Euclidean1',["require", "exports"], function (require, exports) {
+define('davinci-blade/Rational',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    function RationalError(message) {
+        this.name = 'RationalError';
+        this.message = (message || "");
+    }
+    RationalError.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
+        }
+        else {
+            throw new RationalError("Argument '" + name + "' must be a number");
+        }
+    }
+    function assertArgRational(name, arg) {
+        if (arg instanceof Rational) {
+            return arg;
+        }
+        else {
+            throw new RationalError("Argument '" + arg + "' must be a Rational");
+        }
+    }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === 'undefined' || uom instanceof Unit) {
+            return uom;
+        }
+        else {
+            throw new RationalError("Argument '" + uom + "' must be a Unit or undefined");
+        }
+    }
+    var Rational = (function () {
+        /**
+         * The Rational class represents a rational number.
+         *
+         * @class Rational
+         * @extends Field
+         * @constructor
+         * @param {number} n The numerator.
+         * @param {number} d The denominator.
+         */
+        function Rational(n, d) {
+            assertArgNumber('n', n);
+            assertArgNumber('d', d);
+            var g;
+            var gcd = function (a, b) {
+                assertArgNumber('a', a);
+                assertArgNumber('b', b);
+                var temp;
+                if (a < 0) {
+                    a = -a;
+                }
+                if (b < 0) {
+                    b = -b;
+                }
+                if (b > a) {
+                    temp = a;
+                    a = b;
+                    b = temp;
+                }
+                while (true) {
+                    a %= b;
+                    if (a === 0) {
+                        return b;
+                    }
+                    b %= a;
+                    if (b === 0) {
+                        return a;
+                    }
+                }
+            };
+            if (d === 0) {
+                throw new Error("denominator must not be zero");
+            }
+            if (n === 0) {
+                g = 1;
+            }
+            else {
+                g = gcd(Math.abs(n), Math.abs(d));
+            }
+            if (d < 0) {
+                n = -n;
+                d = -d;
+            }
+            this._numer = n / g;
+            this._denom = d / g;
+        }
+        Object.defineProperty(Rational.prototype, "numer", {
+            get: function () {
+                return this._numer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rational.prototype, "denom", {
+            get: function () {
+                return this._denom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Rational.prototype.add = function (rhs) {
+            assertArgRational('rhs', rhs);
+            return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
+        };
+        Rational.prototype.sub = function (rhs) {
+            assertArgRational('rhs', rhs);
+            return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
+        };
+        Rational.prototype.mul = function (rhs) {
+            assertArgRational('rhs', rhs);
+            return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
+        };
+        // TODO: div testing
+        Rational.prototype.div = function (rhs) {
+            if (typeof rhs === 'number') {
+                return new Rational(this._numer, this._denom * rhs);
+            }
+            else {
+                return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
+            }
+        };
+        Rational.prototype.isZero = function () {
+            return this._numer === 0;
+        };
+        Rational.prototype.negative = function () {
+            return new Rational(-this._numer, this._denom);
+        };
+        Rational.prototype.equals = function (other) {
+            if (other instanceof Rational) {
+                return this._numer * other._denom === this._denom * other._numer;
+            }
+            else {
+                return false;
+            }
+        };
+        Rational.prototype.toString = function () {
+            return "" + this._numer + "/" + this._denom;
+        };
+        Rational.ONE = new Rational(1, 1);
+        Rational.TWO = new Rational(2, 1);
+        Rational.MINUS_ONE = new Rational(-1, 1);
+        Rational.ZERO = new Rational(0, 1);
+        return Rational;
+    })();
+    return Rational;
+});
+
+define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
+    function DimensionError(message) {
+        this.name = 'DimensionError';
+        this.message = (message || "");
+    }
+    DimensionError.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
+        }
+        else {
+            throw new DimensionError("Argument '" + name + "' must be a number");
+        }
+    }
+    function assertArgDimensions(name, arg) {
+        if (arg instanceof Dimensions) {
+            return arg;
+        }
+        else {
+            throw new DimensionError("Argument '" + arg + "' must be a Dimensions");
+        }
+    }
+    function assertArgRational(name, arg) {
+        if (arg instanceof Rational) {
+            return arg;
+        }
+        else {
+            throw new DimensionError("Argument '" + arg + "' must be a Rational");
+        }
+    }
+    var Dimensions = (function () {
+        /**
+         * The Dimensions class captures the physical dimensions associated with a unit of measure.
+         *
+         * @class Dimensions
+         * @constructor
+         * @param {Rational} mass The mass component of the dimensions object.
+         * @param {Rational} length The length component of the dimensions object.
+         * @param {Rational} time The time component of the dimensions object.
+         * @param {Rational} charge The charge component of the dimensions object.
+         * @param {Rational} temperature The temperature component of the dimensions object.
+         * @param {Rational} amount The amount component of the dimensions object.
+         * @param {Rational} intensity The intensity component of the dimensions object.
+         */
+        function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
+            this.L = L;
+            this.T = T;
+            this.Q = Q;
+            this.temperature = temperature;
+            this.amount = amount;
+            this.intensity = intensity;
+            var length = L;
+            var time = T;
+            var charge = Q;
+            if (arguments.length !== 7) {
+                throw {
+                    name: "DimensionError",
+                    message: "Expecting 7 arguments"
+                };
+            }
+            if (typeof theMass === 'number') {
+                this._mass = new Rational(theMass, 1);
+            }
+            else if (theMass instanceof Rational) {
+                this._mass = theMass;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "mass must be a Rational or number"
+                };
+            }
+            if (typeof length === 'number') {
+                this.L = new Rational(length, 1);
+            }
+            else if (length instanceof Rational) {
+                this.L = length;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "length must be a Rational or number"
+                };
+            }
+            if (typeof time === 'number') {
+                this.T = new Rational(time, 1);
+            }
+            else if (time instanceof Rational) {
+                this.T = time;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "time must be a Rational or number"
+                };
+            }
+            if (typeof charge === 'number') {
+                this.Q = new Rational(charge, 1);
+            }
+            else if (charge instanceof Rational) {
+                this.Q = charge;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "charge must be a Rational or number"
+                };
+            }
+            if (typeof temperature === 'number') {
+                this.temperature = new Rational(temperature, 1);
+            }
+            else if (temperature instanceof Rational) {
+                this.temperature = temperature;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "(thermodynamic) temperature must be a Rational or number"
+                };
+            }
+            if (typeof amount === 'number') {
+                this.amount = new Rational(amount, 1);
+            }
+            else if (amount instanceof Rational) {
+                this.amount = amount;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "amount (of substance) must be a Rational or number"
+                };
+            }
+            if (typeof intensity === 'number') {
+                this.intensity = new Rational(intensity, 1);
+            }
+            else if (intensity instanceof Rational) {
+                this.intensity = intensity;
+            }
+            else {
+                throw {
+                    name: "DimensionError",
+                    message: "(luminous) intensity must be a Rational or number"
+                };
+            }
+        }
+        Object.defineProperty(Dimensions.prototype, "M", {
+            /**
+            * The <em>mass</em> component of this dimensions instance.
+            *
+            * @property M
+            * @type {Rational}
+            */
+            get: function () {
+                return this._mass;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Dimensions.prototype.compatible = function (rhs) {
+            if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
+                return this;
+            }
+            else {
+                throw new DimensionError("Dimensions must be equal (" + this + ", " + rhs + ")");
+            }
+        };
+        Dimensions.prototype.mul = function (rhs) {
+            return new Dimensions(this._mass.add(rhs._mass), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
+        };
+        Dimensions.prototype.div = function (rhs) {
+            return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
+        };
+        Dimensions.prototype.pow = function (exponent) {
+            return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
+        };
+        Dimensions.prototype.sqrt = function () {
+            return new Dimensions(this._mass.div(Rational.TWO), this.L.div(Rational.TWO), this.T.div(Rational.TWO), this.Q.div(Rational.TWO), this.temperature.div(Rational.TWO), this.amount.div(Rational.TWO), this.intensity.div(Rational.TWO));
+        };
+        Dimensions.prototype.dimensionless = function () {
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+        };
+        /**
+        * Determines whether all the components of the Dimensions instance are zero.
+        *
+        * @method isZero
+        * @return {boolean} <code>true</code> if all the components are zero, otherwise <code>false</code>.
+        */
+        Dimensions.prototype.isZero = function () {
+            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
+        };
+        Dimensions.prototype.negative = function () {
+            return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
+        };
+        Dimensions.prototype.toString = function () {
+            var stringify = function (rational, label) {
+                if (rational.numer === 0) {
+                    return null;
+                }
+                else if (rational.denom === 1) {
+                    if (rational.numer === 1) {
+                        return "" + label;
+                    }
+                    else {
+                        return "" + label + " ** " + rational.numer;
+                    }
+                }
+                return "" + label + " ** " + rational;
+            };
+            return [stringify(this._mass, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function (x) {
+                return typeof x === 'string';
+            }).join(" * ");
+        };
+        return Dimensions;
+    })();
+    return Dimensions;
+});
+
+define('davinci-blade/Unit',["require", "exports", 'davinci-blade/Dimensions', 'davinci-blade/Rational'], function (require, exports, Dimensions, Rational) {
+    function UnitError(message) {
+        this.name = 'UnitError';
+        this.message = (message || "");
+    }
+    UnitError.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
+        }
+        else {
+            throw new UnitError("Argument '" + name + "' must be a number");
+        }
+    }
+    function assertArgDimensions(name, arg) {
+        if (arg instanceof Dimensions) {
+            return arg;
+        }
+        else {
+            throw new UnitError("Argument '" + arg + "' must be a Dimensions");
+        }
+    }
+    function assertArgRational(name, arg) {
+        if (arg instanceof Rational) {
+            return arg;
+        }
+        else {
+            throw new UnitError("Argument '" + arg + "' must be a Rational");
+        }
+    }
+    function assertArgUnit(name, arg) {
+        if (arg instanceof Unit) {
+            return arg;
+        }
+        else {
+            throw new UnitError("Argument '" + arg + "' must be a Unit");
+        }
+    }
+    var dumbString = function (scale, dimensions, labels) {
+        assertArgNumber('scale', scale);
+        assertArgDimensions('dimensions', dimensions);
+        var operatorStr;
+        var scaleString;
+        var unitsString;
+        var stringify = function (rational, label) {
+            if (rational.numer === 0) {
+                return null;
+            }
+            else if (rational.denom === 1) {
+                if (rational.numer === 1) {
+                    return "" + label;
+                }
+                else {
+                    return "" + label + " ** " + rational.numer;
+                }
+            }
+            return "" + label + " ** " + rational;
+        };
+        operatorStr = scale === 1 || dimensions.isZero() ? "" : " ";
+        scaleString = scale === 1 ? "" : "" + scale;
+        unitsString = [stringify(dimensions.M, labels[0]), stringify(dimensions.L, labels[1]), stringify(dimensions.T, labels[2]), stringify(dimensions.Q, labels[3]), stringify(dimensions.temperature, labels[4]), stringify(dimensions.amount, labels[5]), stringify(dimensions.intensity, labels[6])].filter(function (x) {
+            return typeof x === 'string';
+        }).join(" ");
+        return "" + scaleString + operatorStr + unitsString;
+    };
+    var unitString = function (scale, dimensions, labels) {
+        var patterns = [
+            [-1, 1, -3, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, -2, 1, 1, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, -2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
+            [-1, 1, 3, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 0, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 0, 1, -1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [0, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 0, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -3, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [0, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, -1, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, -1, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
+            [1, 1, 2, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1]
+        ];
+        var decodes = [
+            ["F/m"],
+            ["S"],
+            ["F"],
+            ["N·m ** 2/kg ** 2"],
+            ["Hz"],
+            ["A"],
+            ["m/s ** 2"],
+            ["m/s"],
+            ["kg·m/s"],
+            ["Pa"],
+            ["Pa·s"],
+            ["W/m ** 2"],
+            ["N/m"],
+            ["T"],
+            ["W/(m·K)"],
+            ["V/m"],
+            ["N"],
+            ["H/m"],
+            ["J/K"],
+            ["J/(kg·K)"],
+            ["J/(mol·K)"],
+            ["J/mol"],
+            ["J"],
+            ["J·s"],
+            ["W"],
+            ["V"],
+            ["Ω"],
+            ["H"],
+            ["Wb"]
+        ];
+        var M = dimensions.M;
+        var L = dimensions.L;
+        var T = dimensions.T;
+        var Q = dimensions.Q;
+        var temperature = dimensions.temperature;
+        var amount = dimensions.amount;
+        var intensity = dimensions.intensity;
+        for (var i = 0, len = patterns.length; i < len; i++) {
+            var pattern = patterns[i];
+            if (M.numer === pattern[0] && M.denom === pattern[1] && L.numer === pattern[2] && L.denom === pattern[3] && T.numer === pattern[4] && T.denom === pattern[5] && Q.numer === pattern[6] && Q.denom === pattern[7] && temperature.numer === pattern[8] && temperature.denom === pattern[9] && amount.numer === pattern[10] && amount.denom === pattern[11] && intensity.numer === pattern[12] && intensity.denom === pattern[13]) {
+                if (scale !== 1) {
+                    return scale + " * " + decodes[i][0];
+                }
+                else {
+                    return decodes[i][0];
+                }
+            }
+        }
+        return dumbString(scale, dimensions, labels);
+    };
+    function add(lhs, rhs) {
+        return new Unit(lhs.scale + rhs.scale, lhs.dimensions.compatible(rhs.dimensions), lhs.labels);
+    }
+    function sub(lhs, rhs) {
+        return new Unit(lhs.scale - rhs.scale, lhs.dimensions.compatible(rhs.dimensions), lhs.labels);
+    }
+    function mul(lhs, rhs) {
+        return new Unit(lhs.scale * rhs.scale, lhs.dimensions.mul(rhs.dimensions), lhs.labels);
+    }
+    function scalarMultiply(alpha, unit) {
+        return new Unit(alpha * unit.scale, unit.dimensions, unit.labels);
+    }
+    function div(lhs, rhs) {
+        return new Unit(lhs.scale / rhs.scale, lhs.dimensions.div(rhs.dimensions), lhs.labels);
+    }
+    var Unit = (function () {
+        /**
+         * The Unit class represents the units for a measure.
+         *
+         * @class Unit
+         * @constructor
+         * @param {number} scale
+         * @param {Dimensions} dimensions
+         * @param {string[]} labels The label strings to use for each dimension.
+         */
+        function Unit(scale, dimensions, labels) {
+            this.scale = scale;
+            this.dimensions = dimensions;
+            this.labels = labels;
+            if (labels.length !== 7) {
+                throw new Error("Expecting 7 elements in the labels array.");
+            }
+            this.scale = scale;
+            this.dimensions = dimensions;
+            this.labels = labels;
+        }
+        Unit.prototype.compatible = function (rhs) {
+            if (rhs instanceof Unit) {
+                this.dimensions.compatible(rhs.dimensions);
+                return this;
+            }
+            else {
+                throw new Error("Illegal Argument for Unit.compatible: " + rhs);
+            }
+        };
+        Unit.prototype.add = function (rhs) {
+            assertArgUnit('rhs', rhs);
+            return add(this, rhs);
+        };
+        Unit.prototype.__add__ = function (other) {
+            if (other instanceof Unit) {
+                return add(this, other);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__radd__ = function (other) {
+            if (other instanceof Unit) {
+                return add(other, this);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.sub = function (rhs) {
+            assertArgUnit('rhs', rhs);
+            return sub(this, rhs);
+        };
+        Unit.prototype.__sub__ = function (other) {
+            if (other instanceof Unit) {
+                return sub(this, other);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__rsub__ = function (other) {
+            if (other instanceof Unit) {
+                return sub(other, this);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.mul = function (rhs) {
+            assertArgUnit('rhs', rhs);
+            return mul(this, rhs);
+        };
+        Unit.prototype.__mul__ = function (other) {
+            if (other instanceof Unit) {
+                return mul(this, other);
+            }
+            else if (typeof other === 'number') {
+                return scalarMultiply(other, this);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__rmul__ = function (other) {
+            if (other instanceof Unit) {
+                return mul(other, this);
+            }
+            else if (typeof other === 'number') {
+                return scalarMultiply(other, this);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.div = function (rhs) {
+            assertArgUnit('rhs', rhs);
+            return div(this, rhs);
+        };
+        Unit.prototype.__div__ = function (other) {
+            if (other instanceof Unit) {
+                return div(this, other);
+            }
+            else if (typeof other === 'number') {
+                return new Unit(this.scale / other, this.dimensions, this.labels);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.__rdiv__ = function (other) {
+            if (other instanceof Unit) {
+                return div(other, this);
+            }
+            else if (typeof other === 'number') {
+                return new Unit(other / this.scale, this.dimensions.negative(), this.labels);
+            }
+            else {
+                return;
+            }
+        };
+        Unit.prototype.pow = function (q) {
+            assertArgRational('q', q);
+            return new Unit(Math.pow(this.scale, q.numer / q.denom), this.dimensions.pow(q), this.labels);
+        };
+        Unit.prototype.inverse = function () {
+            return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
+        };
+        Unit.prototype.norm = function () {
+            return new Unit(Math.abs(this.scale), this.dimensions, this.labels);
+        };
+        Unit.prototype.quad = function () {
+            return new Unit(this.scale * this.scale, this.dimensions.mul(this.dimensions), this.labels);
+        };
+        Unit.prototype.toString = function () {
+            return unitString(this.scale, this.dimensions, this.labels);
+        };
+        Unit.isUnity = function (uom) {
+            if (typeof uom === 'undefined') {
+                return true;
+            }
+            else if (uom instanceof Unit) {
+                return uom.dimensions.dimensionless();
+            }
+            else {
+                throw new Error("isUnity argument must be a Unit or undefined.");
+            }
+        };
+        Unit.compatible = function (lhs, rhs) {
+            if (lhs instanceof Unit) {
+                if (rhs instanceof Unit) {
+                    return lhs.compatible(rhs);
+                }
+                else {
+                    return undefined;
+                }
+            }
+            else {
+                return undefined;
+            }
+        };
+        Unit.mul = function (lhs, rhs) {
+            if (lhs instanceof Unit) {
+                if (rhs instanceof Unit) {
+                    return lhs.mul(rhs);
+                }
+                else if (Unit.isUnity(rhs)) {
+                    return lhs;
+                }
+                else {
+                    return undefined;
+                }
+            }
+            else if (Unit.isUnity(lhs)) {
+                return rhs;
+            }
+            else {
+                return undefined;
+            }
+        };
+        Unit.div = function (lhs, rhs) {
+            if (lhs instanceof Unit) {
+                if (rhs instanceof Unit) {
+                    return lhs.div(rhs);
+                }
+                else {
+                    return undefined;
+                }
+            }
+            else {
+                return undefined;
+            }
+        };
+        Unit.sqrt = function (uom) {
+            if (typeof uom === 'undefined') {
+                if (uom instanceof Unit) {
+                    return new Unit(Math.sqrt(uom.scale), uom.dimensions.sqrt(), uom.labels);
+                }
+                else {
+                    throw new Error("uom must be a Unit.");
+                }
+            }
+            else {
+                return undefined;
+            }
+        };
+        return Unit;
+    })();
+    return Unit;
+});
+
+define('davinci-blade/Euclidean1',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    function Euclidean1Error(message) {
+        this.name = 'Euclidean1Error';
+        this.message = (message || "");
+    }
+    Euclidean1Error.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
+        }
+        else {
+            throw new Euclidean1Error("Argument '" + name + "' must be a number");
+        }
+    }
+    function assertArgEuclidean1(name, arg) {
+        if (arg instanceof Euclidean1) {
+            return arg;
+        }
+        else {
+            throw new Euclidean1Error("Argument '" + arg + "' must be a Euclidean1");
+        }
+    }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === 'undefined' || uom instanceof Unit) {
+            return uom;
+        }
+        else {
+            throw new Euclidean1Error("Argument '" + uom + "' must be a Unit or undefined");
+        }
+    }
     var Euclidean1 = (function () {
         /**
          * The Euclidean1 class represents a multivector for a 1-dimensional linear space with a Euclidean metric.
@@ -452,26 +1220,58 @@ define('davinci-blade/Euclidean1',["require", "exports"], function (require, exp
          * @constructor
          * @param {number} w The scalar part of the multivector.
          * @param {number} x The vector component of the multivector in the x-direction.
+         * @param uom The optional unit of measure.
          */
-        function Euclidean1(w, x) {
-            this.w = w;
-            this.x = x;
+        function Euclidean1(w, x, uom) {
+            this.w = assertArgNumber('w', w);
+            this.x = assertArgNumber('x', x);
+            this.uom = assertArgUnitOrUndefined('uom', uom);
         }
         Euclidean1.prototype.add = function (rhs) {
-            return new Euclidean1(this.w + rhs.w, this.x + rhs.x);
+            assertArgEuclidean1('rhs', rhs);
+            return new Euclidean1(this.w + rhs.w, this.x + rhs.x, Unit.compatible(this.uom, rhs.uom));
         };
         Euclidean1.prototype.norm = function () {
-            return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0);
+            return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0, this.uom);
         };
         Euclidean1.prototype.quad = function () {
-            return new Euclidean1(this.w * this.w + this.x * this.x, 0);
+            return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
         };
         return Euclidean1;
     })();
     return Euclidean1;
 });
 
-define('davinci-blade/Euclidean2',["require", "exports"], function (require, exports) {
+define('davinci-blade/Euclidean2',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    function Euclidean2Error(message) {
+        this.name = 'Euclidean2Error';
+        this.message = (message || "");
+    }
+    Euclidean2Error.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
+        }
+        else {
+            throw new Euclidean2Error("Argument '" + name + "' must be a number");
+        }
+    }
+    function assertArgEuclidean2(name, arg) {
+        if (arg instanceof Euclidean2) {
+            return arg;
+        }
+        else {
+            throw new Euclidean2Error("Argument '" + arg + "' must be a Euclidean2");
+        }
+    }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === 'undefined' || uom instanceof Unit) {
+            return uom;
+        }
+        else {
+            throw new Euclidean2Error("Argument '" + uom + "' must be a Unit or undefined");
+        }
+    }
     function add00(a00, a01, a10, a11, b00, b01, b10, b11) {
         a00 = +a00;
         a01 = +a01;
@@ -783,7 +1583,7 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
         }
         return str;
     }
-    var divide = function (a00, a01, a10, a11, b00, b01, b10, b11, m) {
+    var divide = function (a00, a01, a10, a11, b00, b01, b10, b11, uom, m) {
         var c00, c01, c10, c11, i00, i01, i10, i11, k00, m00, m01, m10, m11, r00, r01, r10, r11, s00, s01, s10, s11, x00, x01, x10, x11;
         r00 = +b00;
         r01 = +b01;
@@ -811,13 +1611,15 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
         x10 = a00 * i10 + a01 * i11 + a10 * i00 - a11 * i01;
         x11 = a00 * i11 + a01 * i10 - a10 * i01 + a11 * i00;
         if (typeof m !== 'undefined') {
+            assertArgEuclidean2('m', m);
             m.w = x00;
             m.x = x01;
             m.y = x10;
-            return m.xy = x11;
+            m.xy = x11;
+            m.uom = uom;
         }
         else {
-            return new Euclidean2(x00, x01, x10, x11);
+            return new Euclidean2(x00, x01, x10, x11, uom);
         }
     };
     var Euclidean2 = (function () {
@@ -830,23 +1632,36 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
          * @param {number} x The vector component of the multivector in the x-direction.
          * @param {number} y The vector component of the multivector in the y-direction.
          * @param {number} xy The pseudoscalar part of the multivector.
+         * @param uom The optional unit of measure.
          */
-        function Euclidean2(w, x, y, xy) {
-            this.w = w || 0;
-            this.x = x;
-            this.y = y;
-            this.xy = xy;
+        function Euclidean2(w, x, y, xy, uom) {
+            this.w = assertArgNumber('w', w);
+            this.x = assertArgNumber('x', x);
+            this.y = assertArgNumber('y', y);
+            this.xy = assertArgNumber('xy', xy);
+            this.uom = assertArgUnitOrUndefined('uom', uom);
         }
-        Euclidean2.prototype.fromCartesian = function (w, x, y, xy) {
-            return new Euclidean2(w, x, y, xy);
+        Euclidean2.prototype.fromCartesian = function (w, x, y, xy, uom) {
+            assertArgNumber('w', w);
+            assertArgNumber('x', x);
+            assertArgNumber('y', y);
+            assertArgNumber('xy', xy);
+            assertArgUnitOrUndefined('uom', uom);
+            return new Euclidean2(w, x, y, xy, uom);
         };
-        Euclidean2.prototype.fromPolar = function (w, r, theta, s) {
-            return new Euclidean2(w, r * Math.cos(theta), r * Math.sin(theta), s);
+        Euclidean2.prototype.fromPolar = function (w, r, theta, s, uom) {
+            assertArgNumber('w', w);
+            assertArgNumber('r', r);
+            assertArgNumber('theta', theta);
+            assertArgNumber('s', s);
+            assertArgUnitOrUndefined('uom', uom);
+            return new Euclidean2(w, r * Math.cos(theta), r * Math.sin(theta), s, uom);
         };
         Euclidean2.prototype.coordinates = function () {
             return [this.w, this.x, this.y, this.xy];
         };
         Euclidean2.prototype.coordinate = function (index) {
+            assertArgNumber('index', index);
             switch (index) {
                 case 0:
                     return this.w;
@@ -857,38 +1672,35 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
                 case 3:
                     return this.xy;
                 default:
-                    throw new Error("index must be in the range [0..3]");
+                    throw new Euclidean2Error("index must be in the range [0..3]");
             }
         };
         Euclidean2.add = function (a, b) {
-            var a00, a01, a10, a11, b00, b01, b10, b11, x00, x01, x10, x11;
-            a00 = a[0];
-            a01 = a[1];
-            a10 = a[2];
-            a11 = a[3];
-            b00 = b[0];
-            b01 = b[1];
-            b10 = b[2];
-            b11 = b[3];
-            x00 = add00(a00, a01, a10, a11, b00, b01, b10, b11);
-            x01 = add01(a00, a01, a10, a11, b00, b01, b10, b11);
-            x10 = add10(a00, a01, a10, a11, b00, b01, b10, b11);
-            x11 = add11(a00, a01, a10, a11, b00, b01, b10, b11);
+            var a00 = a[0];
+            var a01 = a[1];
+            var a10 = a[2];
+            var a11 = a[3];
+            var b00 = b[0];
+            var b01 = b[1];
+            var b10 = b[2];
+            var b11 = b[3];
+            var x00 = add00(a00, a01, a10, a11, b00, b01, b10, b11);
+            var x01 = add01(a00, a01, a10, a11, b00, b01, b10, b11);
+            var x10 = add10(a00, a01, a10, a11, b00, b01, b10, b11);
+            var x11 = add11(a00, a01, a10, a11, b00, b01, b10, b11);
             return [x00, x01, x10, x11];
         };
         Euclidean2.prototype.add = function (rhs) {
+            assertArgEuclidean2('rhs', rhs);
             var xs = Euclidean2.add(this.coordinates(), rhs.coordinates());
-            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.compatible(this.uom, rhs.uom));
         };
         Euclidean2.prototype.__add__ = function (other) {
             if (other instanceof Euclidean2) {
                 return this.add(other);
             }
             else if (typeof other === 'number') {
-                return this.add(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.add(new Euclidean2(other, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__radd__ = function (other) {
@@ -896,42 +1708,35 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
                 return other.add(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).add(this);
-            }
-            else {
-                return;
+                return new Euclidean2(other, 0, 0, 0, undefined).add(this);
             }
         };
         Euclidean2.sub = function (a, b) {
-            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
-            a0 = a[0];
-            a1 = a[1];
-            a2 = a[2];
-            a3 = a[3];
-            b0 = b[0];
-            b1 = b[1];
-            b2 = b[2];
-            b3 = b[3];
-            x0 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
-            x1 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
-            x2 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
-            x3 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
+            var a0 = a[0];
+            var a1 = a[1];
+            var a2 = a[2];
+            var a3 = a[3];
+            var b0 = b[0];
+            var b1 = b[1];
+            var b2 = b[2];
+            var b3 = b[3];
+            var x0 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
+            var x1 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
+            var x2 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
+            var x3 = subE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.sub = function (rhs) {
-            var xs;
-            xs = Euclidean2.sub(this.coordinates(), rhs.coordinates());
-            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+            assertArgEuclidean2('rhs', rhs);
+            var xs = Euclidean2.sub(this.coordinates(), rhs.coordinates());
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.compatible(this.uom, rhs.uom));
         };
         Euclidean2.prototype.__sub__ = function (other) {
             if (other instanceof Euclidean2) {
                 return this.sub(other);
             }
             else if (typeof other === 'number') {
-                return this.sub(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.sub(new Euclidean2(other, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rsub__ = function (other) {
@@ -939,228 +1744,200 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
                 return other.sub(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).sub(this);
-            }
-            else {
-                return;
+                return new Euclidean2(other, 0, 0, 0, undefined).sub(this);
             }
         };
         Euclidean2.mul = function (a, b) {
-            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
-            a0 = a[0];
-            a1 = a[1];
-            a2 = a[2];
-            a3 = a[3];
-            b0 = b[0];
-            b1 = b[1];
-            b2 = b[2];
-            b3 = b[3];
-            x0 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
-            x1 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
-            x2 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
-            x3 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
+            var a0 = a[0];
+            var a1 = a[1];
+            var a2 = a[2];
+            var a3 = a[3];
+            var b0 = b[0];
+            var b1 = b[1];
+            var b2 = b[2];
+            var b3 = b[3];
+            var x0 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
+            var x1 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
+            var x2 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
+            var x3 = mulE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.mul = function (rhs) {
-            var xs;
-            if (typeof rhs === 'number') {
-                return this.scalarMultiply(rhs);
-            }
-            else {
-                xs = Euclidean2.mul(this.coordinates(), rhs.coordinates());
-                return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
-            }
+            assertArgEuclidean2('rhs', rhs);
+            var xs = Euclidean2.mul(this.coordinates(), rhs.coordinates());
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.mul(this.uom, rhs.uom));
         };
         Euclidean2.prototype.__mul__ = function (other) {
             if (other instanceof Euclidean2) {
                 return this.mul(other);
             }
             else if (typeof other === 'number') {
-                return this.mul(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                var w = other;
+                return this.mul(new Euclidean2(w, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rmul__ = function (other) {
             if (other instanceof Euclidean2) {
-                return other.mul(this);
+                var lhs = other;
+                return lhs.mul(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).mul(this);
-            }
-            else {
-                return;
+                var w = other;
+                return new Euclidean2(w, 0, 0, 0, undefined).mul(this);
             }
         };
         Euclidean2.prototype.scalarMultiply = function (rhs) {
-            return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs);
+            return new Euclidean2(this.w * rhs, this.x * rhs, this.y * rhs, this.xy * rhs, this.uom);
         };
         Euclidean2.prototype.div = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Euclidean2(this.w / rhs, this.x / rhs, this.y / rhs, this.xy / rhs);
-            }
-            else {
-                return divide(this.w, this.x, this.y, this.xy, rhs.w, rhs.x, rhs.y, rhs.xy, void 0);
-            }
+            assertArgEuclidean2('rhs', rhs);
+            return divide(this.w, this.x, this.y, this.xy, rhs.w, rhs.x, rhs.y, rhs.xy, Unit.div(this.uom, rhs.uom), undefined);
         };
         Euclidean2.prototype.__div__ = function (other) {
             if (other instanceof Euclidean2) {
                 return this.div(other);
             }
             else if (typeof other === 'number') {
-                return this.div(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                var w = other;
+                return this.div(new Euclidean2(w, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rdiv__ = function (other) {
             if (other instanceof Euclidean2) {
-                return other.div(this);
+                var lhs = other;
+                return lhs.div(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).div(this);
-            }
-            else {
-                return;
+                var w = other;
+                return new Euclidean2(w, 0, 0, 0, undefined).div(this);
             }
         };
         Euclidean2.splat = function (a, b) {
-            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
-            a0 = a[0];
-            a1 = a[1];
-            a2 = a[2];
-            a3 = a[3];
-            b0 = b[0];
-            b1 = b[1];
-            b2 = b[2];
-            b3 = b[3];
-            x0 = a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3;
-            x1 = 0;
-            x2 = 0;
-            x3 = 0;
+            var a0 = a[0];
+            var a1 = a[1];
+            var a2 = a[2];
+            var a3 = a[3];
+            var b0 = b[0];
+            var b1 = b[1];
+            var b2 = b[2];
+            var b3 = b[3];
+            var x0 = a0 * b0 + a1 * b1 + a2 * b2 - a3 * b3;
+            var x1 = 0;
+            var x2 = 0;
+            var x3 = 0;
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.splat = function (rhs) {
+            assertArgEuclidean2('rhs', rhs);
             var xs = Euclidean2.splat(this.coordinates(), rhs.coordinates());
-            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.mul(this.uom, rhs.uom));
         };
         Euclidean2.wedge = function (a, b) {
-            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
-            a0 = a[0];
-            a1 = a[1];
-            a2 = a[2];
-            a3 = a[3];
-            b0 = b[0];
-            b1 = b[1];
-            b2 = b[2];
-            b3 = b[3];
-            x0 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
-            x1 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
-            x2 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
-            x3 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
+            var a0 = a[0];
+            var a1 = a[1];
+            var a2 = a[2];
+            var a3 = a[3];
+            var b0 = b[0];
+            var b1 = b[1];
+            var b2 = b[2];
+            var b3 = b[3];
+            var x0 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
+            var x1 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
+            var x2 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
+            var x3 = extE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.wedge = function (rhs) {
+            assertArgEuclidean2('rhs', rhs);
             var xs = Euclidean2.wedge(this.coordinates(), rhs.coordinates());
-            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.mul(this.uom, rhs.uom));
         };
         Euclidean2.prototype.__wedge__ = function (other) {
             if (other instanceof Euclidean2) {
-                return this.wedge(other);
+                var rhs = other;
+                return this.wedge(rhs);
             }
             else if (typeof other === 'number') {
-                return this.wedge(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                var w = other;
+                return this.wedge(new Euclidean2(w, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rwedge__ = function (other) {
             if (other instanceof Euclidean2) {
-                return other.wedge(this);
+                var lhs = other;
+                return lhs.wedge(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).wedge(this);
-            }
-            else {
-                return;
+                var w = other;
+                return new Euclidean2(w, 0, 0, 0, undefined).wedge(this);
             }
         };
         Euclidean2.lshift = function (a, b) {
-            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
-            a0 = a[0];
-            a1 = a[1];
-            a2 = a[2];
-            a3 = a[3];
-            b0 = b[0];
-            b1 = b[1];
-            b2 = b[2];
-            b3 = b[3];
-            x0 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
-            x1 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
-            x2 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
-            x3 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
+            var a0 = a[0];
+            var a1 = a[1];
+            var a2 = a[2];
+            var a3 = a[3];
+            var b0 = b[0];
+            var b1 = b[1];
+            var b2 = b[2];
+            var b3 = b[3];
+            var x0 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
+            var x1 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
+            var x2 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
+            var x3 = lcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.lshift = function (rhs) {
-            var xs;
-            xs = Euclidean2.lshift(this.coordinates(), rhs.coordinates());
-            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+            assertArgEuclidean2('rhs', rhs);
+            var xs = Euclidean2.lshift(this.coordinates(), rhs.coordinates());
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.mul(this.uom, rhs.uom));
         };
         Euclidean2.prototype.__lshift__ = function (other) {
             if (other instanceof Euclidean2) {
-                return this.lshift(other);
+                var rhs = other;
+                return this.lshift(rhs);
             }
             else if (typeof other === 'number') {
-                return this.lshift(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                var w = other;
+                return this.lshift(new Euclidean2(w, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rlshift__ = function (other) {
             if (other instanceof Euclidean2) {
-                return other.lshift(this);
+                var lhs = other;
+                return lhs.lshift(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).lshift(this);
-            }
-            else {
-                return;
+                var w = other;
+                return new Euclidean2(w, 0, 0, 0, undefined).lshift(this);
             }
         };
         Euclidean2.rshift = function (a, b) {
-            var a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3;
-            a0 = a[0];
-            a1 = a[1];
-            a2 = a[2];
-            a3 = a[3];
-            b0 = b[0];
-            b1 = b[1];
-            b2 = b[2];
-            b3 = b[3];
-            x0 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
-            x1 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
-            x2 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
-            x3 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
+            var a0 = a[0];
+            var a1 = a[1];
+            var a2 = a[2];
+            var a3 = a[3];
+            var b0 = b[0];
+            var b1 = b[1];
+            var b2 = b[2];
+            var b3 = b[3];
+            var x0 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 0);
+            var x1 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 1);
+            var x2 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 2);
+            var x3 = rcoE2(a0, a1, a2, a3, b0, b1, b2, b3, 3);
             return [x0, x1, x2, x3];
         };
         Euclidean2.prototype.rshift = function (rhs) {
-            var xs;
-            xs = Euclidean2.rshift(this.coordinates(), rhs.coordinates());
-            return new Euclidean2(xs[0], xs[1], xs[2], xs[3]);
+            assertArgEuclidean2('rhs', rhs);
+            var xs = Euclidean2.rshift(this.coordinates(), rhs.coordinates());
+            return new Euclidean2(xs[0], xs[1], xs[2], xs[3], Unit.mul(this.uom, rhs.uom));
         };
         Euclidean2.prototype.__rshift__ = function (other) {
             if (other instanceof Euclidean2) {
                 return this.rshift(other);
             }
             else if (typeof other === 'number') {
-                return this.rshift(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.rshift(new Euclidean2(other, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rrshift__ = function (other) {
@@ -1168,10 +1945,7 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
                 return other.rshift(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).rshift(this);
-            }
-            else {
-                return;
+                return new Euclidean2(other, 0, 0, 0, undefined).rshift(this);
             }
         };
         Euclidean2.prototype.__vbar__ = function (other) {
@@ -1179,10 +1953,7 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
                 return this.splat(other);
             }
             else if (typeof other === 'number') {
-                return this.splat(new Euclidean2(other, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.splat(new Euclidean2(other, 0, 0, 0, undefined));
             }
         };
         Euclidean2.prototype.__rvbar__ = function (other) {
@@ -1190,41 +1961,39 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
                 return other.splat(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean2(other, 0, 0, 0).splat(this);
-            }
-            else {
-                return;
+                return new Euclidean2(other, 0, 0, 0, undefined).splat(this);
             }
         };
         Euclidean2.prototype.__pos__ = function () {
             return this;
         };
         Euclidean2.prototype.__neg__ = function () {
-            return new Euclidean2(-this.w, -this.x, -this.y, -this.xy);
+            return new Euclidean2(-this.w, -this.x, -this.y, -this.xy, this.uom);
         };
         /**
          * ~ (tilde) produces reversion.
          */
         Euclidean2.prototype.__tilde__ = function () {
-            return new Euclidean2(this.w, this.x, this.y, -this.xy);
+            return new Euclidean2(this.w, this.x, this.y, -this.xy, this.uom);
         };
         Euclidean2.prototype.grade = function (index) {
+            assertArgNumber('index', index);
             switch (index) {
                 case 0:
-                    return new Euclidean2(this.w, 0, 0, 0);
+                    return new Euclidean2(this.w, 0, 0, 0, this.uom);
                 case 1:
-                    return new Euclidean2(0, this.x, this.y, 0);
+                    return new Euclidean2(0, this.x, this.y, 0, this.uom);
                 case 2:
-                    return new Euclidean2(0, 0, 0, this.xy);
+                    return new Euclidean2(0, 0, 0, this.xy, this.uom);
                 default:
-                    return new Euclidean2(0, 0, 0, 0);
+                    return new Euclidean2(0, 0, 0, 0, this.uom);
             }
         };
         Euclidean2.prototype.norm = function () {
-            return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0);
+            return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0, this.uom);
         };
         Euclidean2.prototype.quad = function () {
-            return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0);
+            return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0, Unit.mul(this.uom, this.uom));
         };
         Euclidean2.prototype.isNaN = function () {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
@@ -1243,520 +2012,55 @@ define('davinci-blade/Euclidean2',["require", "exports"], function (require, exp
     return Euclidean2;
 });
 
-define('davinci-blade/Unit',["require", "exports"], function (require, exports) {
-    var dumbString = function (scale, dimensions, labels) {
-        var operatorStr;
-        var scaleString;
-        var unitsString;
-        var stringify = function (rational, label) {
-            if (rational.numer === 0) {
-                return null;
-            }
-            else if (rational.denom === 1) {
-                if (rational.numer === 1) {
-                    return "" + label;
-                }
-                else {
-                    return "" + label + " ** " + rational.numer;
-                }
-            }
-            return "" + label + " ** " + rational;
-        };
-        operatorStr = scale === 1 || dimensions.isZero() ? "" : " ";
-        scaleString = scale === 1 ? "" : "" + scale;
-        unitsString = [stringify(dimensions.M, labels[0]), stringify(dimensions.L, labels[1]), stringify(dimensions.T, labels[2]), stringify(dimensions.Q, labels[3]), stringify(dimensions.temperature, labels[4]), stringify(dimensions.amount, labels[5]), stringify(dimensions.intensity, labels[6])].filter(function (x) {
-            return typeof x === 'string';
-        }).join(" ");
-        return "" + scaleString + operatorStr + unitsString;
-    };
-    var unitString = function (scale, dimensions, labels) {
-        var patterns = [
-            [-1, 1, -3, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
-            [-1, 1, -2, 1, 1, 1, 2, 1, 0, 1, 0, 1, 0, 1],
-            [-1, 1, -2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 1],
-            [-1, 1, 3, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [0, 1, 0, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [0, 1, 0, 1, -1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-            [0, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [0, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 0, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 0, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 1, 1, -3, 1, 0, 1, -1, 1, 0, 1, 0, 1],
-            [1, 1, 1, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 1, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 1, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
-            [0, 1, 2, 1, -2, 1, 0, 1, -1, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -2, 1, 0, 1, -1, 1, -1, 1, 0, 1],
-            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, -1, 1, 0, 1],
-            [1, 1, 2, 1, -2, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -3, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -2, 1, -1, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -1, 1, -2, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, 0, 1, -2, 1, 0, 1, 0, 1, 0, 1],
-            [1, 1, 2, 1, -1, 1, -1, 1, 0, 1, 0, 1, 0, 1]
-        ];
-        var decodes = [
-            ["F/m"],
-            ["S"],
-            ["F"],
-            ["N·m ** 2/kg ** 2"],
-            ["Hz"],
-            ["A"],
-            ["m/s ** 2"],
-            ["m/s"],
-            ["kg·m/s"],
-            ["Pa"],
-            ["Pa·s"],
-            ["W/m ** 2"],
-            ["N/m"],
-            ["T"],
-            ["W/(m·K)"],
-            ["V/m"],
-            ["N"],
-            ["H/m"],
-            ["J/K"],
-            ["J/(kg·K)"],
-            ["J/(mol·K)"],
-            ["J/mol"],
-            ["J"],
-            ["J·s"],
-            ["W"],
-            ["V"],
-            ["Ω"],
-            ["H"],
-            ["Wb"]
-        ];
-        var M = dimensions.M;
-        var L = dimensions.L;
-        var T = dimensions.T;
-        var Q = dimensions.Q;
-        var temperature = dimensions.temperature;
-        var amount = dimensions.amount;
-        var intensity = dimensions.intensity;
-        for (var i = 0, len = patterns.length; i < len; i++) {
-            var pattern = patterns[i];
-            if (M.numer === pattern[0] && M.denom === pattern[1] && L.numer === pattern[2] && L.denom === pattern[3] && T.numer === pattern[4] && T.denom === pattern[5] && Q.numer === pattern[6] && Q.denom === pattern[7] && temperature.numer === pattern[8] && temperature.denom === pattern[9] && amount.numer === pattern[10] && amount.denom === pattern[11] && intensity.numer === pattern[12] && intensity.denom === pattern[13]) {
-                if (scale !== 1) {
-                    return scale + " * " + decodes[i][0];
-                }
-                else {
-                    return decodes[i][0];
-                }
-            }
+define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    function Euclidean3Error(message) {
+        this.name = 'Euclidean3Error';
+        this.message = (message || "");
+    }
+    Euclidean3Error.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
         }
-        return dumbString(scale, dimensions, labels);
-    };
-    function add(lhs, rhs) {
-        return new Unit(lhs.scale + rhs.scale, lhs.dimensions.compatible(rhs.dimensions), lhs.labels);
-    }
-    function sub(lhs, rhs) {
-        return new Unit(lhs.scale - rhs.scale, lhs.dimensions.compatible(rhs.dimensions), lhs.labels);
-    }
-    function mul(lhs, rhs) {
-        return new Unit(lhs.scale * rhs.scale, lhs.dimensions.mul(rhs.dimensions), lhs.labels);
-    }
-    function scalarMultiply(alpha, unit) {
-        return new Unit(alpha * unit.scale, unit.dimensions, unit.labels);
-    }
-    function div(lhs, rhs) {
-        return new Unit(lhs.scale / rhs.scale, lhs.dimensions.div(rhs.dimensions), lhs.labels);
-    }
-    var Unit = (function () {
-        /**
-         * The Unit class represents the units for a measure.
-         *
-         * @class Unit
-         * @constructor
-         * @param {number} scale
-         * @param {Dimensions} dimensions
-         * @param {string[]} labels The label strings to use for each dimension.
-         */
-        function Unit(scale, dimensions, labels) {
-            this.scale = scale;
-            this.dimensions = dimensions;
-            this.labels = labels;
-            if (labels.length !== 7) {
-                throw new Error("Expecting 7 elements in the labels array.");
-            }
-            this.scale = scale;
-            this.dimensions = dimensions;
-            this.labels = labels;
+        else {
+            throw new Euclidean3Error("Argument '" + name + "' must be a number");
         }
-        Unit.prototype.compatible = function (rhs) {
-            var dimensions;
-            if (rhs instanceof Unit) {
-                dimensions = this.dimensions.compatible(rhs.dimensions);
-                return this;
-            }
-            else {
-                throw new Error("Illegal Argument for Unit.compatible: " + rhs);
-            }
-        };
-        Unit.prototype.add = function (rhs) {
-            if (rhs instanceof Unit) {
-                return add(this, rhs);
-            }
-            else {
-                throw new Error("Illegal Argument for Unit.add: " + rhs);
-            }
-        };
-        Unit.prototype.__add__ = function (other) {
-            if (other instanceof Unit) {
-                return add(this, other);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.__radd__ = function (other) {
-            if (other instanceof Unit) {
-                return add(other, this);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.sub = function (rhs) {
-            if (rhs instanceof Unit) {
-                return sub(this, rhs);
-            }
-            else {
-                throw new Error("Illegal Argument for Unit.sub: " + rhs);
-            }
-        };
-        Unit.prototype.__sub__ = function (other) {
-            if (other instanceof Unit) {
-                return sub(this, other);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.__rsub__ = function (other) {
-            if (other instanceof Unit) {
-                return sub(other, this);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.mul = function (rhs) {
-            if (typeof rhs === 'number') {
-                return scalarMultiply(rhs, this);
-            }
-            else if (rhs instanceof Unit) {
-                return mul(this, rhs);
-            }
-            else {
-                throw new Error("Illegal Argument for mul: " + rhs);
-            }
-        };
-        Unit.prototype.__mul__ = function (other) {
-            if (other instanceof Unit) {
-                return mul(this, other);
-            }
-            else if (typeof other === 'number') {
-                return scalarMultiply(other, this);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.__rmul__ = function (other) {
-            if (other instanceof Unit) {
-                return mul(other, this);
-            }
-            else if (typeof other === 'number') {
-                return scalarMultiply(other, this);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.div = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Unit(this.scale / rhs, this.dimensions, this.labels);
-            }
-            else if (rhs instanceof Unit) {
-                return div(this, rhs);
-            }
-            else {
-                throw new Error("Illegal Argument for div: " + rhs);
-            }
-        };
-        Unit.prototype.__div__ = function (other) {
-            if (other instanceof Unit) {
-                return div(this, other);
-            }
-            else if (typeof other === 'number') {
-                return new Unit(this.scale / other, this.dimensions, this.labels);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.__rdiv__ = function (other) {
-            if (other instanceof Unit) {
-                return div(other, this);
-            }
-            else if (typeof other === 'number') {
-                return new Unit(other / this.scale, this.dimensions.negative(), this.labels);
-            }
-            else {
-                return;
-            }
-        };
-        Unit.prototype.pow = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Unit(Math.pow(this.scale, rhs), this.dimensions.pow(rhs), this.labels);
-            }
-            else {
-                throw new Error("Illegal Argument for div: " + rhs);
-            }
-        };
-        Unit.prototype.inverse = function () {
-            return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
-        };
-        Unit.prototype.norm = function () {
-            return new Unit(Math.abs(this.scale), this.dimensions, this.labels);
-        };
-        Unit.prototype.quad = function () {
-            return new Unit(this.scale * this.scale, this.dimensions.mul(this.dimensions), this.labels);
-        };
-        Unit.prototype.toString = function () {
-            return unitString(this.scale, this.dimensions, this.labels);
-        };
-        return Unit;
-    })();
-    return Unit;
-});
-
-define('davinci-blade/Measure',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
-    function mul(lhs, rhs) {
-        return new Measure(lhs.quantity.mul(rhs.quantity), lhs.uom.mul(rhs.uom));
     }
-    function div(lhs, rhs) {
-        return new Measure(lhs.quantity.div(rhs.quantity), lhs.uom.div(rhs.uom));
-    }
-    var Measure = (function () {
-        /**
-         * A Measure is a composite consisting of a quantity and a unit of measure.
-         *
-         * @class Measure
-         * @constructor
-         * @param {QuantityOfMeasure<T>} quantity The <em>quantity</em> part of the measure.
-         * @param {Unit} uom The unit-of-measure part of the measure.
-         */
-        function Measure(quantity, uom) {
-            if (uom.scale === 1) {
-                this._quantity = quantity;
-                this._uom = uom;
-            }
-            else {
-                this._quantity = quantity.scalarMultiply(uom.scale);
-                this._uom = new Unit(1, uom.dimensions, uom.labels);
-            }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === 'undefined' || uom instanceof Unit) {
+            return uom;
         }
-        Object.defineProperty(Measure.prototype, "quantity", {
-            /**
-            * The quantity part of the measure.
-            *
-            * @property quantity
-            * @type {GeometricQuantity<T>}
-            */
-            get: function () {
-                return this._quantity;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Measure.prototype, "uom", {
-            /**
-            * The unit part of the measure.
-            *
-            * @property uom
-            * @type {Unit}
-            */
-            get: function () {
-                return this._uom;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Measure.prototype.add = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.add(rhs.quantity), this.uom.compatible(rhs.uom));
-            }
-            else {
-                throw new Error("Measure.add(rhs): rhs must be a Measure.");
-            }
-        };
-        Measure.prototype.sub = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.sub(rhs.quantity), this.uom.compatible(rhs.uom));
-            }
-            else {
-                throw new Error("Measure.sub(rhs): rhs must be a Measure.");
-            }
-        };
-        Measure.prototype.mul = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.mul(rhs.quantity), this.uom.mul(rhs.uom));
-            }
-            else if (rhs instanceof Unit) {
-                return new Measure(this.quantity, this.uom.mul(rhs));
-            }
-            else if (typeof rhs === 'number') {
-                var other = rhs;
-                return this.scalarMultiply(other);
-            }
-            else {
-                throw new Error("Measure.mul(rhs): rhs must be a [Measure, Unit, number].");
-            }
-        };
-        Measure.prototype.__mul__ = function (other) {
-            if (other instanceof Measure) {
-                return new Measure(this.quantity.mul(other.quantity), this.uom.mul(other.uom));
-            }
-            else if (other instanceof Unit) {
-                return new Measure(this.quantity, this.uom.mul(other));
-            }
-            else if (typeof other === 'number') {
-                return this.scalarMultiply(other);
-            }
-            else {
-                return;
-            }
-        };
-        Measure.prototype.__rmul__ = function (other) {
-            if (other instanceof Measure) {
-                return mul(other, this);
-            }
-            else if (other instanceof Unit) {
-                return new Measure(this.quantity, this.uom.mul(other));
-            }
-            else if (typeof other === 'number') {
-                return this.scalarMultiply(other);
-            }
-            else {
-                return;
-            }
-        };
-        Measure.prototype.scalarMultiply = function (rhs) {
-            return new Measure(this.quantity.mul(rhs), this.uom);
-        };
-        Measure.prototype.div = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.div(rhs.quantity), this.uom.div(rhs.uom));
-            }
-            else if (rhs instanceof Unit) {
-                return new Measure(this.quantity, this.uom.div(rhs));
-            }
-            else if (typeof rhs === 'number') {
-                return new Measure(this.quantity.div(rhs), this.uom);
-            }
-            else {
-                throw new Error("Measure.div(rhs): rhs must be a [Measure, Unit, number].");
-            }
-        };
-        Measure.prototype.__div__ = function (other) {
-            if (other instanceof Measure) {
-                return new Measure(this.quantity.div(other.quantity), this.uom.div(other.uom));
-            }
-            else if (other instanceof Unit) {
-                return new Measure(this.quantity, this.uom.div(other));
-            }
-            else if (typeof other === 'number') {
-                return new Measure(this.quantity.div(other), this.uom);
-            }
-            else {
-                return;
-            }
-        };
-        Measure.prototype.__rdiv__ = function (other) {
-            if (other instanceof Measure) {
-                return div(other, this);
-            }
-            else {
-                return;
-            }
-        };
-        Measure.prototype.wedge = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.wedge(rhs.quantity), this.uom.mul(rhs.uom));
-            }
-            else {
-                throw new Error("Measure.wedge(rhs): rhs must be a Measure.");
-            }
-        };
-        Measure.prototype.foo = function () {
-            return;
-        };
-        Measure.prototype.lshift = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.lshift(rhs.quantity), this.uom.mul(rhs.uom));
-            }
-            else {
-                throw new Error("Measure.lshift(rhs): rhs must be a Measure.");
-            }
-        };
-        Measure.prototype.rshift = function (rhs) {
-            if (rhs instanceof Measure) {
-                return new Measure(this.quantity.rshift(rhs.quantity), this.uom.mul(rhs.uom));
-            }
-            else {
-                throw new Error("Measure.rshift(rhs): rhs must be a Measure.");
-            }
-        };
-        Measure.prototype.norm = function () {
-            return new Measure(this.quantity.norm(), this.uom.norm());
-        };
-        Measure.prototype.quad = function () {
-            return new Measure(this.quantity.quad(), this.uom.quad());
-        };
-        Measure.prototype.toString = function () {
-            return "" + this.quantity + " " + this.uom;
-        };
-        return Measure;
-    })();
-    return Measure;
-});
-
-define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure', 'davinci-blade/Unit'], function (require, exports, Measure, Unit) {
-    var compute = function (f, a, b, coord, pack) {
-        var a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, x0, x1, x2, x3, x4, x5, x6, x7;
-        a0 = coord(a, 0);
-        a1 = coord(a, 1);
-        a2 = coord(a, 2);
-        a3 = coord(a, 3);
-        a4 = coord(a, 4);
-        a5 = coord(a, 5);
-        a6 = coord(a, 6);
-        a7 = coord(a, 7);
-        b0 = coord(b, 0);
-        b1 = coord(b, 1);
-        b2 = coord(b, 2);
-        b3 = coord(b, 3);
-        b4 = coord(b, 4);
-        b5 = coord(b, 5);
-        b6 = coord(b, 6);
-        b7 = coord(b, 7);
-        x0 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 0);
-        x1 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 1);
-        x2 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 2);
-        x3 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 3);
-        x4 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 4);
-        x5 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 5);
-        x6 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 6);
-        x7 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 7);
-        return pack(x0, x1, x2, x3, x4, x5, x6, x7);
-    };
+        else {
+            throw new Euclidean3Error("Argument '" + uom + "' must be a Unit or undefined");
+        }
+    }
+    function compute(f, a, b, coord, pack, uom) {
+        var a0 = coord(a, 0);
+        var a1 = coord(a, 1);
+        var a2 = coord(a, 2);
+        var a3 = coord(a, 3);
+        var a4 = coord(a, 4);
+        var a5 = coord(a, 5);
+        var a6 = coord(a, 6);
+        var a7 = coord(a, 7);
+        var b0 = coord(b, 0);
+        var b1 = coord(b, 1);
+        var b2 = coord(b, 2);
+        var b3 = coord(b, 3);
+        var b4 = coord(b, 4);
+        var b5 = coord(b, 5);
+        var b6 = coord(b, 6);
+        var b7 = coord(b, 7);
+        var x0 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 0);
+        var x1 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 1);
+        var x2 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 2);
+        var x3 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 3);
+        var x4 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 4);
+        var x5 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 5);
+        var x6 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 6);
+        var x7 = f(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, 7);
+        return pack(x0, x1, x2, x3, x4, x5, x6, x7, uom);
+    }
     function addE3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7, index) {
         a0 = +a0;
         a1 = +a1;
@@ -1818,7 +2122,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -1884,7 +2188,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -1953,7 +2257,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -2019,7 +2323,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -2085,7 +2389,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -2151,7 +2455,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -2217,12 +2521,12 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 }
                 break;
             default: {
-                throw new Error("index must be in the range [0..7]");
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
     }
-    var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, dst) {
+    var divide = function (a000, a001, a010, a011, a100, a101, a110, a111, b000, b001, b010, b011, b100, b101, b110, b111, uom, dst) {
         var c000, c001, c010, c011, c100, c101, c110, c111, i000, i001, i010, i011, i100, i101, i110, i111, k000, m000, m001, m010, m011, m100, m101, m110, m111, r000, r001, r010, r011, r100, r101, r110, r111, s000, s001, s010, s011, s100, s101, s110, s111, w, x, x000, x001, x010, x011, x100, x101, x110, x111, xy, xyz, y, yz, z, zx;
         r000 = +b000;
         r001 = +b001;
@@ -2289,13 +2593,14 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
             dst.xy = xy;
             dst.yz = yz;
             dst.zx = zx;
-            return dst.xyz = xyz;
+            dst.xyz = xyz;
+            dst.uom = uom;
         }
         else {
-            return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
+            return new Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom);
         }
     };
-    function stringFromCoordinates(coordinates, labels) {
+    function stringFromCoordinates(coordinates, numberToString, labels) {
         var i, _i, _ref;
         var str;
         var sb = [];
@@ -2315,7 +2620,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                     sb.push(label);
                 }
                 else {
-                    sb.push(n.toString());
+                    sb.push(numberToString(n));
                     if (label !== "1") {
                         sb.push("*");
                         sb.push(label);
@@ -2350,24 +2655,36 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
          * @param {number} yz The bivector component of the multivector in the yz-plane.
          * @param {number} zx The bivector component of the multivector in the zx-plane.
          * @param {number} xyz The pseudoscalar part of the multivector.
+         * @param uom The optional unit of measure.
          */
-        function Euclidean3(w, x, y, z, xy, yz, zx, xyz) {
-            this.w = w || 0;
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.xy = xy || 0;
-            this.yz = yz || 0;
-            this.zx = zx || 0;
-            this.xyz = xyz || 0;
+        function Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom) {
+            this.w = assertArgNumber('w', w);
+            this.x = assertArgNumber('x', x);
+            this.y = assertArgNumber('y', y);
+            this.z = assertArgNumber('z', z);
+            this.xy = assertArgNumber('xy', xy);
+            this.yz = assertArgNumber('yz', yz);
+            this.zx = assertArgNumber('zx', zx);
+            this.xyz = assertArgNumber('xyz', xyz);
+            this.uom = assertArgUnitOrUndefined('uom', uom);
         }
-        Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz) {
-            return new Euclidean3(w, x, y, z, xy, yz, zx, xyz);
+        Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            assertArgNumber('w', w);
+            assertArgNumber('x', x);
+            assertArgNumber('y', y);
+            assertArgNumber('z', z);
+            assertArgNumber('xy', xy);
+            assertArgNumber('yz', yz);
+            assertArgNumber('zx', zx);
+            assertArgNumber('xyz', xyz);
+            assertArgUnitOrUndefined('uom', uom);
+            return new Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom);
         };
         Euclidean3.prototype.coordinates = function () {
             return [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz];
         };
         Euclidean3.prototype.coordinate = function (index) {
+            assertArgNumber('index', index);
             switch (index) {
                 case 0:
                     return this.w;
@@ -2386,28 +2703,24 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 case 7:
                     return this.xyz;
                 default:
-                    throw new Error("index must be in the range [0..7]");
+                    throw new Euclidean3Error("index must be in the range [0..7]");
             }
         };
         Euclidean3.prototype.add = function (rhs) {
-            var coord, pack;
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(addE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(addE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.compatible(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__add__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.add(other);
             }
             else if (typeof other === 'number') {
-                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__radd__ = function (other) {
@@ -2415,31 +2728,24 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.add(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).add(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).add(this);
             }
         };
         Euclidean3.prototype.sub = function (rhs) {
-            var coord, pack;
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(subE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(subE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.compatible(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__sub__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.sub(other);
             }
             else if (typeof other === 'number') {
-                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rsub__ = function (other) {
@@ -2447,25 +2753,21 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.sub(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).sub(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).sub(this);
             }
         };
         Euclidean3.prototype.mul = function (rhs) {
-            var coord, pack;
             if (typeof rhs === 'number') {
                 return this.scalarMultiply(rhs);
             }
             else {
-                coord = function (x, n) {
+                var coord = function (x, n) {
                     return x[n];
                 };
-                pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                    return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+                var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                    return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
                 };
-                return compute(mulE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+                return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
             }
         };
         Euclidean3.prototype.__mul__ = function (other) {
@@ -2473,17 +2775,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return this.mul(other);
             }
             else if (typeof other === 'number') {
-                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else if (other instanceof Measure) {
-                var m = other;
-                return new Measure(this.mul(m.quantity), m.uom);
-            }
-            else if (other instanceof Unit) {
-                return new Measure(this, other);
-            }
-            else {
-                return;
+                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rmul__ = function (other) {
@@ -2491,28 +2783,18 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.mul(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).mul(this);
-            }
-            else if (other instanceof Measure) {
-                var m = other;
-                return new Measure(m.quantity.mul(this), m.uom);
-            }
-            else if (other instanceof Unit) {
-                return new Measure(this, other);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).mul(this);
             }
         };
         Euclidean3.prototype.scalarMultiply = function (rhs) {
-            return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs);
+            return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs, this.uom);
         };
         Euclidean3.prototype.div = function (rhs) {
             if (typeof rhs === 'number') {
-                return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs);
+                return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs, this.uom);
             }
             else {
-                return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, void 0);
+                return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom, rhs.uom), void 0);
             }
         };
         Euclidean3.prototype.__div__ = function (other) {
@@ -2520,10 +2802,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return this.div(other);
             }
             else if (typeof other === 'number') {
-                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rdiv__ = function (other) {
@@ -2531,41 +2810,33 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.div(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).div(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).div(this);
             }
         };
         Euclidean3.prototype.splat = function (rhs) {
-            var coord, pack;
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(scpE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(scpE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
         };
         Euclidean3.prototype.wedge = function (rhs) {
-            var coord, pack;
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(extE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(extE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__vbar__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.splat(other);
             }
             else if (typeof other === 'number') {
-                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rvbar__ = function (other) {
@@ -2573,10 +2844,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.splat(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).splat(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).splat(this);
             }
         };
         Euclidean3.prototype.__wedge__ = function (other) {
@@ -2584,10 +2852,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return this.wedge(other);
             }
             else if (typeof other === 'number') {
-                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rwedge__ = function (other) {
@@ -2595,31 +2860,24 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.wedge(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).wedge(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).wedge(this);
             }
         };
         Euclidean3.prototype.lshift = function (rhs) {
-            var coord, pack;
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(lcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(lcoE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__lshift__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.lshift(other);
             }
             else if (typeof other === 'number') {
-                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rlshift__ = function (other) {
@@ -2627,31 +2885,24 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.lshift(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).lshift(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).lshift(this);
             }
         };
         Euclidean3.prototype.rshift = function (rhs) {
-            var coord, pack;
-            coord = function (x, n) {
+            var coord = function (x, n) {
                 return x[n];
             };
-            pack = function (w, x, y, z, xy, yz, zx, xyz) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz);
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
             };
-            return compute(rcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack);
+            return compute(rcoE3, [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], [rhs.w, rhs.x, rhs.y, rhs.z, rhs.xy, rhs.yz, rhs.zx, rhs.xyz], coord, pack, Unit.mul(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__rshift__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.rshift(other);
             }
             else if (typeof other === 'number') {
-                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0));
-            }
-            else {
-                return;
+                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
             }
         };
         Euclidean3.prototype.__rrshift__ = function (other) {
@@ -2659,38 +2910,37 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
                 return other.rshift(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0).rshift(this);
-            }
-            else {
-                return;
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
             }
         };
         Euclidean3.prototype.__pos__ = function () {
             return this;
         };
         Euclidean3.prototype.__neg__ = function () {
-            return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+            return new Euclidean3(-this.w, -this.x, -this.y, -this.z, -this.xy, -this.yz, -this.zx, -this.xyz, this.uom);
         };
         /**
          * ~ (tilde) produces reversion.
          */
         Euclidean3.prototype.__tilde__ = function () {
-            return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz);
+            return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz, this.uom);
         };
         Euclidean3.prototype.grade = function (index) {
+            assertArgNumber('index', index);
             switch (index) {
                 case 0:
-                    return Euclidean3.fromCartesian(this.w, 0, 0, 0, 0, 0, 0, 0);
+                    return Euclidean3.fromCartesian(this.w, 0, 0, 0, 0, 0, 0, 0, this.uom);
                 case 1:
-                    return Euclidean3.fromCartesian(0, this.x, this.y, this.z, 0, 0, 0, 0);
+                    return Euclidean3.fromCartesian(0, this.x, this.y, this.z, 0, 0, 0, 0, this.uom);
                 case 2:
-                    return Euclidean3.fromCartesian(0, 0, 0, 0, this.xy, this.yz, this.zx, 0);
+                    return Euclidean3.fromCartesian(0, 0, 0, 0, this.xy, this.yz, this.zx, 0, this.uom);
                 case 3:
-                    return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, this.xyz);
+                    return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, this.xyz, this.uom);
                 default:
-                    return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, 0);
+                    return Euclidean3.fromCartesian(0, 0, 0, 0, 0, 0, 0, 0, this.uom);
             }
         };
+        // FIXME: This should return a Euclidean3
         Euclidean3.prototype.dot = function (vector) {
             return this.x * vector.x + this.y * vector.y + this.z * vector.z;
         };
@@ -2705,7 +2955,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
             x = y1 * z2 - z1 * y2;
             y = z1 * x2 - x1 * z2;
             z = x1 * y2 - y1 * x2;
-            return new Euclidean3(0, x, y, z, 0, 0, 0, 0);
+            return new Euclidean3(0, x, y, z, 0, 0, 0, 0, Unit.mul(this.uom, vector.uom));
         };
         Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
@@ -2714,380 +2964,105 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/Measure'
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
          */
         Euclidean3.prototype.norm = function () {
-            return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0);
+            return new Euclidean3(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz), 0, 0, 0, 0, 0, 0, 0, this.uom);
         };
         /**
          * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
          */
         Euclidean3.prototype.quad = function () {
-            return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0);
+            return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
         };
         Euclidean3.prototype.sqrt = function () {
-            return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0);
+            return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));
+        };
+        Euclidean3.prototype.toStringCustom = function (coordToString, labels) {
+            var quantityString = stringFromCoordinates(this.coordinates(), coordToString, labels);
+            if (this.uom) {
+                var unitString = this.uom.toString().trim();
+                if (unitString) {
+                    return quantityString + ' ' + unitString;
+                }
+                else {
+                    return quantityString;
+                }
+            }
+            else {
+                return quantityString;
+            }
+        };
+        Euclidean3.prototype.toExponential = function () {
+            var coordToString = function (coord) {
+                return coord.toExponential();
+            };
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
+        };
+        Euclidean3.prototype.toFixed = function (digits) {
+            assertArgNumber('digits', digits);
+            var coordToString = function (coord) {
+                return coord.toFixed(digits);
+            };
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
         };
         Euclidean3.prototype.toString = function () {
-            return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
         };
         Euclidean3.prototype.toStringIJK = function () {
-            return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "i", "j", "k", "ij", "jk", "ki", "I"]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, ["1", "i", "j", "k", "ij", "jk", "ki", "I"]);
         };
         Euclidean3.prototype.toStringLATEX = function () {
-            return stringFromCoordinates([this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz], ["1", "e_{1}", "e_{2}", "e_{3}", "e_{12}", "e_{23}", "e_{31}", "e_{123}"]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, ["1", "e_{1}", "e_{2}", "e_{3}", "e_{12}", "e_{23}", "e_{31}", "e_{123}"]);
         };
         return Euclidean3;
     })();
     return Euclidean3;
 });
 
-define('davinci-blade/Rational',["require", "exports"], function (require, exports) {
-    var Rational = (function () {
-        /**
-         * The Rational class represents a rational number.
-         *
-         * @class Rational
-         * @extends Field
-         * @constructor
-         * @param {number} n The numerator.
-         * @param {number} d The denominator.
-         */
-        function Rational(n, d) {
-            var g;
-            var gcd = function (a, b) {
-                var temp;
-                if (a < 0) {
-                    a = -a;
-                }
-                if (b < 0) {
-                    b = -b;
-                }
-                if (b > a) {
-                    temp = a;
-                    a = b;
-                    b = temp;
-                }
-                while (true) {
-                    a %= b;
-                    if (a === 0) {
-                        return b;
-                    }
-                    b %= a;
-                    if (b === 0) {
-                        return a;
-                    }
-                }
-            };
-            if (d === 0) {
-                throw new Error("denominator must not be zero");
-            }
-            if (n === 0) {
-                g = 1;
-            }
-            else {
-                g = gcd(Math.abs(n), Math.abs(d));
-            }
-            if (d < 0) {
-                n = -n;
-                d = -d;
-            }
-            this._numer = n / g;
-            this._denom = d / g;
+define('davinci-blade/Complex',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+    function ComplexError(message) {
+        this.name = 'ComplexError';
+        this.message = (message || "");
+    }
+    ComplexError.prototype = new Error();
+    function assertArgNumber(name, x) {
+        if (typeof x === 'number') {
+            return x;
         }
-        Object.defineProperty(Rational.prototype, "numer", {
-            /**
-            * The numerator part of the rational number.
-            *
-            * @property numer
-            * @type {number}
-            */
-            get: function () {
-                return this._numer;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rational.prototype, "denom", {
-            /**
-            * The denominator part of the rational number.
-            *
-            * @property denom
-            * @type {number}
-            */
-            get: function () {
-                return this._denom;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-        * Returns the sum of this rational number and the argument.
-        *
-        * @method add
-        * @param {Number|Rational} rhs The number used on the right hand side of the addition operator.
-        * @return {Rational} The sum of this rational number and the specified argument.
-        */
-        Rational.prototype.add = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer + this._denom * rhs, this._denom);
-            }
-            else {
-                return new Rational(this._numer * rhs._denom + this._denom * rhs._numer, this._denom * rhs._denom);
-            }
-        };
-        /**
-        * Returns the difference of this rational number and the argument.
-        *
-        * @method sub
-        * @param {Number|Rational} rhs The number used on the right hand side of the subtraction operator.
-        * @return {Rational} The difference of this rational number and the specified argument.
-        */
-        Rational.prototype.sub = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer - this._denom * rhs, this._denom);
-            }
-            else {
-                return new Rational(this._numer * rhs._denom - this._denom * rhs._numer, this._denom * rhs._denom);
-            }
-        };
-        Rational.prototype.mul = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer * rhs, this._denom);
-            }
-            else {
-                return new Rational(this._numer * rhs._numer, this._denom * rhs._denom);
-            }
-        };
-        // TODO: div testing
-        Rational.prototype.div = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Rational(this._numer, this._denom * rhs);
-            }
-            else {
-                return new Rational(this._numer * rhs._denom, this._denom * rhs._numer);
-            }
-        };
-        // TODO: isZero testing
-        Rational.prototype.isZero = function () {
-            return this._numer === 0;
-        };
-        Rational.prototype.negative = function () {
-            return new Rational(-this._numer, this._denom);
-        };
-        // TODO: equals testing
-        Rational.prototype.equals = function (other) {
-            if (other instanceof Rational) {
-                return this._numer * other._denom === this._denom * other._numer;
-            }
-            else {
-                return false;
-            }
-        };
-        Rational.prototype.toString = function () {
-            return "" + this._numer + "/" + this._denom;
-        };
-        // TODO: Implement some sort of interning to reduce object creation.
-        // Make sure that Rational is immutable!
-        Rational.ONE = new Rational(1, 1);
-        Rational.MINUS_ONE = new Rational(-1, 1);
-        Rational.ZERO = new Rational(0, 1);
-        return Rational;
-    })();
-    return Rational;
-});
-
-define('davinci-blade/Dimensions',["require", "exports", 'davinci-blade/Rational'], function (require, exports, Rational) {
-    var Dimensions = (function () {
-        /**
-         * The Dimensions class captures the physical dimensions associated with a unit of measure.
-         *
-         * @class Dimensions
-         * @constructor
-         * @param {Rational} mass The mass component of the dimensions object.
-         * @param {Rational} length The length component of the dimensions object.
-         * @param {Rational} time The time component of the dimensions object.
-         * @param {Rational} charge The charge component of the dimensions object.
-         * @param {Rational} temperature The temperature component of the dimensions object.
-         * @param {Rational} amount The amount component of the dimensions object.
-         * @param {Rational} intensity The intensity component of the dimensions object.
-         */
-        function Dimensions(theMass, L, T, Q, temperature, amount, intensity) {
-            this.L = L;
-            this.T = T;
-            this.Q = Q;
-            this.temperature = temperature;
-            this.amount = amount;
-            this.intensity = intensity;
-            var length = L;
-            var time = T;
-            var charge = Q;
-            if (arguments.length !== 7) {
-                throw {
-                    name: "DimensionError",
-                    message: "Expecting 7 arguments"
-                };
-            }
-            if (typeof theMass === 'number') {
-                this._mass = new Rational(theMass, 1);
-            }
-            else if (theMass instanceof Rational) {
-                this._mass = theMass;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "mass must be a Rational or number"
-                };
-            }
-            if (typeof length === 'number') {
-                this.L = new Rational(length, 1);
-            }
-            else if (length instanceof Rational) {
-                this.L = length;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "length must be a Rational or number"
-                };
-            }
-            if (typeof time === 'number') {
-                this.T = new Rational(time, 1);
-            }
-            else if (time instanceof Rational) {
-                this.T = time;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "time must be a Rational or number"
-                };
-            }
-            if (typeof charge === 'number') {
-                this.Q = new Rational(charge, 1);
-            }
-            else if (charge instanceof Rational) {
-                this.Q = charge;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "charge must be a Rational or number"
-                };
-            }
-            if (typeof temperature === 'number') {
-                this.temperature = new Rational(temperature, 1);
-            }
-            else if (temperature instanceof Rational) {
-                this.temperature = temperature;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "(thermodynamic) temperature must be a Rational or number"
-                };
-            }
-            if (typeof amount === 'number') {
-                this.amount = new Rational(amount, 1);
-            }
-            else if (amount instanceof Rational) {
-                this.amount = amount;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "amount (of substance) must be a Rational or number"
-                };
-            }
-            if (typeof intensity === 'number') {
-                this.intensity = new Rational(intensity, 1);
-            }
-            else if (intensity instanceof Rational) {
-                this.intensity = intensity;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "(luminous) intensity must be a Rational or number"
-                };
-            }
+        else {
+            throw new ComplexError("Argument '" + name + "' must be a number");
         }
-        Object.defineProperty(Dimensions.prototype, "M", {
-            /**
-            * The <em>mass</em> component of this dimensions instance.
-            *
-            * @property M
-            * @type {Rational}
-            */
-            get: function () {
-                return this._mass;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Dimensions.prototype.compatible = function (rhs) {
-            if (this._mass.equals(rhs._mass) && this.L.equals(rhs.L) && this.T.equals(rhs.T) && this.Q.equals(rhs.Q) && this.temperature.equals(rhs.temperature) && this.amount.equals(rhs.amount) && this.intensity.equals(rhs.intensity)) {
-                return this;
-            }
-            else {
-                throw {
-                    name: "DimensionError",
-                    message: "Dimensions must be equal (" + this + ", " + rhs + ")"
-                };
-            }
-        };
-        Dimensions.prototype.mul = function (rhs) {
-            return new Dimensions(this._mass.add(rhs._mass), this.L.add(rhs.L), this.T.add(rhs.T), this.Q.add(rhs.Q), this.temperature.add(rhs.temperature), this.amount.add(rhs.amount), this.intensity.add(rhs.intensity));
-        };
-        Dimensions.prototype.div = function (rhs) {
-            return new Dimensions(this._mass.sub(rhs._mass), this.L.sub(rhs.L), this.T.sub(rhs.T), this.Q.sub(rhs.Q), this.temperature.sub(rhs.temperature), this.amount.sub(rhs.amount), this.intensity.sub(rhs.intensity));
-        };
-        Dimensions.prototype.pow = function (exponent) {
-            return new Dimensions(this._mass.mul(exponent), this.L.mul(exponent), this.T.mul(exponent), this.Q.mul(exponent), this.temperature.mul(exponent), this.amount.mul(exponent), this.intensity.mul(exponent));
-        };
-        Dimensions.prototype.dimensionless = function () {
-            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
-        };
-        /**
-        * Determines whether all the components of the Dimensions instance are zero.
-        *
-        * @method isZero
-        * @return {boolean} <code>true</code> if all the components are zero, otherwise <code>false</code>.
-        */
-        Dimensions.prototype.isZero = function () {
-            return this._mass.isZero() && this.L.isZero() && this.T.isZero() && this.Q.isZero() && this.temperature.isZero() && this.amount.isZero() && this.intensity.isZero();
-        };
-        Dimensions.prototype.negative = function () {
-            return new Dimensions(this._mass.negative(), this.L.negative(), this.T.negative(), this.Q.negative(), this.temperature.negative(), this.amount.negative(), this.intensity.negative());
-        };
-        Dimensions.prototype.toString = function () {
-            var stringify = function (rational, label) {
-                if (rational.numer === 0) {
-                    return null;
-                }
-                else if (rational.denom === 1) {
-                    if (rational.numer === 1) {
-                        return "" + label;
-                    }
-                    else {
-                        return "" + label + " ** " + rational.numer;
-                    }
-                }
-                return "" + label + " ** " + rational;
-            };
-            return [stringify(this._mass, 'mass'), stringify(this.L, 'length'), stringify(this.T, 'time'), stringify(this.Q, 'charge'), stringify(this.temperature, 'thermodynamic temperature'), stringify(this.amount, 'amount of substance'), stringify(this.intensity, 'luminous intensity')].filter(function (x) {
-                return typeof x === 'string';
-            }).join(" * ");
-        };
-        return Dimensions;
-    })();
-    return Dimensions;
-});
-
-define('davinci-blade/Complex',["require", "exports"], function (require, exports) {
+    }
+    function assertArgComplex(name, arg) {
+        if (arg instanceof Complex) {
+            return arg;
+        }
+        else {
+            throw new ComplexError("Argument '" + arg + "' must be a Complex");
+        }
+    }
+    function assertArgUnitOrUndefined(name, uom) {
+        if (typeof uom === 'undefined' || uom instanceof Unit) {
+            return uom;
+        }
+        else {
+            throw new ComplexError("Argument '" + uom + "' must be a Unit or undefined");
+        }
+    }
     function divide(a, b) {
+        assertArgComplex('a', a);
+        assertArgComplex('b', b);
         var q = b.x * b.x + b.y * b.y;
         var x = (a.x * b.x + a.y * b.y) / q;
         var y = (a.y * b.x - a.x * b.y) / q;
-        return new Complex(x, y);
+        return new Complex(x, y, Unit.div(a.uom, b.uom));
     }
     var Complex = (function () {
         /**
@@ -3095,12 +3070,14 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
          * @param x The real part of the complex number.
          * @param y The imaginary part of the complex number.
          */
-        function Complex(x, y) {
-            this.x = x;
-            this.y = y;
+        function Complex(x, y, uom) {
+            this.x = assertArgNumber('x', x);
+            this.y = assertArgNumber('y', y);
+            this.uom = assertArgUnitOrUndefined('uom', uom);
         }
         Complex.prototype.add = function (rhs) {
-            return new Complex(this.x + rhs.x, this.y + rhs.y);
+            assertArgComplex('rhs', rhs);
+            return new Complex(this.x + rhs.x, this.y + rhs.y, Unit.compatible(this.uom, rhs.uom));
         };
         /**
          * __add__ supports operator +(Complex, any)
@@ -3110,10 +3087,7 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
                 return this.add(other);
             }
             else if (typeof other === 'number') {
-                return new Complex(this.x + other, this.y);
-            }
-            else {
-                return;
+                return new Complex(this.x + other, this.y, Unit.compatible(this.uom, undefined));
             }
         };
         /**
@@ -3121,57 +3095,52 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
          */
         Complex.prototype.__radd__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(other.x + this.x, other.y + this.y);
+                var lhs = other;
+                return new Complex(other.x + this.x, other.y + this.y, Unit.compatible(lhs.uom, this.uom));
             }
             else if (typeof other === 'number') {
-                return new Complex(other + this.x, this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(x + this.x, this.y, Unit.compatible(undefined, this.uom));
             }
         };
         Complex.prototype.__sub__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(this.x - other.x, this.y - other.y);
+                var rhs = other;
+                return new Complex(this.x - rhs.x, this.y - rhs.y, Unit.compatible(this.uom, rhs.uom));
             }
             else if (typeof other === 'number') {
-                return new Complex(this.x - other, this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(this.x - x, this.y, Unit.compatible(this.uom, undefined));
             }
         };
         Complex.prototype.__rsub__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(other.x - this.x, other.y - this.y);
+                var lhs = other;
+                return new Complex(lhs.x - this.x, lhs.y - this.y, Unit.compatible(lhs.uom, this.uom));
             }
             else if (typeof other === 'number') {
-                return new Complex(other - this.x, -this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(x - this.x, -this.y, Unit.compatible(undefined, this.uom));
             }
         };
         Complex.prototype.__mul__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(this.x * other.x - this.y * other.y, this.x * other.y + this.y * other.x);
+                var rhs = other;
+                return new Complex(this.x * rhs.x - this.y * rhs.y, this.x * rhs.y + this.y * rhs.x, Unit.mul(this.uom, rhs.uom));
             }
             else if (typeof other === 'number') {
-                return new Complex(this.x * other, this.y * other);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(this.x * x, this.y * x, this.uom);
             }
         };
         Complex.prototype.__rmul__ = function (other) {
             if (other instanceof Complex) {
-                return new Complex(other.x * this.x - other.y * this.y, other.x * this.y + other.y * this.x);
+                var lhs = other;
+                return new Complex(lhs.x * this.x - lhs.y * this.y, lhs.x * this.y + lhs.y * this.x, Unit.mul(lhs.uom, this.uom));
             }
             else if (typeof other === 'number') {
-                return new Complex(other * this.x, other * this.y);
-            }
-            else {
-                return;
+                var x = other;
+                return new Complex(x * this.x, x * this.y, this.uom);
             }
         };
         Complex.prototype.__div__ = function (other) {
@@ -3179,10 +3148,7 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
                 return divide(this, other);
             }
             else if (typeof other === 'number') {
-                return new Complex(this.x / other, this.y / other);
-            }
-            else {
-                return;
+                return new Complex(this.x / other, this.y / other, this.uom);
             }
         };
         Complex.prototype.__rdiv__ = function (other) {
@@ -3190,17 +3156,14 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
                 return divide(other, this);
             }
             else if (typeof other === 'number') {
-                return divide(new Complex(other, 0), this);
-            }
-            else {
-                return;
+                return divide(new Complex(other, 0, undefined), this);
             }
         };
         Complex.prototype.norm = function () {
-            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0);
+            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
         };
         Complex.prototype.quad = function () {
-            return new Complex(this.x * this.x + this.y * this.y, 0);
+            return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
         };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);
@@ -3212,7 +3175,8 @@ define('davinci-blade/Complex',["require", "exports"], function (require, export
             var expX = Math.exp(this.x);
             var x = expX * Math.cos(this.y);
             var y = expX * Math.sin(this.y);
-            return new Complex(x, y);
+            // TODO: Is this correct? If so, why is it so?
+            return new Complex(x, y, this.uom);
         };
         Complex.prototype.toString = function () {
             return "Complex(" + this.x + ", " + this.y + ")";
@@ -3293,33 +3257,27 @@ define('davinci-blade/Color',["require", "exports"], function (require, exports)
 });
 
 define('davinci-blade/e3ga/scalarE3',["require", "exports", 'davinci-blade/Euclidean3'], function (require, exports, Euclidean3) {
-    var scalarE3 = function (w) {
-        return new Euclidean3(w, 0, 0, 0, 0, 0, 0, 0);
+    var scalarE3 = function (w, uom) {
+        return new Euclidean3(w, 0, 0, 0, 0, 0, 0, 0, uom);
     };
     return scalarE3;
 });
 
 define('davinci-blade/e3ga/vectorE3',["require", "exports", 'davinci-blade/Euclidean3'], function (require, exports, Euclidean3) {
-    /**
-     * Constructs and returns a Euclidean 3D vector from its cartesian components.
-     * @param x The x component of the vector.
-     * @param y The y component of the vector.
-     * @param z The z component of the vector.
-     */
-    var vectorE3 = function (x, y, z) {
-        return new Euclidean3(0, x, y, z, 0, 0, 0, 0);
+    var vectorE3 = function (x, y, z, uom) {
+        return new Euclidean3(0, x, y, z, 0, 0, 0, 0, uom);
     };
     return vectorE3;
 });
 
 define('davinci-blade/e3ga/bivectorE3',["require", "exports", 'davinci-blade/Euclidean3'], function (require, exports, Euclidean3) {
-    var bivectorE3 = function (xy, yz, zx) {
-        return new Euclidean3(0, 0, 0, 0, xy, yz, zx, 0);
+    var bivectorE3 = function (xy, yz, zx, uom) {
+        return new Euclidean3(0, 0, 0, 0, xy, yz, zx, 0, uom);
     };
     return bivectorE3;
 });
 
-define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Measure', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Measure, Complex, Color, scalarE3, vectorE3, bivectorE3) {
+define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Complex, Color, scalarE3, vectorE3, bivectorE3) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -3368,45 +3326,33 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
         Rational: Rational,
         Dimensions: Dimensions,
         Unit: Unit,
-        Measure: Measure,
-        /**
-         * A dimensionless unit.
-         *
-         * @property UNIT_DIMLESS
-         * @type Unit
-         * @static
-         * @final
-         */
-        UNIT_DIMLESS: UNIT_DIMLESS,
-        UNIT_KILOGRAM: UNIT_KILOGRAM,
-        UNIT_METER: UNIT_METER,
-        UNIT_SECOND: UNIT_SECOND,
-        UNIT_AMPERE: UNIT_AMPERE,
-        UNIT_KELVIN: UNIT_KELVIN,
-        UNIT_MOLE: UNIT_MOLE,
-        UNIT_CANDELA: UNIT_CANDELA,
-        UNIT_COULOMB: UNIT_COULOMB,
-        UNIT_INCH: UNIT_INCH,
-        UNIT_FOOT: UNIT_FOOT,
-        UNIT_YARD: UNIT_YARD,
-        UNIT_MILE: UNIT_MILE,
-        UNIT_POUND: UNIT_POUND,
-        UNIT_NEWTON: UNIT_NEWTON,
-        UNIT_JOULE: UNIT_JOULE,
-        UNIT_WATT: UNIT_WATT,
-        UNIT_VOLT: UNIT_VOLT,
-        UNIT_WEBER: UNIT_WEBER,
-        UNIT_TESLA: UNIT_TESLA,
-        UNIT_OHM: UNIT_OHM,
-        UNIT_SIEMEN: UNIT_SIEMEN,
-        UNIT_FARAD: UNIT_FARAD,
-        UNIT_HENRY: UNIT_HENRY,
-        UNIT_HERTZ: UNIT_HERTZ,
-        UNIT_PASCAL: UNIT_PASCAL,
         units: {
-            meter: UNIT_METER,
+            ampere: UNIT_AMPERE,
+            candela: UNIT_CANDELA,
+            coulomb: UNIT_COULOMB,
+            farad: UNIT_FARAD,
+            foot: UNIT_FOOT,
+            henry: UNIT_HENRY,
+            hertz: UNIT_HERTZ,
+            inch: UNIT_INCH,
+            joule: UNIT_JOULE,
+            kelvin: UNIT_KELVIN,
             kilogram: UNIT_KILOGRAM,
-            second: UNIT_SECOND
+            meter: UNIT_METER,
+            mile: UNIT_MILE,
+            mole: UNIT_MOLE,
+            newton: UNIT_NEWTON,
+            ohm: UNIT_OHM,
+            pascal: UNIT_PASCAL,
+            pound: UNIT_POUND,
+            second: UNIT_SECOND,
+            siemen: UNIT_SIEMEN,
+            tesla: UNIT_TESLA,
+            unity: UNIT_DIMLESS,
+            volt: UNIT_VOLT,
+            watt: UNIT_WATT,
+            weber: UNIT_WEBER,
+            yard: UNIT_YARD
         }
     };
     return blade;

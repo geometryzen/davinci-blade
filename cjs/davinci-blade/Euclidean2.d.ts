@@ -1,9 +1,11 @@
 import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Unit = require('davinci-blade/Unit');
 declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
     w: number;
     x: number;
     y: number;
     xy: number;
+    uom: Unit;
     /**
      * The Euclidean2 class represents a multivector for a 2-dimensional linear space with a Euclidean metric.
      *
@@ -13,10 +15,11 @@ declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
      * @param {number} x The vector component of the multivector in the x-direction.
      * @param {number} y The vector component of the multivector in the y-direction.
      * @param {number} xy The pseudoscalar part of the multivector.
+     * @param uom The optional unit of measure.
      */
-    constructor(w: number, x: number, y: number, xy: number);
-    fromCartesian(w: number, x: number, y: number, xy: number): Euclidean2;
-    fromPolar(w: number, r: number, theta: number, s: number): Euclidean2;
+    constructor(w: number, x: number, y: number, xy: number, uom: Unit);
+    fromCartesian(w: number, x: number, y: number, xy: number, uom: Unit): Euclidean2;
+    fromPolar(w: number, r: number, theta: number, s: number, uom: Unit): Euclidean2;
     coordinates(): number[];
     coordinate(index: number): number;
     static add(a: number[], b: number[]): number[];
@@ -28,11 +31,11 @@ declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
     __sub__(other: any): Euclidean2;
     __rsub__(other: any): Euclidean2;
     static mul(a: number[], b: number[]): number[];
-    mul(rhs: any): Euclidean2;
+    mul(rhs: Euclidean2): Euclidean2;
     __mul__(other: any): Euclidean2;
     __rmul__(other: any): Euclidean2;
     scalarMultiply(rhs: number): Euclidean2;
-    div(rhs: any): Euclidean2;
+    div(rhs: Euclidean2): Euclidean2;
     __div__(other: any): Euclidean2;
     __rdiv__(other: any): Euclidean2;
     static splat(a: number[], b: number[]): number[];

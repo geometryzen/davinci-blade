@@ -5,7 +5,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Euclidean1",
         "Euclidean2",
         "Euclidean3",
-        "Measure",
         "Rational",
         "Unit"
     ],
