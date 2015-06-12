@@ -1,10 +1,10 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
 /**
  * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
  * @class Euclidean3
  */
-declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
+declare class Euclidean3 implements Measure<Euclidean3> {
     /**
      * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
      */
@@ -68,7 +68,7 @@ declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
     __mul__(other: any): any;
     __rmul__(other: any): any;
     scalarMultiply(rhs: number): Euclidean3;
-    div(rhs: any): Euclidean3;
+    div(rhs: Euclidean3): Euclidean3;
     __div__(other: any): Euclidean3;
     __rdiv__(other: any): Euclidean3;
     splat(rhs: Euclidean3): Euclidean3;
@@ -93,6 +93,7 @@ declare class Euclidean3 implements GeometricQuantity<Euclidean3> {
     dot(vector: Euclidean3): number;
     cross(vector: Euclidean3): Euclidean3;
     length(): number;
+    exp(): Euclidean3;
     /**
      * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
      */

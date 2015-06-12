@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "JavaScript Geometric Physics library.",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -244,7 +244,7 @@
             "extension_for": [],
             "module": "blade",
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 628,
+            "line": 636,
             "description": "The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric."
         },
         "Rational": {
@@ -331,19 +331,19 @@
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 54,
+            "line": 63,
             "description": "__add__ supports operator +(Complex, any)",
             "class": "Dimensions"
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 65,
+            "line": 74,
             "description": "__radd__ supports operator +(any, Complex)",
             "class": "Dimensions"
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 143,
+            "line": 165,
             "description": "Computes the exponential of this complex number.",
             "class": "Dimensions"
         },
@@ -370,18 +370,18 @@
         },
         {
             "file": "amd/davinci-blade/Euclidean2.js",
-            "line": 729,
+            "line": 737,
             "description": "~ (tilde) produces reversion.",
             "class": "Euclidean2"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 182,
+            "line": 190,
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 633,
+            "line": 641,
             "description": "Constructs a Euclidean3 from its coordinates.",
             "is_constructor": 1,
             "params": [
@@ -434,19 +434,19 @@
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 908,
+            "line": 924,
             "description": "~ (tilde) produces reversion.",
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 949,
+            "line": 968,
             "description": "Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.",
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 955,
+            "line": 974,
             "description": "Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.",
             "class": "Euclidean3"
         },
@@ -468,39 +468,39 @@
         },
         {
             "message": "Missing item type\n__add__ supports operator +(Complex, any)",
-            "line": " amd/davinci-blade/Complex.js:54"
+            "line": " amd/davinci-blade/Complex.js:63"
         },
         {
             "message": "Missing item type\n__radd__ supports operator +(any, Complex)",
-            "line": " amd/davinci-blade/Complex.js:65"
+            "line": " amd/davinci-blade/Complex.js:74"
         },
         {
             "message": "Missing item type\nComputes the exponential of this complex number.",
-            "line": " amd/davinci-blade/Complex.js:143"
+            "line": " amd/davinci-blade/Complex.js:165"
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
-            "line": " amd/davinci-blade/Euclidean2.js:729"
+            "line": " amd/davinci-blade/Euclidean2.js:737"
         },
         {
             "message": "Missing item type",
-            "line": " amd/davinci-blade/Euclidean3.js:182"
+            "line": " amd/davinci-blade/Euclidean3.js:190"
         },
         {
             "message": "Missing item type\nConstructs a Euclidean3 from its coordinates.",
-            "line": " amd/davinci-blade/Euclidean3.js:633"
+            "line": " amd/davinci-blade/Euclidean3.js:641"
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
-            "line": " amd/davinci-blade/Euclidean3.js:908"
+            "line": " amd/davinci-blade/Euclidean3.js:924"
         },
         {
             "message": "Missing item type\nComputes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.",
-            "line": " amd/davinci-blade/Euclidean3.js:949"
+            "line": " amd/davinci-blade/Euclidean3.js:968"
         },
         {
             "message": "Missing item type\nComputes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.",
-            "line": " amd/davinci-blade/Euclidean3.js:955"
+            "line": " amd/davinci-blade/Euclidean3.js:974"
         },
         {
             "message": "Missing item type\nThe version of the blade library.",

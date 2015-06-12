@@ -1,4 +1,4 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
 
 function Euclidean1Error(message: string) {
@@ -34,7 +34,7 @@ function assertArgUnitOrUndefined(name: string, uom: Unit): Unit {
   }
 }
 
-class Euclidean1 implements GeometricQuantity<Euclidean1> {
+class Euclidean1 implements Measure<Euclidean1> {
   public w: number;
   public x: number;
   public uom: Unit;
@@ -51,11 +51,45 @@ class Euclidean1 implements GeometricQuantity<Euclidean1> {
     this.w = assertArgNumber('w', w);
     this.x = assertArgNumber('x', x);
     this.uom = assertArgUnitOrUndefined('uom', uom);
+    if (this.uom && this.uom.scale !== 1) {
+      var scale: number = this.uom.scale;
+      this.w *= scale;
+      this.x *= scale;
+      this.uom = new Unit(1, uom.dimensions, uom.labels);
+    }
+  }
+
+  coordinates(): number[] {
+    return [this.w, this.x];
   }
 
   add(rhs: Euclidean1): Euclidean1 {
     assertArgEuclidean1('rhs', rhs);
     return new Euclidean1(this.w + rhs.w, this.x + rhs.x, Unit.compatible(this.uom, rhs.uom));
+  }
+
+  sub(rhs: Euclidean1): Euclidean1 {
+    assertArgEuclidean1('rhs', rhs);
+    return new Euclidean1(this.w - rhs.w, this.x - rhs.x, Unit.compatible(this.uom, rhs.uom));
+  }
+
+  wedge(rhs: Euclidean1): Euclidean1 {
+    // assertArgEuclidean1('rhs', rhs);
+    throw new Euclidean1Error('wedge');
+  }
+
+  lshift(rhs: Euclidean1): Euclidean1 {
+    // assertArgEuclidean1('rhs', rhs);
+    throw new Euclidean1Error('lshift');
+  }
+
+  rshift(rhs: Euclidean1): Euclidean1 {
+    // assertArgEuclidean1('rhs', rhs);
+    throw new Euclidean1Error('rshift');
+  }
+
+  exp(): Euclidean1 {
+    throw new Euclidean1Error('exp');
   }
 
   norm(): Euclidean1 {
@@ -64,6 +98,18 @@ class Euclidean1 implements GeometricQuantity<Euclidean1> {
 
   quad(): Euclidean1 {
     return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
+  }
+
+  toExponential(): string {
+    return "Euclidean1";
+  }
+
+  toFixed(digits?: number): string {
+    return "Euclidean1";
+  }
+
+  toString(): string {
+    return "Euclidean1";
   }
 }
 

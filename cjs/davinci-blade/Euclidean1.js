@@ -42,16 +42,50 @@ var Euclidean1 = (function () {
         this.w = assertArgNumber('w', w);
         this.x = assertArgNumber('x', x);
         this.uom = assertArgUnitOrUndefined('uom', uom);
+        if (this.uom && this.uom.scale !== 1) {
+            var scale = this.uom.scale;
+            this.w *= scale;
+            this.x *= scale;
+            this.uom = new Unit(1, uom.dimensions, uom.labels);
+        }
     }
+    Euclidean1.prototype.coordinates = function () {
+        return [this.w, this.x];
+    };
     Euclidean1.prototype.add = function (rhs) {
         assertArgEuclidean1('rhs', rhs);
         return new Euclidean1(this.w + rhs.w, this.x + rhs.x, Unit.compatible(this.uom, rhs.uom));
+    };
+    Euclidean1.prototype.sub = function (rhs) {
+        assertArgEuclidean1('rhs', rhs);
+        return new Euclidean1(this.w - rhs.w, this.x - rhs.x, Unit.compatible(this.uom, rhs.uom));
+    };
+    Euclidean1.prototype.wedge = function (rhs) {
+        throw new Euclidean1Error('wedge');
+    };
+    Euclidean1.prototype.lshift = function (rhs) {
+        throw new Euclidean1Error('lshift');
+    };
+    Euclidean1.prototype.rshift = function (rhs) {
+        throw new Euclidean1Error('rshift');
+    };
+    Euclidean1.prototype.exp = function () {
+        throw new Euclidean1Error('exp');
     };
     Euclidean1.prototype.norm = function () {
         return new Euclidean1(Math.sqrt(this.w * this.w + this.x * this.x), 0, this.uom);
     };
     Euclidean1.prototype.quad = function () {
         return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
+    };
+    Euclidean1.prototype.toExponential = function () {
+        return "Euclidean1";
+    };
+    Euclidean1.prototype.toFixed = function (digits) {
+        return "Euclidean1";
+    };
+    Euclidean1.prototype.toString = function () {
+        return "Euclidean1";
     };
     return Euclidean1;
 })();

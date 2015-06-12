@@ -1,6 +1,6 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
-declare class Complex implements GeometricQuantity<Complex> {
+declare class Complex implements Measure<Complex> {
     /**
      * The real part of the complex number.
      */
@@ -19,6 +19,7 @@ declare class Complex implements GeometricQuantity<Complex> {
      * @param y The imaginary part of the complex number.
      */
     constructor(x: number, y: number, uom: Unit);
+    coordinates(): number[];
     add(rhs: Complex): Complex;
     /**
      * __add__ supports operator +(Complex, any)
@@ -28,12 +29,16 @@ declare class Complex implements GeometricQuantity<Complex> {
      * __radd__ supports operator +(any, Complex)
      */
     __radd__(other: any): Complex;
+    sub(rhs: Complex): Complex;
     __sub__(other: any): Complex;
     __rsub__(other: any): Complex;
     __mul__(other: any): Complex;
     __rmul__(other: any): Complex;
     __div__(other: any): Complex;
     __rdiv__(other: any): Complex;
+    wedge(rhs: Complex): Complex;
+    lshift(rhs: Complex): Complex;
+    rshift(rhs: Complex): Complex;
     norm(): Complex;
     quad(): Complex;
     arg(): number;
@@ -41,6 +46,8 @@ declare class Complex implements GeometricQuantity<Complex> {
      * Computes the exponential of this complex number.
      */
     exp(): Complex;
+    toExponential(): string;
+    toFixed(digits?: number): string;
     toString(): string;
 }
 export = Complex;

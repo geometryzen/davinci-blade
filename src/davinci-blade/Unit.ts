@@ -432,11 +432,16 @@ class Unit {
           return lhs.div(rhs);
         }
         else {
-          return undefined;
+          return lhs;
         }
       }
       else {
-        return undefined;
+        if (rhs instanceof Unit) {
+          return rhs.inverse();
+        }
+        else {
+          return void 0;
+        }
       }
     }
 

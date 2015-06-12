@@ -300,7 +300,7 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         }
         return +x;
     }
-    function stringFromCoordinates(coordinates, labels) {
+    function stringFromCoordinates(coordinates, numberToString, labels) {
         var i, _i, _ref;
         var str;
         var sb = [];
@@ -320,7 +320,7 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
                     sb.push(label);
                 }
                 else {
-                    sb.push(n.toString());
+                    sb.push(numberToString(n));
                     if (label !== "1") {
                         sb.push("*");
                         sb.push(label);
@@ -396,6 +396,14 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             this.y = assertArgNumber('y', y);
             this.xy = assertArgNumber('xy', xy);
             this.uom = assertArgUnitOrUndefined('uom', uom);
+            if (this.uom && this.uom.scale !== 1) {
+                var scale = this.uom.scale;
+                this.w *= scale;
+                this.x *= scale;
+                this.y *= scale;
+                this.xy *= scale;
+                this.uom = new Unit(1, uom.dimensions, uom.labels);
+            }
         }
         Euclidean2.prototype.fromCartesian = function (w, x, y, xy, uom) {
             assertArgNumber('w', w);
@@ -745,6 +753,9 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
                     return new Euclidean2(0, 0, 0, 0, this.uom);
             }
         };
+        Euclidean2.prototype.exp = function () {
+            throw new Euclidean2Error('exp');
+        };
         Euclidean2.prototype.norm = function () {
             return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0, this.uom);
         };
@@ -754,14 +765,50 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         Euclidean2.prototype.isNaN = function () {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
         };
+        Euclidean2.prototype.toStringCustom = function (coordToString, labels) {
+            var quantityString = stringFromCoordinates(this.coordinates(), coordToString, labels);
+            if (this.uom) {
+                var unitString = this.uom.toString().trim();
+                if (unitString) {
+                    return quantityString + ' ' + unitString;
+                }
+                else {
+                    return quantityString;
+                }
+            }
+            else {
+                return quantityString;
+            }
+        };
+        Euclidean2.prototype.toExponential = function () {
+            var coordToString = function (coord) {
+                return coord.toExponential();
+            };
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e12"]);
+        };
+        Euclidean2.prototype.toFixed = function (digits) {
+            var coordToString = function (coord) {
+                return coord.toFixed(digits);
+            };
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e12"]);
+        };
         Euclidean2.prototype.toString = function () {
-            return stringFromCoordinates([this.w, this.x, this.y, this.xy], ["1", "e1", "e2", "e12"]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e12"]);
         };
         Euclidean2.prototype.toStringIJK = function () {
-            return stringFromCoordinates(this.coordinates(), ["1", "i", "j", "I"]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, ["1", "i", "j", "I"]);
         };
         Euclidean2.prototype.toStringLATEX = function () {
-            return stringFromCoordinates(this.coordinates(), ["1", "e_{1}", "e_{2}", "e_{12}"]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, ["1", "e_{1}", "e_{2}", "e_{12}"]);
         };
         return Euclidean2;
     })();

@@ -46,7 +46,16 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             this.x = assertArgNumber('x', x);
             this.y = assertArgNumber('y', y);
             this.uom = assertArgUnitOrUndefined('uom', uom);
+            if (this.uom && this.uom.scale !== 1) {
+                var scale = this.uom.scale;
+                this.x *= scale;
+                this.y *= scale;
+                this.uom = new Unit(1, uom.dimensions, uom.labels);
+            }
         }
+        Complex.prototype.coordinates = function () {
+            return [this.x, this.y];
+        };
         Complex.prototype.add = function (rhs) {
             assertArgComplex('rhs', rhs);
             return new Complex(this.x + rhs.x, this.y + rhs.y, Unit.compatible(this.uom, rhs.uom));
@@ -74,6 +83,10 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
                 var x = other;
                 return new Complex(x + this.x, this.y, Unit.compatible(undefined, this.uom));
             }
+        };
+        Complex.prototype.sub = function (rhs) {
+            assertArgComplex('rhs', rhs);
+            return new Complex(this.x - rhs.x, this.y - rhs.y, Unit.compatible(this.uom, rhs.uom));
         };
         Complex.prototype.__sub__ = function (other) {
             if (other instanceof Complex) {
@@ -131,6 +144,15 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
                 return divide(new Complex(other, 0, undefined), this);
             }
         };
+        Complex.prototype.wedge = function (rhs) {
+            throw new ComplexError('wedge');
+        };
+        Complex.prototype.lshift = function (rhs) {
+            throw new ComplexError('lshift');
+        };
+        Complex.prototype.rshift = function (rhs) {
+            throw new ComplexError('rshift');
+        };
         Complex.prototype.norm = function () {
             return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
         };
@@ -147,8 +169,13 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             var expX = Math.exp(this.x);
             var x = expX * Math.cos(this.y);
             var y = expX * Math.sin(this.y);
-            // TODO: Is this correct? If so, why is it so?
             return new Complex(x, y, this.uom);
+        };
+        Complex.prototype.toExponential = function () {
+            return "Complex(" + this.x.toExponential() + ", " + this.y.toExponential() + ")";
+        };
+        Complex.prototype.toFixed = function (digits) {
+            return "Complex(" + this.x.toFixed(digits) + ", " + this.y.toFixed(digits) + ")";
         };
         Complex.prototype.toString = function () {
             return "Complex(" + this.x + ", " + this.y + ")";

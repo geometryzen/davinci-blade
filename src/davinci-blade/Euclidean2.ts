@@ -1,4 +1,4 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
 
 function Euclidean2Error(message: string) {
@@ -292,7 +292,10 @@ function rcoE2(a0: number, a1: number, a2: number, a3: number, b0: number, b1: n
     return +x;
 }
 
-function stringFromCoordinates(coordinates: number[], labels: string[]): string {
+function stringFromCoordinates(
+  coordinates: number[],
+  numberToString: (x: number) => string,
+  labels: string[]): string {
     var i: number, _i: number, _ref: number;
     var str: string;
     var sb: string[] = [];
@@ -310,7 +313,7 @@ function stringFromCoordinates(coordinates: number[], labels: string[]): string 
             if (n === 1) {
                 sb.push(label);
             } else {
-                sb.push(n.toString());
+                sb.push(numberToString(n));
                 if (label !== "1") {
                     sb.push("*");
                     sb.push(label);
@@ -380,7 +383,7 @@ var divide = function(
     }
 };
 
-class Euclidean2 implements GeometricQuantity<Euclidean2> {
+class Euclidean2 implements Measure<Euclidean2> {
   public w: number;
   public x: number;
   public y: number;
@@ -403,6 +406,14 @@ class Euclidean2 implements GeometricQuantity<Euclidean2> {
     this.y = assertArgNumber('y', y);
     this.xy = assertArgNumber('xy', xy);
     this.uom = assertArgUnitOrUndefined('uom', uom);
+    if (this.uom && this.uom.scale !== 1) {
+      var scale: number = this.uom.scale;
+      this.w *= scale;
+      this.x *= scale;
+      this.y *= scale;
+      this.xy *= scale;
+      this.uom = new Unit(1, uom.dimensions, uom.labels);
+    }
   }
 
   fromCartesian(w: number, x: number, y: number, xy: number, uom: Unit): Euclidean2 {
@@ -793,6 +804,10 @@ class Euclidean2 implements GeometricQuantity<Euclidean2> {
     }
   }
 
+  exp(): Euclidean2 {
+    throw new Euclidean2Error('exp');
+  }
+
   norm(): Euclidean2 {
     return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0, this.uom);
   }
@@ -803,14 +818,47 @@ class Euclidean2 implements GeometricQuantity<Euclidean2> {
 
   isNaN(): boolean {return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);}
 
-  toString(): string {return stringFromCoordinates([this.w, this.x, this.y, this.xy], ["1", "e1", "e2", "e12"]);}
+  toStringCustom(
+    coordToString: (x: number) => string,
+    labels: string[]): string {
+    var quantityString: string = stringFromCoordinates(this.coordinates(), coordToString, labels);
+    if (this.uom) {
+      var unitString = this.uom.toString().trim();
+      if (unitString) {
+        return quantityString + ' ' + unitString;
+      }
+      else {
+        return quantityString;
+      }
+    }
+    else {
+      return quantityString;
+    }
+  }
+
+  toExponential(): string {
+    var coordToString = function(coord: number): string { return coord.toExponential() };
+    return this.toStringCustom(coordToString, ["1", "e1", "e2", "e12"]);
+  }
+
+  toFixed(digits?: number): string {
+    var coordToString = function(coord: number): string { return coord.toFixed(digits) };
+    return this.toStringCustom(coordToString, ["1", "e1", "e2", "e12"]);
+  }
+
+  toString(): string {
+    var coordToString = function(coord: number): string { return coord.toString() };
+    return this.toStringCustom(coordToString, ["1", "e1", "e2", "e12"]);
+  }
 
   toStringIJK(): string {
-    return stringFromCoordinates(this.coordinates(), ["1", "i", "j", "I"]);
+    var coordToString = function(coord: number): string { return coord.toString() };
+    return this.toStringCustom(coordToString, ["1", "i", "j", "I"]);
   }
 
   toStringLATEX(): string {
-    return stringFromCoordinates(this.coordinates(), ["1", "e_{1}", "e_{2}", "e_{12}"]);
+    var coordToString = function(coord: number): string { return coord.toString() };
+    return this.toStringCustom(coordToString, ["1", "e_{1}", "e_{2}", "e_{12}"]);
   }
 }
 

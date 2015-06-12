@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.2.0</em>
+            <em>API Docs for: 1.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -387,7 +387,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         }
         return +x;
     }
-    function stringFromCoordinates(coordinates, labels) {
+    function stringFromCoordinates(coordinates, numberToString, labels) {
         var i, _i, _ref;
         var str;
         var sb = [];
@@ -407,7 +407,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
                     sb.push(label);
                 }
                 else {
-                    sb.push(n.toString());
+                    sb.push(numberToString(n));
                     if (label !== &quot;1&quot;) {
                         sb.push(&quot;*&quot;);
                         sb.push(label);
@@ -483,6 +483,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
             this.y = assertArgNumber(&#x27;y&#x27;, y);
             this.xy = assertArgNumber(&#x27;xy&#x27;, xy);
             this.uom = assertArgUnitOrUndefined(&#x27;uom&#x27;, uom);
+            if (this.uom &amp;&amp; this.uom.scale !== 1) {
+                var scale = this.uom.scale;
+                this.w *= scale;
+                this.x *= scale;
+                this.y *= scale;
+                this.xy *= scale;
+                this.uom = new Unit(1, uom.dimensions, uom.labels);
+            }
         }
         Euclidean2.prototype.fromCartesian = function (w, x, y, xy, uom) {
             assertArgNumber(&#x27;w&#x27;, w);
@@ -832,6 +840,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
                     return new Euclidean2(0, 0, 0, 0, this.uom);
             }
         };
+        Euclidean2.prototype.exp = function () {
+            throw new Euclidean2Error(&#x27;exp&#x27;);
+        };
         Euclidean2.prototype.norm = function () {
             return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0, this.uom);
         };
@@ -841,14 +852,50 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         Euclidean2.prototype.isNaN = function () {
             return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);
         };
+        Euclidean2.prototype.toStringCustom = function (coordToString, labels) {
+            var quantityString = stringFromCoordinates(this.coordinates(), coordToString, labels);
+            if (this.uom) {
+                var unitString = this.uom.toString().trim();
+                if (unitString) {
+                    return quantityString + &#x27; &#x27; + unitString;
+                }
+                else {
+                    return quantityString;
+                }
+            }
+            else {
+                return quantityString;
+            }
+        };
+        Euclidean2.prototype.toExponential = function () {
+            var coordToString = function (coord) {
+                return coord.toExponential();
+            };
+            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e12&quot;]);
+        };
+        Euclidean2.prototype.toFixed = function (digits) {
+            var coordToString = function (coord) {
+                return coord.toFixed(digits);
+            };
+            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e12&quot;]);
+        };
         Euclidean2.prototype.toString = function () {
-            return stringFromCoordinates([this.w, this.x, this.y, this.xy], [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e12&quot;]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e12&quot;]);
         };
         Euclidean2.prototype.toStringIJK = function () {
-            return stringFromCoordinates(this.coordinates(), [&quot;1&quot;, &quot;i&quot;, &quot;j&quot;, &quot;I&quot;]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;i&quot;, &quot;j&quot;, &quot;I&quot;]);
         };
         Euclidean2.prototype.toStringLATEX = function () {
-            return stringFromCoordinates(this.coordinates(), [&quot;1&quot;, &quot;e_{1}&quot;, &quot;e_{2}&quot;, &quot;e_{12}&quot;]);
+            var coordToString = function (coord) {
+                return coord.toString();
+            };
+            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e_{1}&quot;, &quot;e_{2}&quot;, &quot;e_{12}&quot;]);
         };
         return Euclidean2;
     })();

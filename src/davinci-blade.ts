@@ -8,6 +8,9 @@ import Unit = require('davinci-blade/Unit');
 import Complex = require('davinci-blade/Complex');
 import Color = require('davinci-blade/Color');
 
+import scalarE2   = require('davinci-blade/e2ga/scalarE2');
+import vectorE2   = require('davinci-blade/e2ga/vectorE2');
+import bivectorE2 = require('davinci-blade/e2ga/bivectorE2');
 import scalarE3   = require('davinci-blade/e3ga/scalarE3');
 import vectorE3   = require('davinci-blade/e3ga/vectorE3');
 import bivectorE3 = require('davinci-blade/e3ga/bivectorE3');
@@ -88,6 +91,73 @@ var blade = {
     Rational: Rational,
     Dimensions: Dimensions,
     Unit: Unit,
+    e2ga:
+    {
+      e1: vectorE2(1, 0),
+      e2: vectorE2(0, 1),
+      units: {
+        ampere: scalarE2(1, UNIT_AMPERE),
+        candela: scalarE2(1, UNIT_CANDELA),
+        coulomb: scalarE2(1, UNIT_COULOMB),
+        farad: scalarE2(1, UNIT_FARAD),
+        foot: scalarE2(1, UNIT_FOOT),
+        henry: scalarE2(1, UNIT_HENRY),
+        hertz: scalarE2(1, UNIT_HERTZ),
+        inch: scalarE2(1, UNIT_INCH),
+        joule: scalarE2(1, UNIT_JOULE),
+        kelvin: scalarE2(1, UNIT_KELVIN),
+        kilogram: scalarE2(1, UNIT_KILOGRAM),
+        meter: scalarE2(1, UNIT_METER),
+        mile: scalarE2(1, UNIT_MILE),
+        mole: scalarE2(1, UNIT_MOLE),
+        newton: scalarE2(1, UNIT_NEWTON),
+        ohm: scalarE2(1, UNIT_OHM),
+        pascal: scalarE2(1, UNIT_PASCAL),
+        pound: scalarE2(1, UNIT_POUND),
+        second: scalarE2(1, UNIT_SECOND),
+        siemen: scalarE2(1, UNIT_SIEMEN),
+        tesla: scalarE2(1, UNIT_TESLA),
+        unity: scalarE2(1, UNIT_DIMLESS),
+        volt: scalarE2(1, UNIT_VOLT),
+        watt: scalarE2(1, UNIT_WATT),
+        weber: scalarE2(1, UNIT_WEBER),
+        yard: scalarE2(1, UNIT_YARD)
+      }
+    },
+    e3ga:
+    {
+      e1: vectorE3(1, 0, 0),
+      e2: vectorE3(0, 1, 0),
+      e3: vectorE3(0, 0, 1),
+      units: {
+        ampere: scalarE3(1, UNIT_AMPERE),
+        candela: scalarE3(1, UNIT_CANDELA),
+        coulomb: scalarE3(1, UNIT_COULOMB),
+        farad: scalarE3(1, UNIT_FARAD),
+        foot: scalarE3(1, UNIT_FOOT),
+        henry: scalarE3(1, UNIT_HENRY),
+        hertz: scalarE3(1, UNIT_HERTZ),
+        inch: scalarE3(1, UNIT_INCH),
+        joule: scalarE3(1, UNIT_JOULE),
+        kelvin: scalarE3(1, UNIT_KELVIN),
+        kilogram: scalarE3(1, UNIT_KILOGRAM),
+        meter: scalarE3(1, UNIT_METER),
+        mile: scalarE3(1, UNIT_MILE),
+        mole: scalarE3(1, UNIT_MOLE),
+        newton: scalarE3(1, UNIT_NEWTON),
+        ohm: scalarE3(1, UNIT_OHM),
+        pascal: scalarE3(1, UNIT_PASCAL),
+        pound: scalarE3(1, UNIT_POUND),
+        second: scalarE3(1, UNIT_SECOND),
+        siemen: scalarE3(1, UNIT_SIEMEN),
+        tesla: scalarE3(1, UNIT_TESLA),
+        unity: scalarE3(1, UNIT_DIMLESS),
+        volt: scalarE3(1, UNIT_VOLT),
+        watt: scalarE3(1, UNIT_WATT),
+        weber: scalarE3(1, UNIT_WEBER),
+        yard: scalarE3(1, UNIT_YARD)
+      }
+    },
     units:
     {
       ampere: UNIT_AMPERE,

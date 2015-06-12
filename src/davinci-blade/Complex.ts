@@ -1,4 +1,4 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
 
 function ComplexError(message: string) {
@@ -44,7 +44,7 @@ function divide(a: Complex, b: Complex): Complex
   return new Complex(x, y, Unit.div(a.uom, b.uom));
 }
 
-class Complex implements GeometricQuantity<Complex>
+class Complex implements Measure<Complex>
 {
     /**
      * The real part of the complex number.
@@ -67,6 +67,16 @@ class Complex implements GeometricQuantity<Complex>
       this.x = assertArgNumber('x', x);
       this.y = assertArgNumber('y', y);
       this.uom = assertArgUnitOrUndefined('uom', uom);
+      if (this.uom && this.uom.scale !== 1) {
+        var scale: number = this.uom.scale;
+        this.x *= scale;
+        this.y *= scale;
+        this.uom = new Unit(1, uom.dimensions, uom.labels);
+      }
+    }
+
+    coordinates(): number[] {
+      return [this.x, this.y];
     }
 
     add(rhs: Complex): Complex {
@@ -101,6 +111,11 @@ class Complex implements GeometricQuantity<Complex>
         var x: number = other;
         return new Complex(x + this.x, this.y, Unit.compatible(undefined, this.uom));
       }
+    }
+
+    sub(rhs: Complex): Complex {
+      assertArgComplex('rhs', rhs);
+      return new Complex(this.x - rhs.x, this.y - rhs.y, Unit.compatible(this.uom, rhs.uom));
     }
 
     __sub__(other: any): Complex
@@ -171,6 +186,21 @@ class Complex implements GeometricQuantity<Complex>
       }
     }
 
+    wedge(rhs: Complex): Complex {
+      // assertArgComplex('rhs', rhs);
+      throw new ComplexError('wedge');
+    }
+
+    lshift(rhs: Complex): Complex {
+      // assertArgComplex('rhs', rhs);
+      throw new ComplexError('lshift');
+    }
+
+    rshift(rhs: Complex): Complex {
+      // assertArgComplex('rhs', rhs);
+      throw new ComplexError('rshift');
+    }
+
     norm(): Complex {
       return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
     }
@@ -188,8 +218,15 @@ class Complex implements GeometricQuantity<Complex>
       var expX = Math.exp(this.x);
       var x = expX * Math.cos(this.y);
       var y = expX * Math.sin(this.y);
-      // TODO: Is this correct? If so, why is it so?
       return new Complex(x, y, this.uom);
+    }
+
+    toExponential(): string {
+      return "Complex(" + this.x.toExponential() + ", " + this.y.toExponential() + ")";
+    }
+
+    toFixed(digits?: number): string {
+      return "Complex(" + this.x.toFixed(digits) + ", " + this.y.toFixed(digits) + ")";
     }
 
     toString(): string {

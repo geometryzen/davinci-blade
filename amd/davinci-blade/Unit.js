@@ -348,11 +348,16 @@ define(["require", "exports", 'davinci-blade/Dimensions', 'davinci-blade/Rationa
                     return lhs.div(rhs);
                 }
                 else {
-                    return undefined;
+                    return lhs;
                 }
             }
             else {
-                return undefined;
+                if (rhs instanceof Unit) {
+                    return rhs.inverse();
+                }
+                else {
+                    return void 0;
+                }
             }
         };
         Unit.sqrt = function (uom) {

@@ -12,6 +12,14 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             throw new Euclidean3Error("Argument '" + name + "' must be a number");
         }
     }
+    function assertArgEuclidean3(name, arg) {
+        if (arg instanceof Euclidean3) {
+            return arg;
+        }
+        else {
+            throw new Euclidean3Error("Argument '" + arg + "' must be a Euclidean3");
+        }
+    }
     function assertArgUnitOrUndefined(name, uom) {
         if (typeof uom === 'undefined' || uom instanceof Unit) {
             return uom;
@@ -653,6 +661,18 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             this.zx = assertArgNumber('zx', zx);
             this.xyz = assertArgNumber('xyz', xyz);
             this.uom = assertArgUnitOrUndefined('uom', uom);
+            if (this.uom && this.uom.scale !== 1) {
+                var scale = this.uom.scale;
+                this.w *= scale;
+                this.x *= scale;
+                this.y *= scale;
+                this.z *= scale;
+                this.xy *= scale;
+                this.yz *= scale;
+                this.zx *= scale;
+                this.xyz *= scale;
+                this.uom = new Unit(1, uom.dimensions, uom.labels);
+            }
         }
         Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz, uom) {
             assertArgNumber('w', w);
@@ -776,12 +796,8 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
             return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs, this.uom);
         };
         Euclidean3.prototype.div = function (rhs) {
-            if (typeof rhs === 'number') {
-                return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs, this.uom);
-            }
-            else {
-                return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom, rhs.uom), void 0);
-            }
+            assertArgEuclidean3('rhs', rhs);
+            return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__div__ = function (other) {
             if (other instanceof Euclidean3) {
@@ -945,6 +961,9 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         };
         Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
+        };
+        Euclidean3.prototype.exp = function () {
+            throw new Euclidean3Error('exp');
         };
         /**
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.

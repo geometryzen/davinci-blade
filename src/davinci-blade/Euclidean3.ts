@@ -1,4 +1,4 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
 
 function Euclidean3Error(message: string) {
@@ -13,6 +13,15 @@ function assertArgNumber(name: string, x: number): number {
   }
   else {
     throw new Euclidean3Error("Argument '" + name + "' must be a number");
+  }
+}
+
+function assertArgEuclidean3(name: string, arg: Euclidean3): Euclidean3 {
+  if (arg instanceof Euclidean3) {
+    return arg;
+  }
+  else {
+    throw new Euclidean3Error("Argument '" + arg + "' must be a Euclidean3");
   }
 }
 
@@ -600,7 +609,7 @@ function stringFromCoordinates(
  * The Euclidean3 class represents a multivector for a 3-dimensional vector space with a Euclidean metric.
  * @class Euclidean3
  */
-class Euclidean3 implements GeometricQuantity<Euclidean3> {
+class Euclidean3 implements Measure<Euclidean3> {
     /**
      * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
      */
@@ -660,6 +669,18 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
       this.zx = assertArgNumber('zx', zx);
       this.xyz = assertArgNumber('xyz', xyz);
       this.uom = assertArgUnitOrUndefined('uom', uom);
+      if (this.uom && this.uom.scale !== 1) {
+        var scale: number = this.uom.scale;
+        this.w *= scale;
+        this.x *= scale;
+        this.y *= scale;
+        this.z *= scale;
+        this.xy *= scale;
+        this.yz *= scale;
+        this.zx *= scale;
+        this.xyz *= scale;
+        this.uom = new Unit(1, uom.dimensions, uom.labels);
+      }
     }
 
     static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom: Unit): Euclidean3 {
@@ -801,13 +822,9 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
       return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs, this.uom);
     }
 
-    div(rhs: any): Euclidean3 {
-      if (typeof rhs === 'number') {
-        return new Euclidean3(this.w / rhs, this.x / rhs, this.y / rhs, this.z / rhs, this.xy / rhs, this.yz / rhs, this.zx / rhs, this.xyz / rhs, this.uom);
-      }
-      else {
-        return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom,rhs.uom), void 0);
-      }
+    div(rhs: Euclidean3): Euclidean3 {
+      assertArgEuclidean3('rhs', rhs);
+      return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom,rhs.uom));
     }
 
     __div__(other: any): Euclidean3
@@ -999,6 +1016,10 @@ class Euclidean3 implements GeometricQuantity<Euclidean3> {
 
     length() {
       return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
+    }
+
+    exp(): Euclidean3 {
+      throw new Euclidean3Error('exp');
     }
 
     /**

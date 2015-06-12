@@ -1,6 +1,6 @@
-import GeometricQuantity = require('davinci-blade/GeometricQuantity');
+import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
-declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
+declare class Euclidean2 implements Measure<Euclidean2> {
     w: number;
     x: number;
     y: number;
@@ -61,9 +61,13 @@ declare class Euclidean2 implements GeometricQuantity<Euclidean2> {
      */
     __tilde__(): Euclidean2;
     grade(index: number): Euclidean2;
+    exp(): Euclidean2;
     norm(): Euclidean2;
     quad(): Euclidean2;
     isNaN(): boolean;
+    toStringCustom(coordToString: (x: number) => string, labels: string[]): string;
+    toExponential(): string;
+    toFixed(digits?: number): string;
     toString(): string;
     toStringIJK(): string;
     toStringLATEX(): string;
