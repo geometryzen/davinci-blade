@@ -61,9 +61,13 @@ declare class Euclidean2 implements Measure<Euclidean2> {
      */
     __tilde__(): Euclidean2;
     grade(index: number): Euclidean2;
+    cos(): Euclidean2;
+    cosh(): Euclidean2;
     exp(): Euclidean2;
     norm(): Euclidean2;
     quad(): Euclidean2;
+    sin(): Euclidean2;
+    sinh(): Euclidean2;
     unit(): Euclidean2;
     isNaN(): boolean;
     toStringCustom(coordToString: (x: number) => string, labels: string[]): string;

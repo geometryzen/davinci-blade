@@ -28,7 +28,7 @@ define(["require", "exports"], function (require, exports) {
         return (Math.exp(x) - Math.exp(-x)) / 2;
     }
     var core = {
-        VERSION: '1.4.0',
+        VERSION: '1.5.0',
         cos: makeUnaryUniversalFunction('cos', Math.cos),
         cosh: makeUnaryUniversalFunction('cosh', cosh),
         exp: makeUnaryUniversalFunction('exp', Math.exp),
@@ -42,7 +42,11 @@ define(["require", "exports"], function (require, exports) {
         sinh: makeUnaryUniversalFunction('sinh', sinh),
         unit: makeUnaryUniversalFunction('unit', function (x) {
             return x / Math.abs(x);
-        })
+        }),
+        Math: {
+            cosh: cosh,
+            sinh: sinh
+        }
     };
     return core;
 });

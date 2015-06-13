@@ -804,6 +804,14 @@ class Euclidean2 implements Measure<Euclidean2> {
     }
   }
 
+  cos(): Euclidean2 {
+    throw new Euclidean2Error('cos');
+  }
+
+  cosh(): Euclidean2 {
+    throw new Euclidean2Error('cosh');
+  }
+
   exp(): Euclidean2 {
     Unit.assertDimensionless(this.uom);
     var expW = Math.exp(this.w);
@@ -818,6 +826,14 @@ class Euclidean2 implements Measure<Euclidean2> {
 
   quad(): Euclidean2 {
     return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0, Unit.mul(this.uom, this.uom));
+  }
+
+  sin(): Euclidean2 {
+    throw new Euclidean2Error('sin');
+  }
+
+  sinh(): Euclidean2 {
+    throw new Euclidean2Error('sinh');
   }
 
   unit(): Euclidean2 {

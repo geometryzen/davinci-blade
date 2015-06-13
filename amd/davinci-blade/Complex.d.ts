@@ -39,12 +39,13 @@ declare class Complex implements Measure<Complex> {
     wedge(rhs: Complex): Complex;
     lshift(rhs: Complex): Complex;
     rshift(rhs: Complex): Complex;
-    /**
-     * Computes the exponential of this complex number.
-     */
+    cos(): Complex;
+    cosh(): Complex;
     exp(): Complex;
     norm(): Complex;
     quad(): Complex;
+    sin(): Complex;
+    sinh(): Complex;
     unit(): Complex;
     arg(): number;
     toStringCustom(coordToString: (x: number) => string): string;

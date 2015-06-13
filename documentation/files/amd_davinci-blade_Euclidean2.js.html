@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.4.0</em>
+            <em>API Docs for: 1.5.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -840,6 +840,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
                     return new Euclidean2(0, 0, 0, 0, this.uom);
             }
         };
+        Euclidean2.prototype.cos = function () {
+            throw new Euclidean2Error(&#x27;cos&#x27;);
+        };
+        Euclidean2.prototype.cosh = function () {
+            throw new Euclidean2Error(&#x27;cosh&#x27;);
+        };
         Euclidean2.prototype.exp = function () {
             Unit.assertDimensionless(this.uom);
             var expW = Math.exp(this.w);
@@ -852,6 +858,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         };
         Euclidean2.prototype.quad = function () {
             return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0, Unit.mul(this.uom, this.uom));
+        };
+        Euclidean2.prototype.sin = function () {
+            throw new Euclidean2Error(&#x27;sin&#x27;);
+        };
+        Euclidean2.prototype.sinh = function () {
+            throw new Euclidean2Error(&#x27;sinh&#x27;);
         };
         Euclidean2.prototype.unit = function () {
             throw new Euclidean2Error(&#x27;unit&#x27;);

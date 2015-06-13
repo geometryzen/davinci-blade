@@ -753,6 +753,12 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
                     return new Euclidean2(0, 0, 0, 0, this.uom);
             }
         };
+        Euclidean2.prototype.cos = function () {
+            throw new Euclidean2Error('cos');
+        };
+        Euclidean2.prototype.cosh = function () {
+            throw new Euclidean2Error('cosh');
+        };
         Euclidean2.prototype.exp = function () {
             Unit.assertDimensionless(this.uom);
             var expW = Math.exp(this.w);
@@ -765,6 +771,12 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         };
         Euclidean2.prototype.quad = function () {
             return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0, Unit.mul(this.uom, this.uom));
+        };
+        Euclidean2.prototype.sin = function () {
+            throw new Euclidean2Error('sin');
+        };
+        Euclidean2.prototype.sinh = function () {
+            throw new Euclidean2Error('sinh');
         };
         Euclidean2.prototype.unit = function () {
             throw new Euclidean2Error('unit');

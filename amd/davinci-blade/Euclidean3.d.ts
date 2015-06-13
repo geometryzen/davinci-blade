@@ -93,6 +93,8 @@ declare class Euclidean3 implements Measure<Euclidean3> {
     dot(vector: Euclidean3): number;
     cross(vector: Euclidean3): Euclidean3;
     length(): number;
+    cos(): Euclidean3;
+    cosh(): Euclidean3;
     exp(): Euclidean3;
     /**
      * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
@@ -102,6 +104,8 @@ declare class Euclidean3 implements Measure<Euclidean3> {
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
     quad(): Euclidean3;
+    sin(): Euclidean3;
+    sinh(): Euclidean3;
     unit(): Euclidean3;
     sqrt(): Euclidean3;
     toStringCustom(coordToString: (x: number) => string, labels: string[]): string;

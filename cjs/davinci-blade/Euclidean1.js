@@ -69,6 +69,12 @@ var Euclidean1 = (function () {
     Euclidean1.prototype.rshift = function (rhs) {
         throw new Euclidean1Error('rshift');
     };
+    Euclidean1.prototype.cos = function () {
+        throw new Euclidean1Error('cos');
+    };
+    Euclidean1.prototype.cosh = function () {
+        throw new Euclidean1Error('cosh');
+    };
     Euclidean1.prototype.exp = function () {
         throw new Euclidean1Error('exp');
     };
@@ -77,6 +83,12 @@ var Euclidean1 = (function () {
     };
     Euclidean1.prototype.quad = function () {
         return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
+    };
+    Euclidean1.prototype.sin = function () {
+        throw new Euclidean1Error('sin');
+    };
+    Euclidean1.prototype.sinh = function () {
+        throw new Euclidean1Error('sinh');
     };
     Euclidean1.prototype.unit = function () {
         throw new Euclidean1Error('unit');

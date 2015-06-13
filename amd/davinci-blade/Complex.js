@@ -1,4 +1,9 @@
-define(["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+define(["require", "exports", 'davinci-blade/Unit', 'davinci-blade/core'], function (require, exports, Unit, core) {
+    var cos = Math.cos;
+    var cosh = core.Math.cosh;
+    var exp = Math.exp;
+    var sin = Math.sin;
+    var sinh = core.Math.sinh;
     function ComplexError(message) {
         this.name = 'ComplexError';
         this.message = (message || "");
@@ -156,25 +161,52 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         Complex.prototype.rshift = function (rhs) {
             throw new ComplexError('rshift');
         };
-        /**
-         * Computes the exponential of this complex number.
-         */
+        Complex.prototype.cos = function () {
+            Unit.assertDimensionless(this.uom);
+            var x = this.x;
+            var y = this.y;
+            return new Complex(cos(x) * cosh(y), -sin(x) * sinh(y));
+        };
+        Complex.prototype.cosh = function () {
+            Unit.assertDimensionless(this.uom);
+            var x = this.x;
+            var y = this.y;
+            return new Complex(cosh(x) * cos(y), sinh(x) * sin(y));
+        };
         Complex.prototype.exp = function () {
             Unit.assertDimensionless(this.uom);
-            var expX = Math.exp(this.x);
-            var x = expX * Math.cos(this.y);
-            var y = expX * Math.sin(this.y);
-            return new Complex(x, y);
+            var x = this.x;
+            var y = this.y;
+            var expX = Math.exp(x);
+            return new Complex(expX * cos(y), expX * sin(y));
         };
         Complex.prototype.norm = function () {
-            return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
+            var x = this.x;
+            var y = this.y;
+            return new Complex(Math.sqrt(x * x + y * y), 0, this.uom);
         };
         Complex.prototype.quad = function () {
-            return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
+            var x = this.x;
+            var y = this.y;
+            return new Complex(x * x + y * y, 0, Unit.mul(this.uom, this.uom));
+        };
+        Complex.prototype.sin = function () {
+            Unit.assertDimensionless(this.uom);
+            var x = this.x;
+            var y = this.y;
+            return new Complex(sin(x) * cosh(y), cos(x) * sinh(y));
+        };
+        Complex.prototype.sinh = function () {
+            Unit.assertDimensionless(this.uom);
+            var x = this.x;
+            var y = this.y;
+            return new Complex(sinh(x) * cos(y), cosh(x) * sin(y));
         };
         Complex.prototype.unit = function () {
-            var divisor = norm(this.x, this.y);
-            return new Complex(this.x / divisor, this.y / divisor);
+            var x = this.x;
+            var y = this.y;
+            var divisor = norm(x, y);
+            return new Complex(x / divisor, y / divisor);
         };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);

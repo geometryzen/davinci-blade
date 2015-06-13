@@ -88,6 +88,14 @@ class Euclidean1 implements Measure<Euclidean1> {
     throw new Euclidean1Error('rshift');
   }
 
+  cos(): Euclidean1 {
+    throw new Euclidean1Error('cos');
+  }
+
+  cosh(): Euclidean1 {
+    throw new Euclidean1Error('cosh');
+  }
+
   exp(): Euclidean1 {
     throw new Euclidean1Error('exp');
   }
@@ -98,6 +106,14 @@ class Euclidean1 implements Measure<Euclidean1> {
 
   quad(): Euclidean1 {
     return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
+  }
+
+  sin(): Euclidean1 {
+    throw new Euclidean1Error('sin');
+  }
+
+  sinh(): Euclidean1 {
+    throw new Euclidean1Error('sinh');
   }
 
   unit(): Euclidean1 {

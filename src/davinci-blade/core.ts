@@ -33,7 +33,7 @@ function sinh(x: number): number {
 
 var core =
 {
-    VERSION: '1.4.0',
+    VERSION: '1.5.0',
     cos: makeUnaryUniversalFunction('cos', Math.cos),
     cosh: makeUnaryUniversalFunction('cosh', cosh),
     exp: makeUnaryUniversalFunction('exp', Math.exp),
@@ -41,7 +41,11 @@ var core =
     quad: makeUnaryUniversalFunction('quad', function(x: number) {return x * x}),
     sin: makeUnaryUniversalFunction('sin', Math.sin),
     sinh: makeUnaryUniversalFunction('sinh', sinh),
-    unit: makeUnaryUniversalFunction('unit', function(x: number) {return x / Math.abs(x)})
+    unit: makeUnaryUniversalFunction('unit', function(x: number) {return x / Math.abs(x)}),
+    Math: {
+      cosh: cosh,
+      sinh: sinh
+    }
 };
 
 export = core;

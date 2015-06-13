@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.4.0</em>
+            <em>API Docs for: 1.5.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -1049,6 +1049,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
         };
+        Euclidean3.prototype.cos = function () {
+            throw new Euclidean3Error(&#x27;cos&#x27;);
+        };
+        Euclidean3.prototype.cosh = function () {
+            throw new Euclidean3Error(&#x27;cosh&#x27;);
+        };
         Euclidean3.prototype.exp = function () {
             throw new Euclidean3Error(&#x27;exp&#x27;);
         };
@@ -1063,6 +1069,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
          */
         Euclidean3.prototype.quad = function () {
             return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
+        };
+        Euclidean3.prototype.sin = function () {
+            throw new Euclidean3Error(&#x27;sin&#x27;);
+        };
+        Euclidean3.prototype.sinh = function () {
+            throw new Euclidean3Error(&#x27;sinh&#x27;);
         };
         Euclidean3.prototype.unit = function () {
             throw new Euclidean3Error(&#x27;unit&#x27;);

@@ -50,6 +50,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.2.0: 2015-06-11 Measure, Quantity, Unit combined.
 * 1.3.0: 2015-06-11 Measure interface.
 * 1.4.0: 2015-06-13 Universal functions.
+* 1.5.0: 2015-06-13 Complex trigonometric and hyperbolic functions.
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

@@ -20,9 +20,13 @@ declare class Euclidean1 implements Measure<Euclidean1> {
     wedge(rhs: Euclidean1): Euclidean1;
     lshift(rhs: Euclidean1): Euclidean1;
     rshift(rhs: Euclidean1): Euclidean1;
+    cos(): Euclidean1;
+    cosh(): Euclidean1;
     exp(): Euclidean1;
     norm(): Euclidean1;
     quad(): Euclidean1;
+    sin(): Euclidean1;
+    sinh(): Euclidean1;
     unit(): Euclidean1;
     toExponential(): string;
     toFixed(digits?: number): string;

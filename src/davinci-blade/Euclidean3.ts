@@ -1018,6 +1018,14 @@ class Euclidean3 implements Measure<Euclidean3> {
       return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
     }
 
+    cos(): Euclidean3 {
+      throw new Euclidean3Error('cos');
+    }
+
+    cosh(): Euclidean3 {
+      throw new Euclidean3Error('cosh');
+    }
+
     exp(): Euclidean3 {
       throw new Euclidean3Error('exp');
     }
@@ -1031,6 +1039,14 @@ class Euclidean3 implements Measure<Euclidean3> {
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
     quad(): Euclidean3 {return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));}
+
+    sin(): Euclidean3 {
+      throw new Euclidean3Error('sin');
+    }
+
+    sinh(): Euclidean3 {
+      throw new Euclidean3Error('sinh');
+    }
 
     unit(): Euclidean3 {
       throw new Euclidean3Error('unit');

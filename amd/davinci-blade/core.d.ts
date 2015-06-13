@@ -8,5 +8,9 @@ declare var core: {
     sin: <T>(x: T) => T;
     sinh: <T>(x: T) => T;
     unit: <T>(x: T) => T;
+    Math: {
+        cosh: (x: number) => number;
+        sinh: (x: number) => number;
+    };
 };
 export = core;

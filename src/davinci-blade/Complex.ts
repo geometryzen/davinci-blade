@@ -1,5 +1,12 @@
 import Measure = require('davinci-blade/Measure');
 import Unit = require('davinci-blade/Unit');
+import core = require('davinci-blade/core');
+
+var cos  = Math.cos;
+var cosh = core.Math.cosh;
+var exp  = Math.exp;
+var sin  = Math.sin;
+var sinh = core.Math.sinh;
 
 function ComplexError(message: string) {
   this.name = 'ComplexError';
@@ -203,31 +210,64 @@ class Complex implements Measure<Complex> {
       throw new ComplexError('rshift');
     }
 
-    /**
-     * Computes the exponential of this complex number.
-     */
+    cos(): Complex {
+      Unit.assertDimensionless(this.uom);
+      var x = this.x;
+      var y = this.y;
+      return new Complex(cos(x) * cosh(y), - sin(x) * sinh(y));
+    }
+
+    cosh(): Complex {
+      Unit.assertDimensionless(this.uom);
+      var x = this.x;
+      var y = this.y;
+      return new Complex(cosh(x) * cos(y), sinh(x) * sin(y));
+    }
+
     exp(): Complex {
       Unit.assertDimensionless(this.uom);
-      var expX = Math.exp(this.x);
-      var x = expX * Math.cos(this.y);
-      var y = expX * Math.sin(this.y);
-      return new Complex(x, y);
+      var x = this.x;
+      var y = this.y;
+      var expX = Math.exp(x);
+      return new Complex(expX * cos(y), expX * sin(y));
     }
 
     norm(): Complex {
-      return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
+      var x = this.x;
+      var y = this.y;
+      return new Complex(Math.sqrt(x * x + y * y), 0, this.uom);
     }
 
     quad(): Complex {
-      return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
+      var x = this.x;
+      var y = this.y;
+      return new Complex(x * x + y * y, 0, Unit.mul(this.uom, this.uom));
+    }
+
+    sin(): Complex {
+      Unit.assertDimensionless(this.uom);
+      var x = this.x;
+      var y = this.y;
+      return new Complex(sin(x) * cosh(y), cos(x) * sinh(y));
+    }
+
+    sinh(): Complex {
+      Unit.assertDimensionless(this.uom);
+      var x = this.x;
+      var y = this.y;
+      return new Complex(sinh(x) * cos(y), cosh(x) * sin(y));
     }
 
     unit(): Complex {
-      var divisor = norm(this.x, this.y);
-      return new Complex(this.x / divisor, this.y / divisor);
+      var x = this.x;
+      var y = this.y;
+      var divisor = norm(x, y);
+      return new Complex(x / divisor, y / divisor);
     }
 
-    arg(): number { return Math.atan2(this.y, this.x); }
+    arg(): number {
+      return Math.atan2(this.y, this.x);
+    }
 
     toStringCustom(coordToString: (x: number) => string): string {
       var quantityString = "Complex(" + coordToString(this.x) + ", " + coordToString(this.y) + ")";

@@ -962,6 +962,12 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
         };
+        Euclidean3.prototype.cos = function () {
+            throw new Euclidean3Error('cos');
+        };
+        Euclidean3.prototype.cosh = function () {
+            throw new Euclidean3Error('cosh');
+        };
         Euclidean3.prototype.exp = function () {
             throw new Euclidean3Error('exp');
         };
@@ -976,6 +982,12 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
          */
         Euclidean3.prototype.quad = function () {
             return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
+        };
+        Euclidean3.prototype.sin = function () {
+            throw new Euclidean3Error('sin');
+        };
+        Euclidean3.prototype.sinh = function () {
+            throw new Euclidean3Error('sinh');
         };
         Euclidean3.prototype.unit = function () {
             throw new Euclidean3Error('unit');
