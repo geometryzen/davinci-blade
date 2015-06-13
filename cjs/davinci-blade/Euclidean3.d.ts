@@ -102,6 +102,7 @@ declare class Euclidean3 implements Measure<Euclidean3> {
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
     quad(): Euclidean3;
+    unit(): Euclidean3;
     sqrt(): Euclidean3;
     toStringCustom(coordToString: (x: number) => string, labels: string[]): string;
     toExponential(): string;

@@ -13,6 +13,16 @@ import Color = require('davinci-blade/Color');
  */
 declare var blade: {
     'VERSION': string;
+    universals: {
+        cos: <T>(x: T) => T;
+        cosh: <T>(x: T) => T;
+        exp: <T>(x: T) => T;
+        norm: <T>(x: T) => T;
+        quad: <T>(x: T) => T;
+        sin: <T>(x: T) => T;
+        sinh: <T>(x: T) => T;
+        unit: <T>(x: T) => T;
+    };
     Color: typeof Color;
     Complex: typeof Complex;
     Euclidean1: typeof Euclidean1;

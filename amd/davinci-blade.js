@@ -36,6 +36,16 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 
      */
     var blade = {
         'VERSION': core.VERSION,
+        universals: {
+            cos: core.cos,
+            cosh: core.cosh,
+            exp: core.exp,
+            norm: core.norm,
+            quad: core.quad,
+            sin: core.sin,
+            sinh: core.sinh,
+            unit: core.unit
+        },
         Color: Color,
         Complex: Complex,
         Euclidean1: Euclidean1,

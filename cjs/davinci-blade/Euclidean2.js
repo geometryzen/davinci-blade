@@ -754,13 +754,20 @@ var Euclidean2 = (function () {
         }
     };
     Euclidean2.prototype.exp = function () {
-        throw new Euclidean2Error('exp');
+        Unit.assertDimensionless(this.uom);
+        var expW = Math.exp(this.w);
+        var cosXY = Math.cos(this.xy);
+        var sinXY = Math.sin(this.xy);
+        return new Euclidean2(expW * cosXY, 0, 0, expW * sinXY, this.uom);
     };
     Euclidean2.prototype.norm = function () {
         return new Euclidean2(Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy), 0, 0, 0, this.uom);
     };
     Euclidean2.prototype.quad = function () {
         return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0, Unit.mul(this.uom, this.uom));
+    };
+    Euclidean2.prototype.unit = function () {
+        throw new Euclidean2Error('unit');
     };
     Euclidean2.prototype.isNaN = function () {
         return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);

@@ -36,6 +36,9 @@ function divide(a, b) {
     var y = (a.y * b.x - a.x * b.y) / q;
     return new Complex(x, y, Unit.div(a.uom, b.uom));
 }
+function norm(x, y) {
+    return Math.sqrt(x * x + y * y);
+}
 var Complex = (function () {
     /**
      * Constructs a complex number z = (x, y).
@@ -141,7 +144,7 @@ var Complex = (function () {
             return divide(other, this);
         }
         else if (typeof other === 'number') {
-            return divide(new Complex(other, 0, undefined), this);
+            return divide(new Complex(other, 0), this);
         }
     };
     Complex.prototype.wedge = function (rhs) {
@@ -153,32 +156,58 @@ var Complex = (function () {
     Complex.prototype.rshift = function (rhs) {
         throw new ComplexError('rshift');
     };
+    /**
+     * Computes the exponential of this complex number.
+     */
+    Complex.prototype.exp = function () {
+        Unit.assertDimensionless(this.uom);
+        var expX = Math.exp(this.x);
+        var x = expX * Math.cos(this.y);
+        var y = expX * Math.sin(this.y);
+        return new Complex(x, y);
+    };
     Complex.prototype.norm = function () {
         return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
     };
     Complex.prototype.quad = function () {
         return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
     };
+    Complex.prototype.unit = function () {
+        var divisor = norm(this.x, this.y);
+        return new Complex(this.x / divisor, this.y / divisor);
+    };
     Complex.prototype.arg = function () {
         return Math.atan2(this.y, this.x);
     };
-    /**
-     * Computes the exponential of this complex number.
-     */
-    Complex.prototype.exp = function () {
-        var expX = Math.exp(this.x);
-        var x = expX * Math.cos(this.y);
-        var y = expX * Math.sin(this.y);
-        return new Complex(x, y, this.uom);
+    Complex.prototype.toStringCustom = function (coordToString) {
+        var quantityString = "Complex(" + coordToString(this.x) + ", " + coordToString(this.y) + ")";
+        if (this.uom) {
+            var uomString = this.uom.toString().trim();
+            if (uomString) {
+                return quantityString + ' ' + uomString;
+            }
+            else {
+                return quantityString;
+            }
+        }
+        else {
+            return quantityString;
+        }
     };
     Complex.prototype.toExponential = function () {
-        return "Complex(" + this.x.toExponential() + ", " + this.y.toExponential() + ")";
+        return this.toStringCustom(function (coord) {
+            return coord.toExponential();
+        });
     };
     Complex.prototype.toFixed = function (digits) {
-        return "Complex(" + this.x.toFixed(digits) + ", " + this.y.toFixed(digits) + ")";
+        return this.toStringCustom(function (coord) {
+            return coord.toFixed(digits);
+        });
     };
     Complex.prototype.toString = function () {
-        return "Complex(" + this.x + ", " + this.y + ")";
+        return this.toStringCustom(function (coord) {
+            return coord.toString();
+        });
     };
     return Complex;
 })();

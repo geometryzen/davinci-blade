@@ -1032,6 +1032,10 @@ class Euclidean3 implements Measure<Euclidean3> {
      */
     quad(): Euclidean3 {return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));}
 
+    unit(): Euclidean3 {
+      throw new Euclidean3Error('unit');
+    }
+
     sqrt() {return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));}
 
     toStringCustom(

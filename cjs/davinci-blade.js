@@ -49,6 +49,16 @@ var UNIT_PASCAL = UNIT_NEWTON.div(UNIT_METER.mul(UNIT_METER));
  */
 var blade = {
     'VERSION': core.VERSION,
+    universals: {
+        cos: core.cos,
+        cosh: core.cosh,
+        exp: core.exp,
+        norm: core.norm,
+        quad: core.quad,
+        sin: core.sin,
+        sinh: core.sinh,
+        unit: core.unit
+    },
     Color: Color,
     Complex: Complex,
     Euclidean1: Euclidean1,

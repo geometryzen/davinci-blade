@@ -392,6 +392,12 @@ class Unit {
       }
     }
 
+    static assertDimensionless(uom: Unit) {
+      if (!Unit.isUnity(uom)) {
+        throw new UnitError("uom must be dimensionless.");
+      }
+    }
+
     static compatible(lhs: Unit, rhs: Unit): Unit {
       if (lhs instanceof Unit) {
         if (rhs instanceof Unit) {

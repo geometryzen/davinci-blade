@@ -34,8 +34,7 @@ function assertArgUnitOrUndefined(name: string, uom: Unit): Unit {
   }
 }
 
-function divide(a: Complex, b: Complex): Complex
-{
+function divide(a: Complex, b: Complex): Complex {
   assertArgComplex('a', a);
   assertArgComplex('b', b);
   var q = b.x * b.x + b.y * b.y;
@@ -44,8 +43,11 @@ function divide(a: Complex, b: Complex): Complex
   return new Complex(x, y, Unit.div(a.uom, b.uom));
 }
 
-class Complex implements Measure<Complex>
-{
+function norm(x: number, y: number): number {
+  return Math.sqrt(x * x + y * y);
+}
+
+class Complex implements Measure<Complex> {
     /**
      * The real part of the complex number.
      */
@@ -63,7 +65,7 @@ class Complex implements Measure<Complex>
      * @param x The real part of the complex number.
      * @param y The imaginary part of the complex number.
      */
-    constructor(x: number, y: number, uom: Unit) {
+    constructor(x: number, y: number, uom?: Unit) {
       this.x = assertArgNumber('x', x);
       this.y = assertArgNumber('y', y);
       this.uom = assertArgUnitOrUndefined('uom', uom);
@@ -182,7 +184,7 @@ class Complex implements Measure<Complex>
         return divide(other, this);
       }
       else if (typeof other === 'number') {
-        return divide(new Complex(other, 0, undefined), this);
+        return divide(new Complex(other, 0), this);
       }
     }
 
@@ -201,6 +203,17 @@ class Complex implements Measure<Complex>
       throw new ComplexError('rshift');
     }
 
+    /**
+     * Computes the exponential of this complex number.
+     */
+    exp(): Complex {
+      Unit.assertDimensionless(this.uom);
+      var expX = Math.exp(this.x);
+      var x = expX * Math.cos(this.y);
+      var y = expX * Math.sin(this.y);
+      return new Complex(x, y);
+    }
+
     norm(): Complex {
       return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
     }
@@ -209,28 +222,39 @@ class Complex implements Measure<Complex>
       return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
     }
 
+    unit(): Complex {
+      var divisor = norm(this.x, this.y);
+      return new Complex(this.x / divisor, this.y / divisor);
+    }
+
     arg(): number { return Math.atan2(this.y, this.x); }
 
-    /**
-     * Computes the exponential of this complex number.
-     */
-    exp(): Complex {
-      var expX = Math.exp(this.x);
-      var x = expX * Math.cos(this.y);
-      var y = expX * Math.sin(this.y);
-      return new Complex(x, y, this.uom);
+    toStringCustom(coordToString: (x: number) => string): string {
+      var quantityString = "Complex(" + coordToString(this.x) + ", " + coordToString(this.y) + ")";
+      if (this.uom) {
+        var uomString = this.uom.toString().trim();
+        if (uomString) {
+          return quantityString + ' ' + uomString;
+        }
+        else {
+          return quantityString;
+        }
+      }
+      else {
+        return quantityString;
+      }
     }
 
     toExponential(): string {
-      return "Complex(" + this.x.toExponential() + ", " + this.y.toExponential() + ")";
+      return this.toStringCustom(function(coord: number) { return coord.toExponential();});
     }
 
     toFixed(digits?: number): string {
-      return "Complex(" + this.x.toFixed(digits) + ", " + this.y.toFixed(digits) + ")";
+      return this.toStringCustom(function(coord: number) { return coord.toFixed(digits);});
     }
 
     toString(): string {
-      return "Complex(" + this.x + ", " + this.y + ")";
+      return this.toStringCustom(function(coord: number) { return coord.toString();});
     }
 }
 

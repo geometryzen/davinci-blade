@@ -100,6 +100,10 @@ class Euclidean1 implements Measure<Euclidean1> {
     return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
   }
 
+  unit(): Euclidean1 {
+    throw new Euclidean1Error('unit');
+  }
+
   toExponential(): string {
     return "Euclidean1";
   }

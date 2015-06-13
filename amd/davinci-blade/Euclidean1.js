@@ -78,6 +78,9 @@ define(["require", "exports", 'davinci-blade/Unit'], function (require, exports,
         Euclidean1.prototype.quad = function () {
             return new Euclidean1(this.w * this.w + this.x * this.x, 0, Unit.mul(this.uom, this.uom));
         };
+        Euclidean1.prototype.unit = function () {
+            throw new Euclidean1Error('unit');
+        };
         Euclidean1.prototype.toExponential = function () {
             return "Euclidean1";
         };

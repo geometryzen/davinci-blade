@@ -33,6 +33,7 @@ declare class Unit {
     quad(): Unit;
     toString(): string;
     static isUnity(uom: Unit): boolean;
+    static assertDimensionless(uom: Unit): void;
     static compatible(lhs: Unit, rhs: Unit): Unit;
     static mul(lhs: Unit, rhs: Unit): Unit;
     static div(lhs: Unit, rhs: Unit): Unit;

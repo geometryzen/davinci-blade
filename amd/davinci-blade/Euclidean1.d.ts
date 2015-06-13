@@ -23,6 +23,7 @@ declare class Euclidean1 implements Measure<Euclidean1> {
     exp(): Euclidean1;
     norm(): Euclidean1;
     quad(): Euclidean1;
+    unit(): Euclidean1;
     toExponential(): string;
     toFixed(digits?: number): string;
     toString(): string;

@@ -805,7 +805,11 @@ class Euclidean2 implements Measure<Euclidean2> {
   }
 
   exp(): Euclidean2 {
-    throw new Euclidean2Error('exp');
+    Unit.assertDimensionless(this.uom);
+    var expW = Math.exp(this.w);
+    var cosXY = Math.cos(this.xy);
+    var sinXY = Math.sin(this.xy);
+    return new Euclidean2(expW * cosXY, 0, 0, expW * sinXY, this.uom);
   }
 
   norm(): Euclidean2 {
@@ -814,6 +818,10 @@ class Euclidean2 implements Measure<Euclidean2> {
 
   quad(): Euclidean2 {
     return new Euclidean2(this.w * this.w + this.x * this.x + this.y * this.y + this.xy * this.xy, 0, 0, 0, Unit.mul(this.uom, this.uom));
+  }
+
+  unit(): Euclidean2 {
+    throw new Euclidean2Error('unit');
   }
 
   isNaN(): boolean {return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);}

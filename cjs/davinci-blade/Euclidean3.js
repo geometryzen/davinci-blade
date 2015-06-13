@@ -977,6 +977,9 @@ var Euclidean3 = (function () {
     Euclidean3.prototype.quad = function () {
         return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
     };
+    Euclidean3.prototype.unit = function () {
+        throw new Euclidean3Error('unit');
+    };
     Euclidean3.prototype.sqrt = function () {
         return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));
     };

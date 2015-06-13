@@ -10,6 +10,7 @@ interface Measure<T> {
   exp(): T;
   norm(): T;
   quad(): T;
+  unit(): T;
   toExponential(): string;
   toFixed(digits?: number): string;
   toString(): string;

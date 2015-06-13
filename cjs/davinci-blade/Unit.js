@@ -311,6 +311,11 @@ var Unit = (function () {
             throw new Error("isUnity argument must be a Unit or undefined.");
         }
     };
+    Unit.assertDimensionless = function (uom) {
+        if (!Unit.isUnity(uom)) {
+            throw new UnitError("uom must be dimensionless.");
+        }
+    };
     Unit.compatible = function (lhs, rhs) {
         if (lhs instanceof Unit) {
             if (rhs instanceof Unit) {

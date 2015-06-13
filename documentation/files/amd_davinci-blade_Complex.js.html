@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.3.0</em>
+            <em>API Docs for: 1.4.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -122,6 +122,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         var x = (a.x * b.x + a.y * b.y) / q;
         var y = (a.y * b.x - a.x * b.y) / q;
         return new Complex(x, y, Unit.div(a.uom, b.uom));
+    }
+    function norm(x, y) {
+        return Math.sqrt(x * x + y * y);
     }
     var Complex = (function () {
         /**
@@ -228,7 +231,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
                 return divide(other, this);
             }
             else if (typeof other === &#x27;number&#x27;) {
-                return divide(new Complex(other, 0, undefined), this);
+                return divide(new Complex(other, 0), this);
             }
         };
         Complex.prototype.wedge = function (rhs) {
@@ -240,32 +243,58 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         Complex.prototype.rshift = function (rhs) {
             throw new ComplexError(&#x27;rshift&#x27;);
         };
+        /**
+         * Computes the exponential of this complex number.
+         */
+        Complex.prototype.exp = function () {
+            Unit.assertDimensionless(this.uom);
+            var expX = Math.exp(this.x);
+            var x = expX * Math.cos(this.y);
+            var y = expX * Math.sin(this.y);
+            return new Complex(x, y);
+        };
         Complex.prototype.norm = function () {
             return new Complex(Math.sqrt(this.x * this.x + this.y * this.y), 0, this.uom);
         };
         Complex.prototype.quad = function () {
             return new Complex(this.x * this.x + this.y * this.y, 0, Unit.mul(this.uom, this.uom));
         };
+        Complex.prototype.unit = function () {
+            var divisor = norm(this.x, this.y);
+            return new Complex(this.x / divisor, this.y / divisor);
+        };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);
         };
-        /**
-         * Computes the exponential of this complex number.
-         */
-        Complex.prototype.exp = function () {
-            var expX = Math.exp(this.x);
-            var x = expX * Math.cos(this.y);
-            var y = expX * Math.sin(this.y);
-            return new Complex(x, y, this.uom);
+        Complex.prototype.toStringCustom = function (coordToString) {
+            var quantityString = &quot;Complex(&quot; + coordToString(this.x) + &quot;, &quot; + coordToString(this.y) + &quot;)&quot;;
+            if (this.uom) {
+                var uomString = this.uom.toString().trim();
+                if (uomString) {
+                    return quantityString + &#x27; &#x27; + uomString;
+                }
+                else {
+                    return quantityString;
+                }
+            }
+            else {
+                return quantityString;
+            }
         };
         Complex.prototype.toExponential = function () {
-            return &quot;Complex(&quot; + this.x.toExponential() + &quot;, &quot; + this.y.toExponential() + &quot;)&quot;;
+            return this.toStringCustom(function (coord) {
+                return coord.toExponential();
+            });
         };
         Complex.prototype.toFixed = function (digits) {
-            return &quot;Complex(&quot; + this.x.toFixed(digits) + &quot;, &quot; + this.y.toFixed(digits) + &quot;)&quot;;
+            return this.toStringCustom(function (coord) {
+                return coord.toFixed(digits);
+            });
         };
         Complex.prototype.toString = function () {
-            return &quot;Complex(&quot; + this.x + &quot;, &quot; + this.y + &quot;)&quot;;
+            return this.toStringCustom(function (coord) {
+                return coord.toString();
+            });
         };
         return Complex;
     })();

@@ -64,6 +64,7 @@ declare class Euclidean2 implements Measure<Euclidean2> {
     exp(): Euclidean2;
     norm(): Euclidean2;
     quad(): Euclidean2;
+    unit(): Euclidean2;
     isNaN(): boolean;
     toStringCustom(coordToString: (x: number) => string, labels: string[]): string;
     toExponential(): string;

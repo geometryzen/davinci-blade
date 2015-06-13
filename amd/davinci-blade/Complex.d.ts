@@ -18,7 +18,7 @@ declare class Complex implements Measure<Complex> {
      * @param x The real part of the complex number.
      * @param y The imaginary part of the complex number.
      */
-    constructor(x: number, y: number, uom: Unit);
+    constructor(x: number, y: number, uom?: Unit);
     coordinates(): number[];
     add(rhs: Complex): Complex;
     /**
@@ -39,13 +39,15 @@ declare class Complex implements Measure<Complex> {
     wedge(rhs: Complex): Complex;
     lshift(rhs: Complex): Complex;
     rshift(rhs: Complex): Complex;
-    norm(): Complex;
-    quad(): Complex;
-    arg(): number;
     /**
      * Computes the exponential of this complex number.
      */
     exp(): Complex;
+    norm(): Complex;
+    quad(): Complex;
+    unit(): Complex;
+    arg(): number;
+    toStringCustom(coordToString: (x: number) => string): string;
     toExponential(): string;
     toFixed(digits?: number): string;
     toString(): string;
