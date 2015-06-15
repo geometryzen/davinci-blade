@@ -315,7 +315,7 @@
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 48,
+            "line": 55,
             "description": "Constructs a complex number z = (x, y).",
             "params": [
                 {
@@ -331,13 +331,13 @@
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 71,
+            "line": 78,
             "description": "__add__ supports operator +(Complex, any)",
             "class": "Dimensions"
         },
         {
             "file": "amd/davinci-blade/Complex.js",
-            "line": 82,
+            "line": 89,
             "description": "__radd__ supports operator +(any, Complex)",
             "class": "Dimensions"
         },
@@ -364,7 +364,7 @@
         },
         {
             "file": "amd/davinci-blade/Euclidean2.js",
-            "line": 737,
+            "line": 740,
             "description": "~ (tilde) produces reversion.",
             "class": "Euclidean2"
         },
@@ -428,19 +428,19 @@
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 924,
+            "line": 927,
             "description": "~ (tilde) produces reversion.",
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 974,
+            "line": 977,
             "description": "Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.",
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 980,
+            "line": 983,
             "description": "Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.",
             "class": "Euclidean3"
         },
@@ -458,19 +458,19 @@
         },
         {
             "message": "Missing item type\nConstructs a complex number z = (x, y).",
-            "line": " amd/davinci-blade/Complex.js:48"
+            "line": " amd/davinci-blade/Complex.js:55"
         },
         {
             "message": "Missing item type\n__add__ supports operator +(Complex, any)",
-            "line": " amd/davinci-blade/Complex.js:71"
+            "line": " amd/davinci-blade/Complex.js:78"
         },
         {
             "message": "Missing item type\n__radd__ supports operator +(any, Complex)",
-            "line": " amd/davinci-blade/Complex.js:82"
+            "line": " amd/davinci-blade/Complex.js:89"
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
-            "line": " amd/davinci-blade/Euclidean2.js:737"
+            "line": " amd/davinci-blade/Euclidean2.js:740"
         },
         {
             "message": "Missing item type",
@@ -482,15 +482,15 @@
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
-            "line": " amd/davinci-blade/Euclidean3.js:924"
+            "line": " amd/davinci-blade/Euclidean3.js:927"
         },
         {
             "message": "Missing item type\nComputes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.",
-            "line": " amd/davinci-blade/Euclidean3.js:974"
+            "line": " amd/davinci-blade/Euclidean3.js:977"
         },
         {
             "message": "Missing item type\nComputes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.",
-            "line": " amd/davinci-blade/Euclidean3.js:980"
+            "line": " amd/davinci-blade/Euclidean3.js:983"
         },
         {
             "message": "Missing item type\nDetermines whether a property name is callable on an object.",

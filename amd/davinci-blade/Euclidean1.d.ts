@@ -17,9 +17,12 @@ declare class Euclidean1 implements Measure<Euclidean1> {
     coordinates(): number[];
     add(rhs: Euclidean1): Euclidean1;
     sub(rhs: Euclidean1): Euclidean1;
+    mul(rhs: Euclidean1): Euclidean1;
+    div(rhs: Euclidean1): Euclidean1;
     wedge(rhs: Euclidean1): Euclidean1;
     lshift(rhs: Euclidean1): Euclidean1;
     rshift(rhs: Euclidean1): Euclidean1;
+    pow(exponent: Euclidean1): Euclidean1;
     cos(): Euclidean1;
     cosh(): Euclidean1;
     exp(): Euclidean1;
@@ -28,6 +31,7 @@ declare class Euclidean1 implements Measure<Euclidean1> {
     sin(): Euclidean1;
     sinh(): Euclidean1;
     unit(): Euclidean1;
+    scalar(): number;
     toExponential(): string;
     toFixed(digits?: number): string;
     toString(): string;

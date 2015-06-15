@@ -54,6 +54,7 @@ declare class Euclidean2 implements Measure<Euclidean2> {
     __rrshift__(other: any): Euclidean2;
     __vbar__(other: any): Euclidean2;
     __rvbar__(other: any): Euclidean2;
+    pow(exponent: Euclidean2): Euclidean2;
     __pos__(): Euclidean2;
     __neg__(): Euclidean2;
     /**
@@ -69,6 +70,7 @@ declare class Euclidean2 implements Measure<Euclidean2> {
     sin(): Euclidean2;
     sinh(): Euclidean2;
     unit(): Euclidean2;
+    scalar(): number;
     isNaN(): boolean;
     toStringCustom(coordToString: (x: number) => string, labels: string[]): string;
     toExponential(): string;

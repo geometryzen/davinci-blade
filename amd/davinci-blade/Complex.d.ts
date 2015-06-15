@@ -32,13 +32,16 @@ declare class Complex implements Measure<Complex> {
     sub(rhs: Complex): Complex;
     __sub__(other: any): Complex;
     __rsub__(other: any): Complex;
+    mul(rhs: Complex): Complex;
     __mul__(other: any): Complex;
     __rmul__(other: any): Complex;
+    div(rhs: Complex): Complex;
     __div__(other: any): Complex;
     __rdiv__(other: any): Complex;
     wedge(rhs: Complex): Complex;
     lshift(rhs: Complex): Complex;
     rshift(rhs: Complex): Complex;
+    pow(exponent: Complex): Complex;
     cos(): Complex;
     cosh(): Complex;
     exp(): Complex;
@@ -47,6 +50,7 @@ declare class Complex implements Measure<Complex> {
     sin(): Complex;
     sinh(): Complex;
     unit(): Complex;
+    scalar(): number;
     arg(): number;
     toStringCustom(coordToString: (x: number) => string): string;
     toExponential(): string;

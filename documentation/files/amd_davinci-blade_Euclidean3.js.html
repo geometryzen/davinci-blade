@@ -1002,6 +1002,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
                 return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
             }
         };
+        Euclidean3.prototype.pow = function (exponent) {
+            throw new Euclidean3Error(&#x27;pow&#x27;);
+        };
         Euclidean3.prototype.__pos__ = function () {
             return this;
         };
@@ -1078,6 +1081,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
         };
         Euclidean3.prototype.unit = function () {
             throw new Euclidean3Error(&#x27;unit&#x27;);
+        };
+        Euclidean3.prototype.scalar = function () {
+            return this.w;
         };
         Euclidean3.prototype.sqrt = function () {
             return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));

@@ -915,6 +915,9 @@ var Euclidean3 = (function () {
             return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
         }
     };
+    Euclidean3.prototype.pow = function (exponent) {
+        throw new Euclidean3Error('pow');
+    };
     Euclidean3.prototype.__pos__ = function () {
         return this;
     };
@@ -991,6 +994,9 @@ var Euclidean3 = (function () {
     };
     Euclidean3.prototype.unit = function () {
         throw new Euclidean3Error('unit');
+    };
+    Euclidean3.prototype.scalar = function () {
+        return this.w;
     };
     Euclidean3.prototype.sqrt = function () {
         return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));

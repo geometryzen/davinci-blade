@@ -356,28 +356,32 @@ class Unit {
       }
     }
 
-    pow(q: Rational): Unit
+    pow(exponent: Rational): Unit
     {
-      assertArgRational('q', q);
-      return new Unit(Math.pow(this.scale, q.numer/q.denom), this.dimensions.pow(q), this.labels);
+      assertArgRational('exponent', exponent);
+      return new Unit(Math.pow(this.scale, exponent.numer/exponent.denom), this.dimensions.pow(exponent), this.labels);
     }
 
     inverse(): Unit
     {
-        return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
+      return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
     }
 
+    isUnity(): boolean {
+      return this.dimensions.dimensionless() && (this.scale === 1);
+    } 
+
     norm(): Unit {
-        return new Unit(Math.abs(this.scale), this.dimensions, this.labels);
+      return new Unit(Math.abs(this.scale), this.dimensions, this.labels);
     }
 
     quad(): Unit {
-        return new Unit(this.scale * this.scale, this.dimensions.mul(this.dimensions), this.labels);
+      return new Unit(this.scale * this.scale, this.dimensions.mul(this.dimensions), this.labels);
     }
 
     toString(): string
     {
-        return unitString(this.scale, this.dimensions, this.labels);
+      return unitString(this.scale, this.dimensions, this.labels);
     }
 
     static isUnity(uom: Unit): boolean {
@@ -385,7 +389,7 @@ class Unit {
         return true;
       }
       else if (uom instanceof Unit) {
-        return uom.dimensions.dimensionless();
+        return uom.isUnity();
       }
       else {
         throw new Error("isUnity argument must be a Unit or undefined.");

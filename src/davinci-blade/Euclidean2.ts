@@ -775,6 +775,11 @@ class Euclidean2 implements Measure<Euclidean2> {
     }
   }
 
+  pow(exponent: Euclidean2): Euclidean2 {
+    // assertArgEuclidean2('exponent', exponent);
+    throw new Euclidean2Error('pow');
+  }
+
   __pos__(): Euclidean2 {
     return this;
   }
@@ -838,6 +843,10 @@ class Euclidean2 implements Measure<Euclidean2> {
 
   unit(): Euclidean2 {
     throw new Euclidean2Error('unit');
+  }
+
+  scalar(): number {
+    return this.w;
   }
 
   isNaN(): boolean {return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);}

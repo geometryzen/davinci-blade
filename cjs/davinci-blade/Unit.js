@@ -284,12 +284,15 @@ var Unit = (function () {
             return;
         }
     };
-    Unit.prototype.pow = function (q) {
-        assertArgRational('q', q);
-        return new Unit(Math.pow(this.scale, q.numer / q.denom), this.dimensions.pow(q), this.labels);
+    Unit.prototype.pow = function (exponent) {
+        assertArgRational('exponent', exponent);
+        return new Unit(Math.pow(this.scale, exponent.numer / exponent.denom), this.dimensions.pow(exponent), this.labels);
     };
     Unit.prototype.inverse = function () {
         return new Unit(1 / this.scale, this.dimensions.negative(), this.labels);
+    };
+    Unit.prototype.isUnity = function () {
+        return this.dimensions.dimensionless() && (this.scale === 1);
     };
     Unit.prototype.norm = function () {
         return new Unit(Math.abs(this.scale), this.dimensions, this.labels);
@@ -305,7 +308,7 @@ var Unit = (function () {
             return true;
         }
         else if (uom instanceof Unit) {
-            return uom.dimensions.dimensionless();
+            return uom.isUnity();
         }
         else {
             throw new Error("isUnity argument must be a Unit or undefined.");

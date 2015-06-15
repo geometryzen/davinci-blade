@@ -963,6 +963,11 @@ class Euclidean3 implements Measure<Euclidean3> {
       }
     }
 
+    pow(exponent: Euclidean3): Euclidean3 {
+      // assertArgEuclidean3('exponent', exponent);
+      throw new Euclidean3Error('pow');
+    }
+
     __pos__(): Euclidean3 {
       return this;
     }
@@ -1050,6 +1055,10 @@ class Euclidean3 implements Measure<Euclidean3> {
 
     unit(): Euclidean3 {
       throw new Euclidean3Error('unit');
+    }
+
+    scalar(): number {
+      return this.w;
     }
 
     sqrt() {return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));}

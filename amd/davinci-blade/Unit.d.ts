@@ -27,8 +27,9 @@ declare class Unit {
     div(rhs: Unit): Unit;
     __div__(other: any): Unit;
     __rdiv__(other: any): Unit;
-    pow(q: Rational): Unit;
+    pow(exponent: Rational): Unit;
     inverse(): Unit;
+    isUnity(): boolean;
     norm(): Unit;
     quad(): Unit;
     toString(): string;

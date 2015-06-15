@@ -60,6 +60,12 @@ var Euclidean1 = (function () {
         assertArgEuclidean1('rhs', rhs);
         return new Euclidean1(this.w - rhs.w, this.x - rhs.x, Unit.compatible(this.uom, rhs.uom));
     };
+    Euclidean1.prototype.mul = function (rhs) {
+        throw new Euclidean1Error('mul');
+    };
+    Euclidean1.prototype.div = function (rhs) {
+        throw new Euclidean1Error('div');
+    };
     Euclidean1.prototype.wedge = function (rhs) {
         throw new Euclidean1Error('wedge');
     };
@@ -68,6 +74,9 @@ var Euclidean1 = (function () {
     };
     Euclidean1.prototype.rshift = function (rhs) {
         throw new Euclidean1Error('rshift');
+    };
+    Euclidean1.prototype.pow = function (exponent) {
+        throw new Euclidean1Error('pow');
     };
     Euclidean1.prototype.cos = function () {
         throw new Euclidean1Error('cos');
@@ -92,6 +101,9 @@ var Euclidean1 = (function () {
     };
     Euclidean1.prototype.unit = function () {
         throw new Euclidean1Error('unit');
+    };
+    Euclidean1.prototype.scalar = function () {
+        return this.w;
     };
     Euclidean1.prototype.toExponential = function () {
         return "Euclidean1";

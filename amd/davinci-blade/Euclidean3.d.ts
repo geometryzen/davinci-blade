@@ -83,6 +83,7 @@ declare class Euclidean3 implements Measure<Euclidean3> {
     rshift(rhs: Euclidean3): Euclidean3;
     __rshift__(other: any): Euclidean3;
     __rrshift__(other: any): Euclidean3;
+    pow(exponent: Euclidean3): Euclidean3;
     __pos__(): Euclidean3;
     __neg__(): Euclidean3;
     /**
@@ -107,6 +108,7 @@ declare class Euclidean3 implements Measure<Euclidean3> {
     sin(): Euclidean3;
     sinh(): Euclidean3;
     unit(): Euclidean3;
+    scalar(): number;
     sqrt(): Euclidean3;
     toStringCustom(coordToString: (x: number) => string, labels: string[]): string;
     toExponential(): string;

@@ -73,6 +73,16 @@ class Euclidean1 implements Measure<Euclidean1> {
     return new Euclidean1(this.w - rhs.w, this.x - rhs.x, Unit.compatible(this.uom, rhs.uom));
   }
 
+  mul(rhs: Euclidean1): Euclidean1 {
+    // assertArgEuclidean1('rhs', rhs);
+    throw new Euclidean1Error('mul');
+  }
+
+  div(rhs: Euclidean1): Euclidean1 {
+    // assertArgEuclidean1('rhs', rhs);
+    throw new Euclidean1Error('div');
+  }
+
   wedge(rhs: Euclidean1): Euclidean1 {
     // assertArgEuclidean1('rhs', rhs);
     throw new Euclidean1Error('wedge');
@@ -86,6 +96,11 @@ class Euclidean1 implements Measure<Euclidean1> {
   rshift(rhs: Euclidean1): Euclidean1 {
     // assertArgEuclidean1('rhs', rhs);
     throw new Euclidean1Error('rshift');
+  }
+
+  pow(exponent: Euclidean1): Euclidean1 {
+    // assertArgEuclidean1('rhs', rhs);
+    throw new Euclidean1Error('pow');
   }
 
   cos(): Euclidean1 {
@@ -118,6 +133,10 @@ class Euclidean1 implements Measure<Euclidean1> {
 
   unit(): Euclidean1 {
     throw new Euclidean1Error('unit');
+  }
+
+  scalar(): number {
+    return this.w;
   }
 
   toExponential(): string {

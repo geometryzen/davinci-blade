@@ -728,6 +728,9 @@ var Euclidean2 = (function () {
             return new Euclidean2(other, 0, 0, 0, undefined).splat(this);
         }
     };
+    Euclidean2.prototype.pow = function (exponent) {
+        throw new Euclidean2Error('pow');
+    };
     Euclidean2.prototype.__pos__ = function () {
         return this;
     };
@@ -780,6 +783,9 @@ var Euclidean2 = (function () {
     };
     Euclidean2.prototype.unit = function () {
         throw new Euclidean2Error('unit');
+    };
+    Euclidean2.prototype.scalar = function () {
+        return this.w;
     };
     Euclidean2.prototype.isNaN = function () {
         return isNaN(this.w) || isNaN(this.x) || isNaN(this.y) || isNaN(this.xy);

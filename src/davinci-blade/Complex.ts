@@ -41,6 +41,14 @@ function assertArgUnitOrUndefined(name: string, uom: Unit): Unit {
   }
 }
 
+function multiply(a: Complex, b: Complex): Complex {
+  assertArgComplex('a', a);
+  assertArgComplex('b', b);
+  var x = a.x * b.x - a.y * b.y;
+  var y = a.x * b.y + a.y * b.x;
+  return new Complex(x, y, Unit.mul(a.uom, b.uom));
+}
+
 function divide(a: Complex, b: Complex): Complex {
   assertArgComplex('a', a);
   assertArgComplex('b', b);
@@ -155,10 +163,14 @@ class Complex implements Measure<Complex> {
       }
     }
 
+    mul(rhs: Complex): Complex {
+      assertArgComplex('rhs', rhs);
+      return multiply(this, rhs);
+    }
+
     __mul__(other: any): Complex {
       if (other instanceof Complex) {
-        var rhs: Complex = other;
-        return new Complex(this.x * rhs.x - this.y * rhs.y, this.x * rhs.y + this.y * rhs.x, Unit.mul(this.uom, rhs.uom));
+        return multiply(this, other);
       }
       else if (typeof other === 'number') {
         var x: number = other;
@@ -168,13 +180,17 @@ class Complex implements Measure<Complex> {
 
     __rmul__(other: any): Complex {
       if (other instanceof Complex) {
-        var lhs: Complex = other;
-        return new Complex(lhs.x * this.x - lhs.y * this.y, lhs.x * this.y + lhs.y * this.x, Unit.mul(lhs.uom, this.uom));
+        return multiply(other, this);
       }
       else if (typeof other === 'number') {
         var x: number = other;
         return new Complex(x * this.x, x * this.y, this.uom);
       }
+    }
+
+    div(rhs: Complex): Complex {
+      assertArgComplex('rhs', rhs);
+      return divide(this, rhs);
     }
 
     __div__(other: any): Complex {
@@ -208,6 +224,11 @@ class Complex implements Measure<Complex> {
     rshift(rhs: Complex): Complex {
       // assertArgComplex('rhs', rhs);
       throw new ComplexError('rshift');
+    }
+
+    pow(exponent: Complex): Complex {
+      // assertArgComplex('rhs', rhs);
+      throw new ComplexError('pow');
     }
 
     cos(): Complex {
@@ -263,6 +284,10 @@ class Complex implements Measure<Complex> {
       var y = this.y;
       var divisor = norm(x, y);
       return new Complex(x / divisor, y / divisor);
+    }
+
+    scalar(): number {
+      return this.x;
     }
 
     arg(): number {

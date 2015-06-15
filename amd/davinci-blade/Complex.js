@@ -33,6 +33,13 @@ define(["require", "exports", 'davinci-blade/Unit', 'davinci-blade/core'], funct
             throw new ComplexError("Argument '" + uom + "' must be a Unit or undefined");
         }
     }
+    function multiply(a, b) {
+        assertArgComplex('a', a);
+        assertArgComplex('b', b);
+        var x = a.x * b.x - a.y * b.y;
+        var y = a.x * b.y + a.y * b.x;
+        return new Complex(x, y, Unit.mul(a.uom, b.uom));
+    }
     function divide(a, b) {
         assertArgComplex('a', a);
         assertArgComplex('b', b);
@@ -116,10 +123,13 @@ define(["require", "exports", 'davinci-blade/Unit', 'davinci-blade/core'], funct
                 return new Complex(x - this.x, -this.y, Unit.compatible(undefined, this.uom));
             }
         };
+        Complex.prototype.mul = function (rhs) {
+            assertArgComplex('rhs', rhs);
+            return multiply(this, rhs);
+        };
         Complex.prototype.__mul__ = function (other) {
             if (other instanceof Complex) {
-                var rhs = other;
-                return new Complex(this.x * rhs.x - this.y * rhs.y, this.x * rhs.y + this.y * rhs.x, Unit.mul(this.uom, rhs.uom));
+                return multiply(this, other);
             }
             else if (typeof other === 'number') {
                 var x = other;
@@ -128,13 +138,16 @@ define(["require", "exports", 'davinci-blade/Unit', 'davinci-blade/core'], funct
         };
         Complex.prototype.__rmul__ = function (other) {
             if (other instanceof Complex) {
-                var lhs = other;
-                return new Complex(lhs.x * this.x - lhs.y * this.y, lhs.x * this.y + lhs.y * this.x, Unit.mul(lhs.uom, this.uom));
+                return multiply(other, this);
             }
             else if (typeof other === 'number') {
                 var x = other;
                 return new Complex(x * this.x, x * this.y, this.uom);
             }
+        };
+        Complex.prototype.div = function (rhs) {
+            assertArgComplex('rhs', rhs);
+            return divide(this, rhs);
         };
         Complex.prototype.__div__ = function (other) {
             if (other instanceof Complex) {
@@ -160,6 +173,9 @@ define(["require", "exports", 'davinci-blade/Unit', 'davinci-blade/core'], funct
         };
         Complex.prototype.rshift = function (rhs) {
             throw new ComplexError('rshift');
+        };
+        Complex.prototype.pow = function (exponent) {
+            throw new ComplexError('pow');
         };
         Complex.prototype.cos = function () {
             Unit.assertDimensionless(this.uom);
@@ -207,6 +223,9 @@ define(["require", "exports", 'davinci-blade/Unit', 'davinci-blade/core'], funct
             var y = this.y;
             var divisor = norm(x, y);
             return new Complex(x / divisor, y / divisor);
+        };
+        Complex.prototype.scalar = function () {
+            return this.x;
         };
         Complex.prototype.arg = function () {
             return Math.atan2(this.y, this.x);
