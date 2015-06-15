@@ -33,7 +33,7 @@ function sinh(x: number): number {
 
 var core =
 {
-    VERSION: '1.5.0',
+    VERSION: '1.6.0',
     cos: makeUnaryUniversalFunction('cos', Math.cos),
     cosh: makeUnaryUniversalFunction('cosh', cosh),
     exp: makeUnaryUniversalFunction('exp', Math.exp),
