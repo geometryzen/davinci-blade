@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "JavaScript Geometric Physics library.",
-        "version": "1.6.0",
+        "version": "1.7.0",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -108,7 +108,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "amd/davinci-blade/Unit.js",
-            "line": 165,
+            "line": 173,
             "description": "Provides the blade module"
         }
     },
@@ -284,7 +284,7 @@
             "extension_for": [],
             "module": "blade",
             "file": "amd/davinci-blade/Unit.js",
-            "line": 165,
+            "line": 173,
             "description": "The Unit class represents the units for a measure.",
             "is_constructor": 1,
             "params": [
@@ -428,19 +428,19 @@
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 927,
+            "line": 922,
             "description": "~ (tilde) produces reversion.",
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 977,
+            "line": 974,
             "description": "Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.",
             "class": "Euclidean3"
         },
         {
             "file": "amd/davinci-blade/Euclidean3.js",
-            "line": 983,
+            "line": 980,
             "description": "Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.",
             "class": "Euclidean3"
         },
@@ -482,15 +482,15 @@
         },
         {
             "message": "Missing item type\n~ (tilde) produces reversion.",
-            "line": " amd/davinci-blade/Euclidean3.js:927"
+            "line": " amd/davinci-blade/Euclidean3.js:922"
         },
         {
             "message": "Missing item type\nComputes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.",
-            "line": " amd/davinci-blade/Euclidean3.js:977"
+            "line": " amd/davinci-blade/Euclidean3.js:974"
         },
         {
             "message": "Missing item type\nComputes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.",
-            "line": " amd/davinci-blade/Euclidean3.js:983"
+            "line": " amd/davinci-blade/Euclidean3.js:980"
         },
         {
             "message": "Missing item type\nDetermines whether a property name is callable on an object.",

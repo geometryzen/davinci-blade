@@ -64,7 +64,7 @@ declare class Euclidean3 implements Measure<Euclidean3> {
     sub(rhs: Euclidean3): Euclidean3;
     __sub__(other: any): Euclidean3;
     __rsub__(other: any): Euclidean3;
-    mul(rhs: any): Euclidean3;
+    mul(rhs: Euclidean3): Euclidean3;
     __mul__(other: any): any;
     __rmul__(other: any): any;
     scalarMultiply(rhs: number): Euclidean3;

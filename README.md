@@ -52,6 +52,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.4.0: 2015-06-13 Universal functions.
 * 1.5.0: 2015-06-13 Complex trigonometric and hyperbolic functions.
 * 1.6.0: 2015-06-15 scalar() method.
+* 1.7.0: 2015-06-17 Euclidean3 sqrt() and unit()
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

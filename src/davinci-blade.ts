@@ -82,13 +82,14 @@ var blade = {
     'VERSION': core.VERSION,
     universals:
     {
-      cos: core.cos,
+      cos:  core.cos,
       cosh: core.cosh,
-      exp: core.exp,
+      exp:  core.exp,
       norm: core.norm,
       quad: core.quad,
-      sin: core.sin,
+      sin:  core.sin,
       sinh: core.sinh,
+      sqrt: core.sqrt,
       unit: core.unit
     },
     Color: Color,

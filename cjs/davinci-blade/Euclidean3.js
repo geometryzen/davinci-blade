@@ -1,3 +1,4 @@
+var NotImplementedError = require('davinci-blade/NotImplementedError');
 var Unit = require('davinci-blade/Unit');
 function Euclidean3Error(message) {
     this.name = 'Euclidean3Error';
@@ -763,18 +764,13 @@ var Euclidean3 = (function () {
         }
     };
     Euclidean3.prototype.mul = function (rhs) {
-        if (typeof rhs === 'number') {
-            return this.scalarMultiply(rhs);
-        }
-        else {
-            var coord = function (x, n) {
-                return x[n];
-            };
-            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
-                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
-            };
-            return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
-        }
+        var coord = function (x, n) {
+            return x[n];
+        };
+        var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+            return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
+        };
+        return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
     };
     Euclidean3.prototype.__mul__ = function (other) {
         if (other instanceof Euclidean3) {
@@ -966,13 +962,15 @@ var Euclidean3 = (function () {
         return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
     };
     Euclidean3.prototype.cos = function () {
-        throw new Euclidean3Error('cos');
+        Unit.assertDimensionless(this.uom);
+        var cosW = Math.cos(this.w);
+        return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, undefined);
     };
     Euclidean3.prototype.cosh = function () {
-        throw new Euclidean3Error('cosh');
+        throw new NotImplementedError('cosh(Euclidean3)');
     };
     Euclidean3.prototype.exp = function () {
-        throw new Euclidean3Error('exp');
+        throw new NotImplementedError('exp(Euclidean3)');
     };
     /**
      * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
@@ -993,7 +991,7 @@ var Euclidean3 = (function () {
         throw new Euclidean3Error('sinh');
     };
     Euclidean3.prototype.unit = function () {
-        throw new Euclidean3Error('unit');
+        return this.div(this.norm());
     };
     Euclidean3.prototype.scalar = function () {
         return this.w;

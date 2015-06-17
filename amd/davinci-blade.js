@@ -44,6 +44,7 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 
             quad: core.quad,
             sin: core.sin,
             sinh: core.sinh,
+            sqrt: core.sqrt,
             unit: core.unit
         },
         Color: Color,

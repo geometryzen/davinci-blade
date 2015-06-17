@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.6.0</em>
+            <em>API Docs for: 1.7.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -121,6 +121,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Dimensions
         }
         else {
             throw new UnitError(&quot;Argument &#x27;&quot; + arg + &quot;&#x27; must be a Unit&quot;);
+        }
+    }
+    function assertArgUnitOrUndefined(name, arg) {
+        if (typeof arg === &#x27;undefined&#x27;) {
+            return arg;
+        }
+        else {
+            return assertArgUnit(name, arg);
         }
     }
     var dumbString = function (scale, dimensions, labels) {
@@ -406,16 +414,33 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Dimensions
             }
         };
         Unit.compatible = function (lhs, rhs) {
-            if (lhs instanceof Unit) {
-                if (rhs instanceof Unit) {
+            assertArgUnitOrUndefined(&#x27;lhs&#x27;, lhs);
+            assertArgUnitOrUndefined(&#x27;rhs&#x27;, rhs);
+            if (lhs) {
+                if (rhs) {
                     return lhs.compatible(rhs);
                 }
                 else {
-                    return undefined;
+                    if (lhs.isUnity()) {
+                        return void 0;
+                    }
+                    else {
+                        throw new UnitError(lhs + &quot; is incompatible with 1&quot;);
+                    }
                 }
             }
             else {
-                return undefined;
+                if (rhs) {
+                    if (rhs.isUnity()) {
+                        return void 0;
+                    }
+                    else {
+                        throw new UnitError(&quot;1 is incompatible with &quot; + rhs);
+                    }
+                }
+                else {
+                    return void 0;
+                }
             }
         };
         Unit.mul = function (lhs, rhs) {
@@ -427,14 +452,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Dimensions
                     return lhs;
                 }
                 else {
-                    return undefined;
+                    return void 0;
                 }
             }
             else if (Unit.isUnity(lhs)) {
                 return rhs;
             }
             else {
-                return undefined;
+                return void 0;
             }
         };
         Unit.div = function (lhs, rhs) {
@@ -456,16 +481,17 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Dimensions
             }
         };
         Unit.sqrt = function (uom) {
-            if (typeof uom === &#x27;undefined&#x27;) {
-                if (uom instanceof Unit) {
+            if (typeof uom !== &#x27;undefined&#x27;) {
+                assertArgUnit(&#x27;uom&#x27;, uom);
+                if (!uom.isUnity()) {
                     return new Unit(Math.sqrt(uom.scale), uom.dimensions.sqrt(), uom.labels);
                 }
                 else {
-                    throw new Error(&quot;uom must be a Unit.&quot;);
+                    return void 0;
                 }
             }
             else {
-                return undefined;
+                return void 0;
             }
         };
         return Unit;

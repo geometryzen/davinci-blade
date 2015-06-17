@@ -57,6 +57,7 @@ var blade = {
         quad: core.quad,
         sin: core.sin,
         sinh: core.sinh,
+        sqrt: core.sqrt,
         unit: core.unit
     },
     Color: Color,

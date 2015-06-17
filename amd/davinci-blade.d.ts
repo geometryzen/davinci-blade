@@ -21,6 +21,7 @@ declare var blade: {
         quad: <T>(x: T) => T;
         sin: <T>(x: T) => T;
         sinh: <T>(x: T) => T;
+        sqrt: <T>(x: T) => T;
         unit: <T>(x: T) => T;
     };
     Color: typeof Color;

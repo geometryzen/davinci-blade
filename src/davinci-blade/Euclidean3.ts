@@ -1,4 +1,5 @@
 import Measure = require('davinci-blade/Measure');
+import NotImplementedError = require('davinci-blade/NotImplementedError');
 import Unit = require('davinci-blade/Unit');
 
 function Euclidean3Error(message: string) {
@@ -780,18 +781,11 @@ class Euclidean3 implements Measure<Euclidean3> {
       }
     }
 
-    mul(rhs: any): Euclidean3
+    mul(rhs: Euclidean3): Euclidean3
     {
-      if (typeof rhs === 'number')
-      {
-        return this.scalarMultiply(rhs);
-      }
-      else
-      {
-        var coord = function(x: number[], n: number): number {return x[n];};
-        var pack = function(w, x, y, z, xy, yz, zx, xyz, uom: Unit) {return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);};
-        return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
-      }
+      var coord = function(x: number[], n: number): number {return x[n];};
+      var pack = function(w, x, y, z, xy, yz, zx, xyz, uom: Unit) {return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);};
+      return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
     }
 
     __mul__(other: any): any
@@ -1024,15 +1018,17 @@ class Euclidean3 implements Measure<Euclidean3> {
     }
 
     cos(): Euclidean3 {
-      throw new Euclidean3Error('cos');
+      Unit.assertDimensionless(this.uom);
+      var cosW = Math.cos(this.w);
+      return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, undefined);
     }
 
     cosh(): Euclidean3 {
-      throw new Euclidean3Error('cosh');
+      throw new NotImplementedError('cosh(Euclidean3)');
     }
 
     exp(): Euclidean3 {
-      throw new Euclidean3Error('exp');
+      throw new NotImplementedError('exp(Euclidean3)');
     }
 
     /**
@@ -1054,14 +1050,16 @@ class Euclidean3 implements Measure<Euclidean3> {
     }
 
     unit(): Euclidean3 {
-      throw new Euclidean3Error('unit');
+      return this.div(this.norm());
     }
 
     scalar(): number {
       return this.w;
     }
 
-    sqrt() {return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));}
+    sqrt() {
+      return new Euclidean3(Math.sqrt(this.w), 0, 0, 0, 0, 0, 0, 0, Unit.sqrt(this.uom));
+    }
 
     toStringCustom(
       coordToString: (x: number) => string,

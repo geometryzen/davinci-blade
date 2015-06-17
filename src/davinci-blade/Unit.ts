@@ -43,6 +43,15 @@ function assertArgUnit(name: string, arg: Unit): Unit {
   }
 }
 
+function assertArgUnitOrUndefined(name: string, arg: Unit): Unit {
+  if (typeof arg === 'undefined') {
+    return arg;
+  }
+  else {
+    return assertArgUnit(name, arg);
+  }
+}
+
 var dumbString = function(scale: number, dimensions: Dimensions, labels: string[]) {
   assertArgNumber('scale', scale);
   assertArgDimensions('dimensions', dimensions);
@@ -403,16 +412,33 @@ class Unit {
     }
 
     static compatible(lhs: Unit, rhs: Unit): Unit {
-      if (lhs instanceof Unit) {
-        if (rhs instanceof Unit) {
+      assertArgUnitOrUndefined('lhs', lhs);
+      assertArgUnitOrUndefined('rhs', rhs);
+      if (lhs) {
+        if (rhs) {
           return lhs.compatible(rhs);
         }
         else {
-          return undefined;
+          if (lhs.isUnity()) {
+            return void 0;
+          }
+          else {
+            throw new UnitError(lhs + " is incompatible with 1");
+          }
         }
       }
       else {
-        return undefined;
+        if (rhs) {
+          if (rhs.isUnity()) {
+            return void 0;
+          }
+          else {
+            throw new UnitError("1 is incompatible with " + rhs);
+          }
+        }
+        else {
+          return void 0;
+        }
       }
     }
 
@@ -425,14 +451,14 @@ class Unit {
           return lhs;
         }
         else {
-          return undefined;
+          return void 0;
         }
       }
       else if (Unit.isUnity(lhs)) {
         return rhs;
       }
       else {
-        return undefined;
+        return void 0;
       }
     }
 
@@ -456,16 +482,17 @@ class Unit {
     }
 
     static sqrt(uom: Unit): Unit {
-      if (typeof uom === 'undefined') {
-        if (uom instanceof Unit) {
+      if (typeof uom !== 'undefined') {
+        assertArgUnit('uom', uom);
+        if (!uom.isUnity()) {
           return new Unit(Math.sqrt(uom.scale), uom.dimensions.sqrt(), uom.labels);
         }
         else {
-          throw new Error("uom must be a Unit.");
+          return void 0;
         }
       }
       else {
-        return undefined;
+        return void 0;
       }
     }
 }

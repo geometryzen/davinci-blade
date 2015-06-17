@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.6.0</em>
+            <em>API Docs for: 1.7.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -85,7 +85,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;], function (require, exports, Unit) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImplementedError&#x27;, &#x27;davinci-blade/Unit&#x27;], function (require, exports, NotImplementedError, Unit) {
     function Euclidean3Error(message) {
         this.name = &#x27;Euclidean3Error&#x27;;
         this.message = (message || &quot;&quot;);
@@ -850,18 +850,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
             }
         };
         Euclidean3.prototype.mul = function (rhs) {
-            if (typeof rhs === &#x27;number&#x27;) {
-                return this.scalarMultiply(rhs);
-            }
-            else {
-                var coord = function (x, n) {
-                    return x[n];
-                };
-                var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
-                    return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
-                };
-                return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
-            }
+            var coord = function (x, n) {
+                return x[n];
+            };
+            var pack = function (w, x, y, z, xy, yz, zx, xyz, uom) {
+                return Euclidean3.fromCartesian(w, x, y, z, xy, yz, zx, xyz, uom);
+            };
+            return compute(mulE3, this.coordinates(), rhs.coordinates(), coord, pack, Unit.mul(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__mul__ = function (other) {
             if (other instanceof Euclidean3) {
@@ -1053,13 +1048,15 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
         };
         Euclidean3.prototype.cos = function () {
-            throw new Euclidean3Error(&#x27;cos&#x27;);
+            Unit.assertDimensionless(this.uom);
+            var cosW = Math.cos(this.w);
+            return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, undefined);
         };
         Euclidean3.prototype.cosh = function () {
-            throw new Euclidean3Error(&#x27;cosh&#x27;);
+            throw new NotImplementedError(&#x27;cosh(Euclidean3)&#x27;);
         };
         Euclidean3.prototype.exp = function () {
-            throw new Euclidean3Error(&#x27;exp&#x27;);
+            throw new NotImplementedError(&#x27;exp(Euclidean3)&#x27;);
         };
         /**
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
@@ -1080,7 +1077,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/Unit&#x27;
             throw new Euclidean3Error(&#x27;sinh&#x27;);
         };
         Euclidean3.prototype.unit = function () {
-            throw new Euclidean3Error(&#x27;unit&#x27;);
+            return this.div(this.norm());
         };
         Euclidean3.prototype.scalar = function () {
             return this.w;
