@@ -1,6 +1,6 @@
 {
   "name": "davinci-blade",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "JavaScript Geometric Physics library.",
   "author":
   {
@@ -29,10 +29,10 @@
   },
   "devDependencies":
   {
-    "jasmine": "2.2.1",
+    "jasmine": "2.3.4",
     "almond": "0.3.1",
-    "r.js": "2.1.16",
-    "requirejs": "2.1.16",
+    "r.js": "2.1.18",
+    "requirejs": "2.1.18",
     "jscover": "http://github.com/tntim96/JSCover.git"
   },
   "ignore":

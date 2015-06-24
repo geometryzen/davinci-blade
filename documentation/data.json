@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-blade",
         "description": "JavaScript Geometric Physics library.",
-        "version": "1.7.0",
+        "version": "1.7.1",
         "url": "",
         "logo": "../assets/logo.png"
     },
