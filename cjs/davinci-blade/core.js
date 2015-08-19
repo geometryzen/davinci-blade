@@ -27,7 +27,7 @@ function sinh(x) {
     return (Math.exp(x) - Math.exp(-x)) / 2;
 }
 var core = {
-    VERSION: '1.7.1',
+    VERSION: '1.7.2',
     cos: makeUnaryUniversalFunction('cos', Math.cos),
     cosh: makeUnaryUniversalFunction('cosh', cosh),
     exp: makeUnaryUniversalFunction('exp', Math.exp),

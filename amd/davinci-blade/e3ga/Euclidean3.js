@@ -1,102 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>amd/davinci-blade/Euclidean3.js - davinci-blade</title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
-    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
-    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
-    <link rel="icon" href="../assets/favicon.ico">
-    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
-</head>
-<body class="yui3-skin-sam">
-
-<div id="doc">
-    <div id="hd" class="yui3-g header">
-        <div class="yui3-u-3-4">
-                <h1><img src="../../assets/logo.png" title="davinci-blade"></h1>
-        </div>
-        <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.7.1</em>
-        </div>
-    </div>
-    <div id="bd" class="yui3-g">
-
-        <div class="yui3-u-1-4">
-            <div id="docs-sidebar" class="sidebar apidocs">
-                <div id="api-list">
-                    <h2 class="off-left">APIs</h2>
-                    <div id="api-tabview" class="tabview">
-                        <ul class="tabs">
-                            <li><a href="#api-classes">Classes</a></li>
-                            <li><a href="#api-modules">Modules</a></li>
-                        </ul>
-                
-                        <div id="api-tabview-filter">
-                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
-                        </div>
-                
-                        <div id="api-tabview-panel">
-                            <ul id="api-classes" class="apis classes">
-                                <li><a href="../classes/Dimensions.html">Dimensions</a></li>
-                                <li><a href="../classes/Euclidean1.html">Euclidean1</a></li>
-                                <li><a href="../classes/Euclidean2.html">Euclidean2</a></li>
-                                <li><a href="../classes/Euclidean3.html">Euclidean3</a></li>
-                                <li><a href="../classes/Rational.html">Rational</a></li>
-                                <li><a href="../classes/Unit.html">Unit</a></li>
-                            </ul>
-                
-                            <ul id="api-modules" class="apis modules">
-                                <li><a href="../modules/blade.html">blade</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="yui3-u-3-4">
-                <div id="api-options">
-                    Show:
-                    <label for="api-show-inherited">
-                        <input type="checkbox" id="api-show-inherited" checked>
-                        Inherited
-                    </label>
-            
-                    <label for="api-show-protected">
-                        <input type="checkbox" id="api-show-protected">
-                        Protected
-                    </label>
-            
-                    <label for="api-show-private">
-                        <input type="checkbox" id="api-show-private">
-                        Private
-                    </label>
-                    <label for="api-show-deprecated">
-                        <input type="checkbox" id="api-show-deprecated">
-                        Deprecated
-                    </label>
-            
-                </div>
-            
-            <div class="apidocs">
-                <div id="docs-main">
-                    <div class="content">
-<h1 class="file-heading">File: amd/davinci-blade/Euclidean3.js</h1>
-
-<div class="file">
-    <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImplementedError&#x27;, &#x27;davinci-blade/Unit&#x27;], function (require, exports, NotImplementedError, Unit) {
+define(["require", "exports", 'davinci-blade/NotImplementedError', 'davinci-blade/Unit', 'davinci-blade/core'], function (require, exports, NotImplementedError, Unit, core) {
+    var cos = Math.cos;
+    var cosh = core.Math.cosh;
+    var exp = Math.exp;
+    var sin = Math.sin;
+    var sinh = core.Math.sinh;
     function Euclidean3Error(message) {
-        this.name = &#x27;Euclidean3Error&#x27;;
-        this.message = (message || &quot;&quot;);
+        this.name = 'Euclidean3Error';
+        this.message = (message || "");
     }
     Euclidean3Error.prototype = new Error();
     function assertArgNumber(name, x) {
-        if (typeof x === &#x27;number&#x27;) {
+        if (typeof x === 'number') {
             return x;
         }
         else {
-            throw new Euclidean3Error(&quot;Argument &#x27;&quot; + name + &quot;&#x27; must be a number&quot;);
+            throw new Euclidean3Error("Argument '" + name + "' must be a number");
         }
     }
     function assertArgEuclidean3(name, arg) {
@@ -104,15 +22,15 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             return arg;
         }
         else {
-            throw new Euclidean3Error(&quot;Argument &#x27;&quot; + arg + &quot;&#x27; must be a Euclidean3&quot;);
+            throw new Euclidean3Error("Argument '" + arg + "' must be a Euclidean3");
         }
     }
     function assertArgUnitOrUndefined(name, uom) {
-        if (typeof uom === &#x27;undefined&#x27; || uom instanceof Unit) {
+        if (typeof uom === 'undefined' || uom instanceof Unit) {
             return uom;
         }
         else {
-            throw new Euclidean3Error(&quot;Argument &#x27;&quot; + uom + &quot;&#x27; must be a Unit or undefined&quot;);
+            throw new Euclidean3Error("Argument '" + uom + "' must be a Unit or undefined");
         }
     }
     function compute(f, a, b, coord, pack, uom) {
@@ -203,7 +121,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -269,7 +187,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -338,7 +256,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -404,7 +322,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -470,7 +388,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -536,7 +454,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -602,7 +520,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 break;
             default: {
-                throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                throw new Euclidean3Error("index must be in the range [0..7]");
             }
         }
         return +x;
@@ -666,7 +584,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
         yz = x110;
         zx = -x101;
         xyz = x111;
-        if (typeof dst !== &#x27;undefined&#x27;) {
+        if (typeof dst !== 'undefined') {
             dst.w = w;
             dst.x = x;
             dst.y = y;
@@ -688,13 +606,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
         var append = function (coord, label) {
             var n;
             if (coord !== 0) {
-                if (coord &gt;= 0) {
-                    if (sb.length &gt; 0) {
-                        sb.push(&quot;+&quot;);
+                if (coord >= 0) {
+                    if (sb.length > 0) {
+                        sb.push("+");
                     }
                 }
                 else {
-                    sb.push(&quot;-&quot;);
+                    sb.push("-");
                 }
                 n = Math.abs(coord);
                 if (n === 1) {
@@ -702,21 +620,21 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 }
                 else {
                     sb.push(numberToString(n));
-                    if (label !== &quot;1&quot;) {
-                        sb.push(&quot;*&quot;);
+                    if (label !== "1") {
+                        sb.push("*");
                         sb.push(label);
                     }
                 }
             }
         };
-        for (i = _i = 0, _ref = coordinates.length - 1; 0 &lt;= _ref ? _i &lt;= _ref : _i &gt;= _ref; i = 0 &lt;= _ref ? ++_i : --_i) {
+        for (i = _i = 0, _ref = coordinates.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
             append(coordinates[i], labels[i]);
         }
-        if (sb.length &gt; 0) {
-            str = sb.join(&quot;&quot;);
+        if (sb.length > 0) {
+            str = sb.join("");
         }
         else {
-            str = &quot;0&quot;;
+            str = "0";
         }
         return str;
     }
@@ -739,16 +657,16 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
          * @param uom The optional unit of measure.
          */
         function Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom) {
-            this.w = assertArgNumber(&#x27;w&#x27;, w);
-            this.x = assertArgNumber(&#x27;x&#x27;, x);
-            this.y = assertArgNumber(&#x27;y&#x27;, y);
-            this.z = assertArgNumber(&#x27;z&#x27;, z);
-            this.xy = assertArgNumber(&#x27;xy&#x27;, xy);
-            this.yz = assertArgNumber(&#x27;yz&#x27;, yz);
-            this.zx = assertArgNumber(&#x27;zx&#x27;, zx);
-            this.xyz = assertArgNumber(&#x27;xyz&#x27;, xyz);
-            this.uom = assertArgUnitOrUndefined(&#x27;uom&#x27;, uom);
-            if (this.uom &amp;&amp; this.uom.scale !== 1) {
+            this.w = assertArgNumber('w', w);
+            this.x = assertArgNumber('x', x);
+            this.y = assertArgNumber('y', y);
+            this.z = assertArgNumber('z', z);
+            this.xy = assertArgNumber('xy', xy);
+            this.yz = assertArgNumber('yz', yz);
+            this.zx = assertArgNumber('zx', zx);
+            this.xyz = assertArgNumber('xyz', xyz);
+            this.uom = assertArgUnitOrUndefined('uom', uom);
+            if (this.uom && this.uom.scale !== 1) {
                 var scale = this.uom.scale;
                 this.w *= scale;
                 this.x *= scale;
@@ -762,22 +680,22 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             }
         }
         Euclidean3.fromCartesian = function (w, x, y, z, xy, yz, zx, xyz, uom) {
-            assertArgNumber(&#x27;w&#x27;, w);
-            assertArgNumber(&#x27;x&#x27;, x);
-            assertArgNumber(&#x27;y&#x27;, y);
-            assertArgNumber(&#x27;z&#x27;, z);
-            assertArgNumber(&#x27;xy&#x27;, xy);
-            assertArgNumber(&#x27;yz&#x27;, yz);
-            assertArgNumber(&#x27;zx&#x27;, zx);
-            assertArgNumber(&#x27;xyz&#x27;, xyz);
-            assertArgUnitOrUndefined(&#x27;uom&#x27;, uom);
+            assertArgNumber('w', w);
+            assertArgNumber('x', x);
+            assertArgNumber('y', y);
+            assertArgNumber('z', z);
+            assertArgNumber('xy', xy);
+            assertArgNumber('yz', yz);
+            assertArgNumber('zx', zx);
+            assertArgNumber('xyz', xyz);
+            assertArgUnitOrUndefined('uom', uom);
             return new Euclidean3(w, x, y, z, xy, yz, zx, xyz, uom);
         };
         Euclidean3.prototype.coordinates = function () {
             return [this.w, this.x, this.y, this.z, this.xy, this.yz, this.zx, this.xyz];
         };
         Euclidean3.prototype.coordinate = function (index) {
-            assertArgNumber(&#x27;index&#x27;, index);
+            assertArgNumber('index', index);
             switch (index) {
                 case 0:
                     return this.w;
@@ -796,9 +714,16 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
                 case 7:
                     return this.xyz;
                 default:
-                    throw new Euclidean3Error(&quot;index must be in the range [0..7]&quot;);
+                    throw new Euclidean3Error("index must be in the range [0..7]");
             }
         };
+        /**
+         * Computes the sum of this Euclidean3 and another considered to be the rhs of the binary addition, `+`, operator.
+         * This method does not change this Euclidean3.
+         * @method add
+         * @param rhs {Euclidean3}
+         * @return {Euclidean3} This Euclidean3 plus rhs.
+         */
         Euclidean3.prototype.add = function (rhs) {
             var coord = function (x, n) {
                 return x[n];
@@ -812,18 +737,25 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (other instanceof Euclidean3) {
                 return this.add(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__radd__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.add(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).add(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).add(this);
             }
         };
+        /**
+         * Computes the difference of this Euclidean3 and another considered to be the rhs of the binary subtraction, `-`, operator.
+         * This method does not change this Euclidean3.
+         * @method sub
+         * @param rhs {Euclidean3}
+         * @return {Euclidean3} This Euclidean3 minus rhs.
+         */
         Euclidean3.prototype.sub = function (rhs) {
             var coord = function (x, n) {
                 return x[n];
@@ -837,16 +769,16 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (other instanceof Euclidean3) {
                 return this.sub(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rsub__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.sub(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).sub(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).sub(this);
             }
         };
         Euclidean3.prototype.mul = function (rhs) {
@@ -862,39 +794,39 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (other instanceof Euclidean3) {
                 return this.mul(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rmul__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.mul(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).mul(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).mul(this);
             }
         };
         Euclidean3.prototype.scalarMultiply = function (rhs) {
             return new Euclidean3(this.w * rhs, this.x * rhs, this.y * rhs, this.z * rhs, this.xy * rhs, this.yz * rhs, this.zx * rhs, this.xyz * rhs, this.uom);
         };
         Euclidean3.prototype.div = function (rhs) {
-            assertArgEuclidean3(&#x27;rhs&#x27;, rhs);
+            assertArgEuclidean3('rhs', rhs);
             return divide(this.w, this.x, this.y, this.xy, this.z, -this.zx, this.yz, this.xyz, rhs.w, rhs.x, rhs.y, rhs.xy, rhs.z, -rhs.zx, rhs.yz, rhs.xyz, Unit.div(this.uom, rhs.uom));
         };
         Euclidean3.prototype.__div__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.div(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rdiv__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.div(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).div(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).div(this);
             }
         };
         Euclidean3.prototype.splat = function (rhs) {
@@ -919,32 +851,32 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (other instanceof Euclidean3) {
                 return this.splat(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rvbar__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.splat(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).splat(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).splat(this);
             }
         };
         Euclidean3.prototype.__wedge__ = function (other) {
             if (other instanceof Euclidean3) {
                 return this.wedge(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rwedge__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.wedge(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).wedge(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).wedge(this);
             }
         };
         Euclidean3.prototype.lshift = function (rhs) {
@@ -960,16 +892,16 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (other instanceof Euclidean3) {
                 return this.lshift(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rlshift__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.lshift(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).lshift(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).lshift(this);
             }
         };
         Euclidean3.prototype.rshift = function (rhs) {
@@ -985,20 +917,20 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (other instanceof Euclidean3) {
                 return this.rshift(other);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+            else if (typeof other === 'number') {
+                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rrshift__ = function (other) {
             if (other instanceof Euclidean3) {
                 return other.rshift(this);
             }
-            else if (typeof other === &#x27;number&#x27;) {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
+            else if (typeof other === 'number') {
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).rshift(this);
             }
         };
         Euclidean3.prototype.pow = function (exponent) {
-            throw new Euclidean3Error(&#x27;pow&#x27;);
+            throw new Euclidean3Error('pow');
         };
         Euclidean3.prototype.__pos__ = function () {
             return this;
@@ -1013,7 +945,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             return new Euclidean3(this.w, this.x, this.y, this.z, -this.xy, -this.yz, -this.zx, -this.xyz, this.uom);
         };
         Euclidean3.prototype.grade = function (index) {
-            assertArgNumber(&#x27;index&#x27;, index);
+            assertArgNumber('index', index);
             switch (index) {
                 case 0:
                     return Euclidean3.fromCartesian(this.w, 0, 0, 0, 0, 0, 0, 0, this.uom);
@@ -1044,19 +976,34 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             z = x1 * y2 - y1 * x2;
             return new Euclidean3(0, x, y, z, 0, 0, 0, 0, Unit.mul(this.uom, vector.uom));
         };
+        Euclidean3.prototype.isZero = function () {
+            return (this.w === 0) && (this.x === 0) && (this.y === 0) && (this.z === 0) && (this.yz === 0) && (this.zx === 0) && (this.xy === 0) && (this.xyz === 0);
+        };
         Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
         };
         Euclidean3.prototype.cos = function () {
+            // TODO: Generalize to full multivector.
             Unit.assertDimensionless(this.uom);
-            var cosW = Math.cos(this.w);
-            return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, undefined);
+            var cosW = cos(this.w);
+            return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, void 0);
         };
         Euclidean3.prototype.cosh = function () {
-            throw new NotImplementedError(&#x27;cosh(Euclidean3)&#x27;);
+            throw new NotImplementedError('cosh(Euclidean3)');
         };
         Euclidean3.prototype.exp = function () {
-            throw new NotImplementedError(&#x27;exp(Euclidean3)&#x27;);
+            Unit.assertDimensionless(this.uom);
+            var bivector = this.grade(2);
+            var a = bivector.norm();
+            if (!a.isZero()) {
+                var c = a.cos();
+                var s = a.sin();
+                var B = bivector.unit();
+                return c.add(B.mul(s));
+            }
+            else {
+                return new Euclidean3(1, 0, 0, 0, 0, 0, 0, 0, this.uom);
+            }
         };
         /**
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
@@ -1071,10 +1018,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
         };
         Euclidean3.prototype.sin = function () {
-            throw new Euclidean3Error(&#x27;sin&#x27;);
+            // TODO: Generalize to full multivector.
+            Unit.assertDimensionless(this.uom);
+            var sinW = sin(this.w);
+            return new Euclidean3(sinW, 0, 0, 0, 0, 0, 0, 0, void 0);
         };
         Euclidean3.prototype.sinh = function () {
-            throw new Euclidean3Error(&#x27;sinh&#x27;);
+            throw new Euclidean3Error('sinh');
         };
         Euclidean3.prototype.unit = function () {
             return this.div(this.norm());
@@ -1090,7 +1040,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             if (this.uom) {
                 var unitString = this.uom.toString().trim();
                 if (unitString) {
-                    return quantityString + &#x27; &#x27; + unitString;
+                    return quantityString + ' ' + unitString;
                 }
                 else {
                     return quantityString;
@@ -1104,53 +1054,34 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-blade/NotImpleme
             var coordToString = function (coord) {
                 return coord.toExponential();
             };
-            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e3&quot;, &quot;e12&quot;, &quot;e23&quot;, &quot;e31&quot;, &quot;e123&quot;]);
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
         };
         Euclidean3.prototype.toFixed = function (digits) {
-            assertArgNumber(&#x27;digits&#x27;, digits);
+            assertArgNumber('digits', digits);
             var coordToString = function (coord) {
                 return coord.toFixed(digits);
             };
-            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e3&quot;, &quot;e12&quot;, &quot;e23&quot;, &quot;e31&quot;, &quot;e123&quot;]);
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
         };
         Euclidean3.prototype.toString = function () {
             var coordToString = function (coord) {
                 return coord.toString();
             };
-            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e3&quot;, &quot;e12&quot;, &quot;e23&quot;, &quot;e31&quot;, &quot;e123&quot;]);
+            return this.toStringCustom(coordToString, ["1", "e1", "e2", "e3", "e12", "e23", "e31", "e123"]);
         };
         Euclidean3.prototype.toStringIJK = function () {
             var coordToString = function (coord) {
                 return coord.toString();
             };
-            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;, &quot;ij&quot;, &quot;jk&quot;, &quot;ki&quot;, &quot;I&quot;]);
+            return this.toStringCustom(coordToString, ["1", "i", "j", "k", "ij", "jk", "ki", "I"]);
         };
         Euclidean3.prototype.toStringLATEX = function () {
             var coordToString = function (coord) {
                 return coord.toString();
             };
-            return this.toStringCustom(coordToString, [&quot;1&quot;, &quot;e_{1}&quot;, &quot;e_{2}&quot;, &quot;e_{3}&quot;, &quot;e_{12}&quot;, &quot;e_{23}&quot;, &quot;e_{31}&quot;, &quot;e_{123}&quot;]);
+            return this.toStringCustom(coordToString, ["1", "e_{1}", "e_{2}", "e_{3}", "e_{12}", "e_{23}", "e_{31}", "e_{123}"]);
         };
         return Euclidean3;
     })();
     return Euclidean3;
 });
-
-    </pre>
-</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="../assets/vendor/prettify/prettify-min.js"></script>
-<script>prettyPrint();</script>
-<script src="../assets/js/yui-prettify.js"></script>
-<script src="../assets/../api.js"></script>
-<script src="../assets/js/api-filter.js"></script>
-<script src="../assets/js/api-list.js"></script>
-<script src="../assets/js/api-search.js"></script>
-<script src="../assets/js/apidocs.js"></script>
-</body>
-</html>

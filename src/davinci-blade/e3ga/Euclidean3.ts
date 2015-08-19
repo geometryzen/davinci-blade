@@ -1,6 +1,13 @@
 import Measure = require('davinci-blade/Measure');
 import NotImplementedError = require('davinci-blade/NotImplementedError');
 import Unit = require('davinci-blade/Unit');
+import core = require('davinci-blade/core');
+
+var cos  = Math.cos;
+var cosh = core.Math.cosh;
+var exp  = Math.exp;
+var sin  = Math.sin;
+var sinh = core.Math.sinh;
 
 function Euclidean3Error(message: string) {
   this.name = 'Euclidean3Error';
@@ -613,6 +620,8 @@ function stringFromCoordinates(
 class Euclidean3 implements Measure<Euclidean3> {
     /**
      * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
+     * @property w
+     * @type number
      */
     public w: number;
     /**
@@ -660,7 +669,7 @@ class Euclidean3 implements Measure<Euclidean3> {
      * @param {number} xyz The pseudoscalar part of the multivector.
      * @param uom The optional unit of measure.
      */
-    constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom: Unit) {
+    constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom?: Unit) {
       this.w = assertArgNumber('w', w);
       this.x = assertArgNumber('x', x);
       this.y = assertArgNumber('y', y);
@@ -724,7 +733,13 @@ class Euclidean3 implements Measure<Euclidean3> {
           throw new Euclidean3Error("index must be in the range [0..7]");
       }
     }
-
+    /**
+     * Computes the sum of this Euclidean3 and another considered to be the rhs of the binary addition, `+`, operator.
+     * This method does not change this Euclidean3.
+     * @method add
+     * @param rhs {Euclidean3}
+     * @return {Euclidean3} This Euclidean3 plus rhs.
+     */
     add(rhs: Euclidean3): Euclidean3 {
       var coord = function(x: number[], n: number): number {
         return x[n];
@@ -740,7 +755,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return this.add(other);
       }
       else if (typeof other === 'number') {
-        return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -749,10 +764,17 @@ class Euclidean3 implements Measure<Euclidean3> {
         return other.add(this);
       }
       else if (typeof other === 'number') {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).add(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).add(this);
       }
     }
 
+    /**
+     * Computes the difference of this Euclidean3 and another considered to be the rhs of the binary subtraction, `-`, operator.
+     * This method does not change this Euclidean3.
+     * @method sub
+     * @param rhs {Euclidean3}
+     * @return {Euclidean3} This Euclidean3 minus rhs.
+     */
     sub(rhs: Euclidean3): Euclidean3 {
       var coord = function(x: number[], n: number): number {
         return x[n];
@@ -768,7 +790,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return this.sub(other);
       }
       else if (typeof other === 'number') {
-        return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -777,7 +799,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return other.sub(this);
       }
       else if (typeof other === 'number') {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).sub(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).sub(this);
       }
     }
 
@@ -796,7 +818,7 @@ class Euclidean3 implements Measure<Euclidean3> {
       }
       else if (typeof other === 'number')
       {
-        return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -808,7 +830,7 @@ class Euclidean3 implements Measure<Euclidean3> {
       }
       else if (typeof other === 'number')
       {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).mul(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).mul(this);
       }
     }
 
@@ -829,7 +851,7 @@ class Euclidean3 implements Measure<Euclidean3> {
       }
       else if (typeof other === 'number')
       {
-        return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -841,7 +863,7 @@ class Euclidean3 implements Measure<Euclidean3> {
       }
       else if (typeof other === 'number')
       {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).div(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).div(this);
       }
     }
 
@@ -870,7 +892,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return this.splat(other);
       }
       else if (typeof other === 'number') {
-        return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -879,7 +901,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return other.splat(this);
       }
       else if (typeof other === 'number') {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).splat(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).splat(this);
       }
     }
 
@@ -888,7 +910,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return this.wedge(other);
       }
       else if (typeof other === 'number') {
-        return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -897,7 +919,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return other.wedge(this);
       }
       else if (typeof other === 'number') {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).wedge(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).wedge(this);
       }
     }
 
@@ -916,7 +938,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return this.lshift(other);
       }
       else if (typeof other === 'number') {
-        return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -925,7 +947,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return other.lshift(this);
       }
       else if (typeof other === 'number') {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).lshift(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).lshift(this);
       }
     }
 
@@ -944,7 +966,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return this.rshift(other);
       }
       else if (typeof other === 'number') {
-        return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+        return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
       }
     }
 
@@ -953,7 +975,7 @@ class Euclidean3 implements Measure<Euclidean3> {
         return other.rshift(this);
       }
       else if (typeof other === 'number') {
-        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
+        return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).rshift(this);
       }
     }
 
@@ -1012,23 +1034,38 @@ class Euclidean3 implements Measure<Euclidean3> {
         z = x1 * y2 - y1 * x2;
         return new Euclidean3(0, x, y, z, 0, 0, 0, 0, Unit.mul(this.uom, vector.uom));
     }
-
+    isZero(): boolean {
+        return (this.w === 0) && (this.x === 0) && (this.y === 0) && (this.z === 0) && (this.yz === 0) && (this.zx === 0) && (this.xy === 0) && (this.xyz === 0);
+    }
     length() {
       return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
     }
 
     cos(): Euclidean3 {
+      // TODO: Generalize to full multivector.
       Unit.assertDimensionless(this.uom);
-      var cosW = Math.cos(this.w);
-      return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, undefined);
+      var cosW = cos(this.w);
+      return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, void 0);
     }
 
     cosh(): Euclidean3 {
+      //Unit.assertDimensionless(this.uom);
       throw new NotImplementedError('cosh(Euclidean3)');
     }
 
     exp(): Euclidean3 {
-      throw new NotImplementedError('exp(Euclidean3)');
+      Unit.assertDimensionless(this.uom);
+      var bivector = this.grade(2);
+      var a = bivector.norm();
+      if (!a.isZero()) {
+        var c = a.cos();
+        var s = a.sin();
+        var B = bivector.unit();
+        return c.add(B.mul(s));
+      }
+      else {
+        return new Euclidean3(1, 0, 0, 0, 0, 0, 0, 0, this.uom);
+      }
     }
 
     /**
@@ -1039,13 +1076,19 @@ class Euclidean3 implements Measure<Euclidean3> {
     /**
      * Computes the quadrance of this Euclidean3. The quadrance is the square of the magnitude.
      */
-    quad(): Euclidean3 {return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));}
+    quad(): Euclidean3 {
+      return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
+    }
 
     sin(): Euclidean3 {
-      throw new Euclidean3Error('sin');
+      // TODO: Generalize to full multivector.
+      Unit.assertDimensionless(this.uom);
+      var sinW = sin(this.w);
+      return new Euclidean3(sinW, 0, 0, 0, 0, 0, 0, 0, void 0);
     }
 
     sinh(): Euclidean3 {
+      //Unit.assertDimensionless(this.uom);
       throw new Euclidean3Error('sinh');
     }
 

@@ -1,6 +1,6 @@
-import Euclidean1 = require('davinci-blade/Euclidean1');
-import Euclidean2 = require('davinci-blade/Euclidean2');
-import Euclidean3 = require('davinci-blade/Euclidean3');
+import Euclidean1 = require('davinci-blade/e1ga/Euclidean1');
+import Euclidean2 = require('davinci-blade/e2ga/Euclidean2');
+import Euclidean3 = require('davinci-blade/e3ga/Euclidean3');
 import Rational = require('davinci-blade/Rational');
 import Dimensions = require('davinci-blade/Dimensions');
 import Unit = require('davinci-blade/Unit');
@@ -32,6 +32,7 @@ declare var blade: {
     scalarE3: (w: number, uom?: Unit) => Euclidean3;
     vectorE3: (x: number, y: number, z: number, uom?: Unit) => Euclidean3;
     bivectorE3: (xy: number, yz: number, zx: number, uom?: Unit) => Euclidean3;
+    pseudoscalarE3: (xyz: number, uom?: Unit) => Euclidean3;
     Rational: typeof Rational;
     Dimensions: typeof Dimensions;
     Unit: typeof Unit;

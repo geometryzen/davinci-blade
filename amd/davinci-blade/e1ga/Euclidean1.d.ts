@@ -13,7 +13,7 @@ declare class Euclidean1 implements Measure<Euclidean1> {
      * @param {number} x The vector component of the multivector in the x-direction.
      * @param uom The optional unit of measure.
      */
-    constructor(w: number, x: number, uom: Unit);
+    constructor(w: number, x: number, uom?: Unit);
     coordinates(): number[];
     add(rhs: Euclidean1): Euclidean1;
     sub(rhs: Euclidean1): Euclidean1;

@@ -1,4 +1,4 @@
-var Euclidean2 = require('davinci-blade/Euclidean2');
+var Euclidean2 = require('davinci-blade/e2ga/Euclidean2');
 var vectorE2 = function (x, y, uom) {
     return new Euclidean2(0, x, y, 0, uom);
 };

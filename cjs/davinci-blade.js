@@ -1,7 +1,7 @@
 var core = require('davinci-blade/core');
-var Euclidean1 = require('davinci-blade/Euclidean1');
-var Euclidean2 = require('davinci-blade/Euclidean2');
-var Euclidean3 = require('davinci-blade/Euclidean3');
+var Euclidean1 = require('davinci-blade/e1ga/Euclidean1');
+var Euclidean2 = require('davinci-blade/e2ga/Euclidean2');
+var Euclidean3 = require('davinci-blade/e3ga/Euclidean3');
 var Rational = require('davinci-blade/Rational');
 var Dimensions = require('davinci-blade/Dimensions');
 var Unit = require('davinci-blade/Unit');
@@ -12,6 +12,7 @@ var vectorE2 = require('davinci-blade/e2ga/vectorE2');
 var scalarE3 = require('davinci-blade/e3ga/scalarE3');
 var vectorE3 = require('davinci-blade/e3ga/vectorE3');
 var bivectorE3 = require('davinci-blade/e3ga/bivectorE3');
+var pseudoscalarE3 = require('davinci-blade/e3ga/pseudoscalarE3');
 var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
 var R0 = Rational.ZERO;
 var R1 = Rational.ONE;
@@ -68,6 +69,7 @@ var blade = {
     scalarE3: scalarE3,
     vectorE3: vectorE3,
     bivectorE3: bivectorE3,
+    pseudoscalarE3: pseudoscalarE3,
     Rational: Rational,
     Dimensions: Dimensions,
     Unit: Unit,

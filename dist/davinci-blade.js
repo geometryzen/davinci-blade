@@ -463,7 +463,7 @@ define('davinci-blade/core',["require", "exports"], function (require, exports) 
         return (Math.exp(x) - Math.exp(-x)) / 2;
     }
     var core = {
-        VERSION: '1.7.1',
+        VERSION: '1.7.2',
         cos: makeUnaryUniversalFunction('cos', Math.cos),
         cosh: makeUnaryUniversalFunction('cosh', cosh),
         exp: makeUnaryUniversalFunction('exp', Math.exp),
@@ -1265,7 +1265,7 @@ define('davinci-blade/Unit',["require", "exports", 'davinci-blade/Dimensions', '
     return Unit;
 });
 
-define('davinci-blade/Euclidean1',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+define('davinci-blade/e1ga/Euclidean1',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
     function Euclidean1Error(message) {
         this.name = 'Euclidean1Error';
         this.message = (message || "");
@@ -1386,7 +1386,7 @@ define('davinci-blade/Euclidean1',["require", "exports", 'davinci-blade/Unit'], 
     return Euclidean1;
 });
 
-define('davinci-blade/Euclidean2',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
+define('davinci-blade/e2ga/Euclidean2',["require", "exports", 'davinci-blade/Unit'], function (require, exports, Unit) {
     function Euclidean2Error(message) {
         this.name = 'Euclidean2Error';
         this.message = (message || "");
@@ -2237,7 +2237,12 @@ define('davinci-blade/NotImplementedError',["require", "exports"], function (req
     return NotImplementedError;
 });
 
-define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImplementedError', 'davinci-blade/Unit'], function (require, exports, NotImplementedError, Unit) {
+define('davinci-blade/e3ga/Euclidean3',["require", "exports", 'davinci-blade/NotImplementedError', 'davinci-blade/Unit', 'davinci-blade/core'], function (require, exports, NotImplementedError, Unit, core) {
+    var cos = Math.cos;
+    var cosh = core.Math.cosh;
+    var exp = Math.exp;
+    var sin = Math.sin;
+    var sinh = core.Math.sinh;
     function Euclidean3Error(message) {
         this.name = 'Euclidean3Error';
         this.message = (message || "");
@@ -2951,6 +2956,13 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                     throw new Euclidean3Error("index must be in the range [0..7]");
             }
         };
+        /**
+         * Computes the sum of this Euclidean3 and another considered to be the rhs of the binary addition, `+`, operator.
+         * This method does not change this Euclidean3.
+         * @method add
+         * @param rhs {Euclidean3}
+         * @return {Euclidean3} This Euclidean3 plus rhs.
+         */
         Euclidean3.prototype.add = function (rhs) {
             var coord = function (x, n) {
                 return x[n];
@@ -2965,7 +2977,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.add(other);
             }
             else if (typeof other === 'number') {
-                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.add(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__radd__ = function (other) {
@@ -2973,9 +2985,16 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.add(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).add(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).add(this);
             }
         };
+        /**
+         * Computes the difference of this Euclidean3 and another considered to be the rhs of the binary subtraction, `-`, operator.
+         * This method does not change this Euclidean3.
+         * @method sub
+         * @param rhs {Euclidean3}
+         * @return {Euclidean3} This Euclidean3 minus rhs.
+         */
         Euclidean3.prototype.sub = function (rhs) {
             var coord = function (x, n) {
                 return x[n];
@@ -2990,7 +3009,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.sub(other);
             }
             else if (typeof other === 'number') {
-                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.sub(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rsub__ = function (other) {
@@ -2998,7 +3017,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.sub(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).sub(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).sub(this);
             }
         };
         Euclidean3.prototype.mul = function (rhs) {
@@ -3015,7 +3034,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.mul(other);
             }
             else if (typeof other === 'number') {
-                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.mul(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rmul__ = function (other) {
@@ -3023,7 +3042,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.mul(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).mul(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).mul(this);
             }
         };
         Euclidean3.prototype.scalarMultiply = function (rhs) {
@@ -3038,7 +3057,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.div(other);
             }
             else if (typeof other === 'number') {
-                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.div(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rdiv__ = function (other) {
@@ -3046,7 +3065,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.div(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).div(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).div(this);
             }
         };
         Euclidean3.prototype.splat = function (rhs) {
@@ -3072,7 +3091,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.splat(other);
             }
             else if (typeof other === 'number') {
-                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.splat(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rvbar__ = function (other) {
@@ -3080,7 +3099,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.splat(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).splat(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).splat(this);
             }
         };
         Euclidean3.prototype.__wedge__ = function (other) {
@@ -3088,7 +3107,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.wedge(other);
             }
             else if (typeof other === 'number') {
-                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.wedge(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rwedge__ = function (other) {
@@ -3096,7 +3115,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.wedge(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).wedge(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).wedge(this);
             }
         };
         Euclidean3.prototype.lshift = function (rhs) {
@@ -3113,7 +3132,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.lshift(other);
             }
             else if (typeof other === 'number') {
-                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.lshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rlshift__ = function (other) {
@@ -3121,7 +3140,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.lshift(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).lshift(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).lshift(this);
             }
         };
         Euclidean3.prototype.rshift = function (rhs) {
@@ -3138,7 +3157,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return this.rshift(other);
             }
             else if (typeof other === 'number') {
-                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined));
+                return this.rshift(new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0));
             }
         };
         Euclidean3.prototype.__rrshift__ = function (other) {
@@ -3146,7 +3165,7 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
                 return other.rshift(this);
             }
             else if (typeof other === 'number') {
-                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, undefined).rshift(this);
+                return new Euclidean3(other, 0, 0, 0, 0, 0, 0, 0, void 0).rshift(this);
             }
         };
         Euclidean3.prototype.pow = function (exponent) {
@@ -3196,19 +3215,34 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
             z = x1 * y2 - y1 * x2;
             return new Euclidean3(0, x, y, z, 0, 0, 0, 0, Unit.mul(this.uom, vector.uom));
         };
+        Euclidean3.prototype.isZero = function () {
+            return (this.w === 0) && (this.x === 0) && (this.y === 0) && (this.z === 0) && (this.yz === 0) && (this.zx === 0) && (this.xy === 0) && (this.xyz === 0);
+        };
         Euclidean3.prototype.length = function () {
             return Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz);
         };
         Euclidean3.prototype.cos = function () {
+            // TODO: Generalize to full multivector.
             Unit.assertDimensionless(this.uom);
-            var cosW = Math.cos(this.w);
-            return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, undefined);
+            var cosW = cos(this.w);
+            return new Euclidean3(cosW, 0, 0, 0, 0, 0, 0, 0, void 0);
         };
         Euclidean3.prototype.cosh = function () {
             throw new NotImplementedError('cosh(Euclidean3)');
         };
         Euclidean3.prototype.exp = function () {
-            throw new NotImplementedError('exp(Euclidean3)');
+            Unit.assertDimensionless(this.uom);
+            var bivector = this.grade(2);
+            var a = bivector.norm();
+            if (!a.isZero()) {
+                var c = a.cos();
+                var s = a.sin();
+                var B = bivector.unit();
+                return c.add(B.mul(s));
+            }
+            else {
+                return new Euclidean3(1, 0, 0, 0, 0, 0, 0, 0, this.uom);
+            }
         };
         /**
          * Computes the magnitude of this Euclidean3. The magnitude is the square root of the quadrance.
@@ -3223,7 +3257,10 @@ define('davinci-blade/Euclidean3',["require", "exports", 'davinci-blade/NotImple
             return new Euclidean3(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z + this.xy * this.xy + this.yz * this.yz + this.zx * this.zx + this.xyz * this.xyz, 0, 0, 0, 0, 0, 0, 0, Unit.mul(this.uom, this.uom));
         };
         Euclidean3.prototype.sin = function () {
-            throw new Euclidean3Error('sin');
+            // TODO: Generalize to full multivector.
+            Unit.assertDimensionless(this.uom);
+            var sinW = sin(this.w);
+            return new Euclidean3(sinW, 0, 0, 0, 0, 0, 0, 0, void 0);
         };
         Euclidean3.prototype.sinh = function () {
             throw new Euclidean3Error('sinh');
@@ -3625,42 +3662,49 @@ define('davinci-blade/Color',["require", "exports"], function (require, exports)
     return Color;
 });
 
-define('davinci-blade/e2ga/scalarE2',["require", "exports", 'davinci-blade/Euclidean2'], function (require, exports, Euclidean2) {
+define('davinci-blade/e2ga/scalarE2',["require", "exports", 'davinci-blade/e2ga/Euclidean2'], function (require, exports, Euclidean2) {
     var scalarE2 = function (w, uom) {
         return new Euclidean2(w, 0, 0, 0, uom);
     };
     return scalarE2;
 });
 
-define('davinci-blade/e2ga/vectorE2',["require", "exports", 'davinci-blade/Euclidean2'], function (require, exports, Euclidean2) {
+define('davinci-blade/e2ga/vectorE2',["require", "exports", 'davinci-blade/e2ga/Euclidean2'], function (require, exports, Euclidean2) {
     var vectorE2 = function (x, y, uom) {
         return new Euclidean2(0, x, y, 0, uom);
     };
     return vectorE2;
 });
 
-define('davinci-blade/e3ga/scalarE3',["require", "exports", 'davinci-blade/Euclidean3'], function (require, exports, Euclidean3) {
+define('davinci-blade/e3ga/scalarE3',["require", "exports", 'davinci-blade/e3ga/Euclidean3'], function (require, exports, Euclidean3) {
     var scalarE3 = function (w, uom) {
         return new Euclidean3(w, 0, 0, 0, 0, 0, 0, 0, uom);
     };
     return scalarE3;
 });
 
-define('davinci-blade/e3ga/vectorE3',["require", "exports", 'davinci-blade/Euclidean3'], function (require, exports, Euclidean3) {
+define('davinci-blade/e3ga/vectorE3',["require", "exports", 'davinci-blade/e3ga/Euclidean3'], function (require, exports, Euclidean3) {
     var vectorE3 = function (x, y, z, uom) {
         return new Euclidean3(0, x, y, z, 0, 0, 0, 0, uom);
     };
     return vectorE3;
 });
 
-define('davinci-blade/e3ga/bivectorE3',["require", "exports", 'davinci-blade/Euclidean3'], function (require, exports, Euclidean3) {
+define('davinci-blade/e3ga/bivectorE3',["require", "exports", 'davinci-blade/e3ga/Euclidean3'], function (require, exports, Euclidean3) {
     var bivectorE3 = function (xy, yz, zx, uom) {
         return new Euclidean3(0, 0, 0, 0, xy, yz, zx, 0, uom);
     };
     return bivectorE3;
 });
 
-define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e2ga/scalarE2', 'davinci-blade/e2ga/vectorE2', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Complex, Color, scalarE2, vectorE2, scalarE3, vectorE3, bivectorE3) {
+define('davinci-blade/e3ga/pseudoscalarE3',["require", "exports", 'davinci-blade/e3ga/Euclidean3'], function (require, exports, Euclidean3) {
+    var pseudoscalarE3 = function (xyz, uom) {
+        return new Euclidean3(0, 0, 0, 0, 0, 0, 0, xyz, uom);
+    };
+    return pseudoscalarE3;
+});
+
+define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-blade/e1ga/Euclidean1', 'davinci-blade/e2ga/Euclidean2', 'davinci-blade/e3ga/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e2ga/scalarE2', 'davinci-blade/e2ga/vectorE2', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3', 'davinci-blade/e3ga/pseudoscalarE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Complex, Color, scalarE2, vectorE2, scalarE3, vectorE3, bivectorE3, pseudoscalarE3) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -3717,6 +3761,7 @@ define('davinci-blade',["require", "exports", 'davinci-blade/core', 'davinci-bla
         scalarE3: scalarE3,
         vectorE3: vectorE3,
         bivectorE3: bivectorE3,
+        pseudoscalarE3: pseudoscalarE3,
         Rational: Rational,
         Dimensions: Dimensions,
         Unit: Unit,

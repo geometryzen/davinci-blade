@@ -54,6 +54,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.6.0: 2015-06-15 scalar() method.
 * 1.7.0: 2015-06-17 Euclidean3 sqrt() and unit()
 * 1.7.1: 2015-06-23 d.ts Measure
+* 1.7.2: 2015-08-19 pseudoscalarE3
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

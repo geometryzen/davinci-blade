@@ -1,4 +1,4 @@
-import Euclidean2 = require('davinci-blade/Euclidean2');
+import Euclidean2 = require('davinci-blade/e2ga/Euclidean2');
 import Unit = require('davinci-blade/Unit');
 
 var vectorE2 = function(x: number, y: number, uom?: Unit): Euclidean2 {

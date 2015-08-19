@@ -1,7 +1,7 @@
 import core = require('davinci-blade/core');
-import Euclidean1 = require('davinci-blade/Euclidean1');
-import Euclidean2 = require('davinci-blade/Euclidean2');
-import Euclidean3 = require('davinci-blade/Euclidean3');
+import Euclidean1 = require('davinci-blade/e1ga/Euclidean1');
+import Euclidean2 = require('davinci-blade/e2ga/Euclidean2');
+import Euclidean3 = require('davinci-blade/e3ga/Euclidean3');
 import Rational = require('davinci-blade/Rational');
 import Dimensions = require('davinci-blade/Dimensions');
 import Unit = require('davinci-blade/Unit');
@@ -11,9 +11,11 @@ import Color = require('davinci-blade/Color');
 import scalarE2   = require('davinci-blade/e2ga/scalarE2');
 import vectorE2   = require('davinci-blade/e2ga/vectorE2');
 import bivectorE2 = require('davinci-blade/e2ga/bivectorE2');
+
 import scalarE3   = require('davinci-blade/e3ga/scalarE3');
 import vectorE3   = require('davinci-blade/e3ga/vectorE3');
 import bivectorE3 = require('davinci-blade/e3ga/bivectorE3');
+import pseudoscalarE3 = require('davinci-blade/e3ga/pseudoscalarE3');
 
 var UNIT_SYMBOLS: string[] = ["kg", "m", "s", "C", "K", "mol", "cd"];
 
@@ -100,6 +102,7 @@ var blade = {
     scalarE3: scalarE3,
     vectorE3: vectorE3,
     bivectorE3: bivectorE3,
+    pseudoscalarE3: pseudoscalarE3,
     Rational: Rational,
     Dimensions: Dimensions,
     Unit: Unit,

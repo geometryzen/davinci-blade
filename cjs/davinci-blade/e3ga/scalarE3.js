@@ -1,4 +1,4 @@
-var Euclidean3 = require('davinci-blade/Euclidean3');
+var Euclidean3 = require('davinci-blade/e3ga/Euclidean3');
 var scalarE3 = function (w, uom) {
     return new Euclidean3(w, 0, 0, 0, 0, 0, 0, 0, uom);
 };

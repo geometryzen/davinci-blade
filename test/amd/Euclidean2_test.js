@@ -2,7 +2,7 @@ define([
     'davinci-blade/Rational',
     'davinci-blade/Dimensions',
     'davinci-blade/Unit',
-    'davinci-blade/Euclidean2'
+    'davinci-blade/e2ga/Euclidean2'
 ], function(
     Rational,
     Dimensions,

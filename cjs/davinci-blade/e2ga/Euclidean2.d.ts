@@ -17,7 +17,7 @@ declare class Euclidean2 implements Measure<Euclidean2> {
      * @param {number} xy The pseudoscalar part of the multivector.
      * @param uom The optional unit of measure.
      */
-    constructor(w: number, x: number, y: number, xy: number, uom: Unit);
+    constructor(w: number, x: number, y: number, xy: number, uom?: Unit);
     fromCartesian(w: number, x: number, y: number, xy: number, uom: Unit): Euclidean2;
     fromPolar(w: number, r: number, theta: number, s: number, uom: Unit): Euclidean2;
     coordinates(): number[];

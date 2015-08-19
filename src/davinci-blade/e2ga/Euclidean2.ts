@@ -400,7 +400,7 @@ class Euclidean2 implements Measure<Euclidean2> {
    * @param {number} xy The pseudoscalar part of the multivector.
    * @param uom The optional unit of measure.
    */
-  constructor(w: number, x: number, y: number, xy: number, uom: Unit) {
+  constructor(w: number, x: number, y: number, xy: number, uom?: Unit) {
     this.w = assertArgNumber('w', w);
     this.x = assertArgNumber('x', x);
     this.y = assertArgNumber('y', y);

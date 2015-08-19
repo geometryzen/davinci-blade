@@ -7,6 +7,8 @@ import Unit = require('davinci-blade/Unit');
 declare class Euclidean3 implements Measure<Euclidean3> {
     /**
      * The `w` property is the grade zero (scalar) part of the Euclidean3 multivector.
+     * @property w
+     * @type number
      */
     w: number;
     /**
@@ -54,13 +56,27 @@ declare class Euclidean3 implements Measure<Euclidean3> {
      * @param {number} xyz The pseudoscalar part of the multivector.
      * @param uom The optional unit of measure.
      */
-    constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom: Unit);
+    constructor(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom?: Unit);
     static fromCartesian(w: number, x: number, y: number, z: number, xy: number, yz: number, zx: number, xyz: number, uom: Unit): Euclidean3;
     coordinates(): number[];
     coordinate(index: number): number;
+    /**
+     * Computes the sum of this Euclidean3 and another considered to be the rhs of the binary addition, `+`, operator.
+     * This method does not change this Euclidean3.
+     * @method add
+     * @param rhs {Euclidean3}
+     * @return {Euclidean3} This Euclidean3 plus rhs.
+     */
     add(rhs: Euclidean3): Euclidean3;
     __add__(other: any): Euclidean3;
     __radd__(other: any): Euclidean3;
+    /**
+     * Computes the difference of this Euclidean3 and another considered to be the rhs of the binary subtraction, `-`, operator.
+     * This method does not change this Euclidean3.
+     * @method sub
+     * @param rhs {Euclidean3}
+     * @return {Euclidean3} This Euclidean3 minus rhs.
+     */
     sub(rhs: Euclidean3): Euclidean3;
     __sub__(other: any): Euclidean3;
     __rsub__(other: any): Euclidean3;
@@ -93,6 +109,7 @@ declare class Euclidean3 implements Measure<Euclidean3> {
     grade(index: number): Euclidean3;
     dot(vector: Euclidean3): number;
     cross(vector: Euclidean3): Euclidean3;
+    isZero(): boolean;
     length(): number;
     cos(): Euclidean3;
     cosh(): Euclidean3;

@@ -1,4 +1,4 @@
-define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 'davinci-blade/Euclidean2', 'davinci-blade/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e2ga/scalarE2', 'davinci-blade/e2ga/vectorE2', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Complex, Color, scalarE2, vectorE2, scalarE3, vectorE3, bivectorE3) {
+define(["require", "exports", 'davinci-blade/core', 'davinci-blade/e1ga/Euclidean1', 'davinci-blade/e2ga/Euclidean2', 'davinci-blade/e3ga/Euclidean3', 'davinci-blade/Rational', 'davinci-blade/Dimensions', 'davinci-blade/Unit', 'davinci-blade/Complex', 'davinci-blade/Color', 'davinci-blade/e2ga/scalarE2', 'davinci-blade/e2ga/vectorE2', 'davinci-blade/e3ga/scalarE3', 'davinci-blade/e3ga/vectorE3', 'davinci-blade/e3ga/bivectorE3', 'davinci-blade/e3ga/pseudoscalarE3'], function (require, exports, core, Euclidean1, Euclidean2, Euclidean3, Rational, Dimensions, Unit, Complex, Color, scalarE2, vectorE2, scalarE3, vectorE3, bivectorE3, pseudoscalarE3) {
     var UNIT_SYMBOLS = ["kg", "m", "s", "C", "K", "mol", "cd"];
     var R0 = Rational.ZERO;
     var R1 = Rational.ONE;
@@ -55,6 +55,7 @@ define(["require", "exports", 'davinci-blade/core', 'davinci-blade/Euclidean1', 
         scalarE3: scalarE3,
         vectorE3: vectorE3,
         bivectorE3: bivectorE3,
+        pseudoscalarE3: pseudoscalarE3,
         Rational: Rational,
         Dimensions: Dimensions,
         Unit: Unit,
